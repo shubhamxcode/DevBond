@@ -1,6 +1,9 @@
+import { FC } from "react";
 import { GiBodySwapping } from "react-icons/gi";
+import { Link } from "react-router-dom";
 
-function Nav() {
+
+const Nav: FC = () => {
   return (
     <div className="text-white">
       <nav className="flex justify-between items-center p-4 bg-gray-800 border-b border-gray-600 shadow-md">
@@ -8,19 +11,20 @@ function Nav() {
           <GiBodySwapping />
         </div>
         <ul className="flex gap-8 text-2xl font-medium">
-          <li className="hover:text-blue-500 transition-colors cursor-pointer">Home</li>
+          <Link to="/" className="hover:text-blue-500 transition-colors cursor-pointer">Home</Link>
           <li className="hover:text-blue-500 transition-colors cursor-pointer">Feature</li>
           <li className="hover:text-blue-500 transition-colors cursor-pointer">Work</li>
           <li className="hover:text-blue-500 transition-colors cursor-pointer">Contact</li>
           <li className="hover:text-blue-500 transition-colors cursor-pointer">Help</li>
         </ul>
-        
-        <button className="text-2xl px-6 py-2 rounded-full bg-blue-700 hover:bg-blue-800 transition-colors font-semibold">
+
+        {/* Adjust Link to point to the correct Signin component */}
+        <Link to="/signin" className="text-2xl px-6 py-2 rounded-full bg-blue-700 hover:bg-blue-800 transition-colors font-semibold">
           Login
-        </button>
+        </Link>
       </nav>
     </div>
   );
-}
+};
 
 export default Nav;

@@ -1,11 +1,22 @@
 
-import Nav from './components/navbar/nav'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import Home from './components/Home/Home'
+import Signin from './components/signin/signin'
+import Layout from "./layout";
 function App() {
   
 
   return (
     <>
-    <Nav/>
+     <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Layout/>}>
+          <Route index element={<Home />} />
+          <Route path="/signin" element={<Signin/>}/>
+        </Route>
+      </Routes>
+    </BrowserRouter>
     </>
   )
 }
