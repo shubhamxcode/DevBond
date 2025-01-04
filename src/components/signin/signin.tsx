@@ -19,15 +19,15 @@ const App: React.FC = () => {
   }, [auth]);
 
   return (
-    <div style={{ backgroundColor: '#121212', color: '#fff', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-      <h1 className='text-2xl'>Start your journey frome here</h1>
+    <div className='gap-y-4' style={{ backgroundColor: '#121212', color: '#fff', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
+      <h1 className=' text-2xl'>Start your journey frome here</h1>
       {user ? (
         <div>
           <p>Welcome, {user.displayName || 'User'}</p>
           <button onClick={logout} style={{ padding: '10px 20px', backgroundColor: '#6200ea', color: '#fff', border: 'none', borderRadius: '5px' }}>Sign Out</button>
         </div>
       ) : (
-        <div>
+        <div className='space-x-3'>
           <button onClick={signInWithGoogle} style={{ padding: '10px 20px', backgroundColor: '#4285F4', color: '#fff', border: 'none', borderRadius: '5px', marginBottom: '10px' }}>Sign In with Google</button>
           <button onClick={signInWithGitHub} style={{ padding: '10px 20px', backgroundColor: '#333', color: '#fff', border: 'none', borderRadius: '5px' }}>Sign In with GitHub</button>
         </div>
