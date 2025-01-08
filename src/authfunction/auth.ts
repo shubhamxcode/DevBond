@@ -1,5 +1,5 @@
 import { signInWithPopup, GoogleAuthProvider, GithubAuthProvider, signOut } from 'firebase/auth';
-import { auth } from '../firebaseauth/firebase'; // Named import
+import { auth } from '../firebaseauth/firebase';
 
 const googleProvider = new GoogleAuthProvider();
 const githubProvider = new GithubAuthProvider();

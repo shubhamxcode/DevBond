@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { signInWithGitHub, signInWithGoogle, logout } from '../../authfunction/auth';
+import { useState, useEffect } from 'react';
+import { signInWithGitHub, signInWithGoogle} from '../../authfunction/auth';
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
+import { useNavigate } from 'react-router-dom';  // Import useNavigate
+// import Field from '../devfields/field';
 
-const App: React.FC = () => {
+const App = () => {
   const [user, setUser] = useState<User | null>(null);
+  const navigate = useNavigate();  // Initialize navigate
 
   // Initialize Firebase Auth
   const auth = getAuth();
@@ -12,24 +15,31 @@ const App: React.FC = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      if (currentUser) {
+        // If user is authenticated, navigate to the desired route
+        navigate('/field');  // Replace '/dashboard' with your target route
+      }
     });
 
     // Cleanup subscription on component unmount
     return () => unsubscribe();
-  }, [auth]);
+  }, [auth, navigate]);
 
   return (
     <div className='gap-y-4' style={{ backgroundColor: '#121212', color: '#fff', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-      <h1 className=' text-2xl'>Start your journey frome here</h1>
+      <h1 className=' text-green-400 text-3xl'>Start your journey from here</h1>
       {user ? (
-        <div>
-          <p>Welcome, {user.displayName || 'User'}</p>
-          <button onClick={logout} style={{ padding: '10px 20px', backgroundColor: '#6200ea', color: '#fff', border: 'none', borderRadius: '5px' }}>Sign Out</button>
+        <div className=''>
+          
         </div>
       ) : (
         <div className='space-x-3'>
-          <button onClick={signInWithGoogle} style={{ padding: '10px 20px', backgroundColor: '#4285F4', color: '#fff', border: 'none', borderRadius: '5px', marginBottom: '10px' }}>Sign In with Google</button>
-          <button onClick={signInWithGitHub} style={{ padding: '10px 20px', backgroundColor: '#333', color: '#fff', border: 'none', borderRadius: '5px' }}>Sign In with GitHub</button>
+          <button onClick={signInWithGoogle} style={{ padding: '10px 20px', backgroundColor: '#4285F4', color: '#fff', border: 'none', borderRadius: '5px', marginBottom: '10px' }}>
+            Sign In with Google
+          </button>
+          <button onClick={signInWithGitHub} style={{ padding: '10px 20px', backgroundColor: '#333', color: '#fff', border: 'none', borderRadius: '5px' }}>
+            Sign In with GitHub
+          </button>
         </div>
       )}
     </div>

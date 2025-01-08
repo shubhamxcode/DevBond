@@ -1,5 +1,3 @@
-
-
 function Page() {
   interface CardDataType {
     id: number;
@@ -10,12 +8,12 @@ function Page() {
   }
 
   const cards: CardDataType[] = [
-    { id: 1, num: 1, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR4TTr4FQVWveKU6orqUsrLrGLjVoA_RIbghQ&s', title: 'Developer Interaction', description: 'Create accounts using GitHub and LeetCode to earn points and enhance website development skills.' },
-    { id: 2, num: 2, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsXIeEsyetCRGUd4IxqFaeHrOlgZ6ecXSu0g&s', title: 'Profile Enhancement', description: 'Enhance your profile with achievements and projects on GitHub and LeetCode.' },
-    { id: 3, num: 3, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRaFruoKKhmL8mzA2wtrsuZVecAof5Ggly9cWKc_Gk4uTFhsgBR7TipoPyCchobL7bPPM&usqp=CAU', title: 'Guidance Chatbot', description: 'Receive guidance and suggestions from our chatbot based on your progress.' },
-    { id: 4, num: 4, image: 'https://thealgoristsblob.blob.core.windows.net/thealgoristsimages/LeaderboardLLD.jpeg', title: 'Leaderboard System', description: 'Compete with peers and track your performance on the leaderboard.' },
-    { id: 5, num: 5, image: 'https://media.istockphoto.com/id/1417588140/photo/circle-gold-star-medal.jpg?s=612x612&w=0&k=20&c=-XPXHvet2n4E5nBu9RdlBsPenFD5g0IErS_S3HSfb88=', title: 'Skill Badges', description: 'Earn badges for completing challenges and improving your skills.' },
-    { id: 6, num: 6, image: 'https://img.freepik.com/premium-photo/community-support-teamwork_1046319-73022.jpg', title: 'Community Support', description: 'Connect with other developers for support and networking opportunities.' },
+    { id: 1, num: 1, image: 'https://img.freepik.com/premium-photo/dark-image-dark-abstract-image-with-dark-background_994023-22344.jpg', title: 'Developer Interaction', description: 'Create accounts using GitHub and LeetCode to earn points and enhance website development skills.' },
+    { id: 2, num: 2, image: 'https://img.freepik.com/premium-photo/dark-image-dark-abstract-image-with-dark-background_994023-22344.jpg', title: 'Profile Enhancement', description: 'Enhance your profile with achievements and projects on GitHub and LeetCode.' },
+    { id: 3, num: 3, image: 'https://img.freepik.com/premium-photo/dark-image-dark-abstract-image-with-dark-background_994023-22344.jpg', title: 'Guidance Chatbot', description: 'Receive guidance and suggestions from our chatbot based on your progress.' },
+    { id: 4, num: 4, image: 'https://img.freepik.com/premium-photo/dark-image-dark-abstract-image-with-dark-background_994023-22344.jpg', title: 'Leaderboard System', description: 'Compete with peers and track your performance on the leaderboard.' },
+    { id: 5, num: 5, image: 'https://img.freepik.com/premium-photo/dark-image-dark-abstract-image-with-dark-background_994023-22344.jpg', title: 'Skill Badges', description: 'Earn badges for completing challenges and improving your skills.' },
+    { id: 6, num: 6, image: 'https://img.freepik.com/premium-photo/dark-image-dark-abstract-image-with-dark-background_994023-22344.jpg', title: 'Community Support', description: 'Connect with other developers for support and networking opportunities.' },
   ];
 
   return (
