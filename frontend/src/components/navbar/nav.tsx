@@ -12,7 +12,7 @@ const Nav: FC = () => {
         </div>
         <ul className="flex gap-8 text-2xl font-medium">
           <Link to="/" className="hover:text-blue-500 transition-colors cursor-pointer">Home</Link>
-          <li className="hover:text-blue-500 transition-colors cursor-pointer">Feature</li>
+          <Link to='/shubham' className="hover:text-blue-500 transition-colors cursor-pointer">Feature</Link>
           <li className="hover:text-blue-500 transition-colors cursor-pointer">Work</li>
           <li className="hover:text-blue-500 transition-colors cursor-pointer">Contact</li>
           <li className="hover:text-blue-500 transition-colors cursor-pointer">Help</li>

@@ -6,6 +6,7 @@ import Signin from './components/signin/signin'
 import Layout from "./layout";
 import Field from "./components/devfields/field";
 import User from "./components/developer/user";
+import Dist from './displaydata/dis'
 function App() {
   
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="/signin" element={<Signin/>}/>
           <Route path="/field" element={<Field/>}/>
           <Route path="/user" element={<User/>}/>
+          <Route path="/shubham" element={<Dist/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
