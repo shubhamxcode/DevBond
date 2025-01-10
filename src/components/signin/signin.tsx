@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { signInWithGitHub, signInWithGoogle} from '../../authfunction/auth';
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';  // Import useNavigate
 // import Field from '../devfields/field';
+import Signinform from '../../siginform'
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -20,29 +20,26 @@ const App = () => {
         navigate('/field');  // Replace '/dashboard' with your target route
       }
     });
-
-    // Cleanup subscription on component unmount
     return () => unsubscribe();
   }, [auth, navigate]);
 
   return (
-    <div className='gap-y-4' style={{ backgroundColor: '#121212', color: '#fff', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', flexDirection: 'column' }}>
-      <h1 className=' text-green-400 text-3xl'>Start your journey from here</h1>
-      {user ? (
-        <div className=''>
-          
-        </div>
-      ) : (
-        <div className='space-x-3'>
-          <button onClick={signInWithGoogle} style={{ padding: '10px 20px', backgroundColor: '#4285F4', color: '#fff', border: 'none', borderRadius: '5px', marginBottom: '10px' }}>
-            Sign In with Google
-          </button>
-          <button onClick={signInWithGitHub} style={{ padding: '10px 20px', backgroundColor: '#333', color: '#fff', border: 'none', borderRadius: '5px' }}>
-            Sign In with GitHub
-          </button>
-        </div>
-      )}
-    </div>
+    <div className='bg-gray-900 text-white min-h-screen flex justify-center items-center flex-col'>
+  <h1 className='text-green-400 text-6xl mb-8'>Start your journey from here</h1>
+  <div className="max-w-7xl w-full px-4">
+    {user ? (
+      <div>
+        {/* Additional content for logged-in user */}
+      </div>
+    ) : (
+      <div>
+        <Signinform/>
+      </div>
+    )}
+  </div>
+</div>
+
+  
   );
 };
 
