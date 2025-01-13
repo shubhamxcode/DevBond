@@ -1,6 +1,6 @@
-require('dotenv').config(({path:'./env'}))
-
-import mongoose, { connect } from "mongoose";
-import connectDB from "./Database/data";
-
-connectDB(); 
+import dotenv from 'dotenv';
+import connectDB from './Database/data.ts';
+dotenv.config({
+    path:'./.env'
+})
+connectDB();
