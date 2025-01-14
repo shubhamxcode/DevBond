@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, { mongo } from "mongoose";
 
 const USerschema=new mongoose.Schema({
     firebaseId:{
@@ -22,3 +22,5 @@ const USerschema=new mongoose.Schema({
         type:String,
     }
 },{timestamps:true})
+
+export const User=mongoose.model("User",USerschema);
