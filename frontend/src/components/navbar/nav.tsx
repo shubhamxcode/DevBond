@@ -12,14 +12,14 @@ const Nav: FC = () => {
         </div>
         <ul className="flex gap-8 text-2xl font-medium">
           <Link to="/" className="hover:text-blue-500 transition-colors cursor-pointer">Home</Link>
-          <Link to='/shubham' className="hover:text-blue-500 transition-colors cursor-pointer">Feature</Link>
+          <Link to='' className="hover:text-blue-500 transition-colors cursor-pointer">Feature</Link>
           <li className="hover:text-blue-500 transition-colors cursor-pointer">Work</li>
           <li className="hover:text-blue-500 transition-colors cursor-pointer">Contact</li>
           <li className="hover:text-blue-500 transition-colors cursor-pointer">Help</li>
         </ul>
 
         {/* Adjust Link to point to the correct Signin component */}
-        <Link to="/signin" className="text-2xl px-6 py-2 rounded-full bg-blue-700 hover:bg-blue-800 transition-colors font-semibold">
+        <Link to='' className="text-2xl px-6 py-2 rounded-full bg-blue-700 hover:bg-blue-800 transition-colors font-semibold">
           Login
         </Link>
       </nav>
