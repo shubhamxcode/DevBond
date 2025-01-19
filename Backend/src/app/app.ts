@@ -11,4 +11,13 @@ app.use(Cors({
 app.use(express.json({limit:"16kb"}));
 app.use(express.urlencoded({extended:true,limit:"16kb"}))
 app.use(cookieparser())
+
+//import routes 
+
+import userrouter from '../routes/route.ts'
+
+// routes declaration
+
+app.use("/api/users",userrouter)
+//http://localhost2000/api/v1/users/
 export default app
