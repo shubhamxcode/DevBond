@@ -10,7 +10,7 @@ class Apierror extends Error{
         statusCode:number,
         message:string="something went wrong",
         errors:any[]=[],
-        stack:string
+        stack:string=new Error().stack||""
     ){
         super(message)
         this.message=message,
