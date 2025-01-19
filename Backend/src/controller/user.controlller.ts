@@ -1,6 +1,7 @@
 import asynchandler from "../utils/asynchandler.ts";
 import Apierror from "../utils/apierror.ts";
 import {User} from '../models/userschema.ts'
+import Apiresponse   from "../utils/apiresponse.ts";
 const regiesteruser=asynchandler(async(req,res)=>{
     //get user detail from frontend 
     //validation-not empty 
@@ -12,7 +13,7 @@ const regiesteruser=asynchandler(async(req,res)=>{
 
     const {username,email,password}=req.body
     console.log("email:",email,"username:",username,"password:",password);
-    
+     
     if (
         [username,email,password].some((fields)=>fields?.trim()=="")
     ) {
@@ -23,9 +24,20 @@ const regiesteruser=asynchandler(async(req,res)=>{
     if (existeduser) {
         throw new Apierror(409,"You are already register ")
     }
-    return res.status(200).json({
-        message:"Bhai ho gaya finally"
+   const user=await User.create({
+        username:username.toLowerCase(), 
+        email,
+        password
     })
+    const createdUser = await User.findById(user._id).select(
+        "-password -refreshToken"
+    );
+    if (!createdUser) {
+        throw new Apierror(500,"something went wrong sorry ")
+    }
+    return res.status(201).json(
+        new Apiresponse({},"user register succesfully",201)
+    )
 })
 
 export default regiesteruser 
