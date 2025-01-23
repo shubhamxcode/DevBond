@@ -19,7 +19,7 @@ const Nav: FC = () => {
         </ul>
 
         {/* Adjust Link to point to the correct Signin component */}
-        <Link to='/login' className="text-2xl px-6 py-2 rounded-full bg-blue-700 hover:bg-blue-800 transition-colors font-semibold">
+        <Link to='/signup' className="text-2xl px-6 py-2 rounded-full bg-blue-700 hover:bg-blue-800 transition-colors font-semibold">
           Login
         </Link>
       </nav>
