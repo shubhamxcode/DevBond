@@ -36,12 +36,13 @@ const LoginPage = () => {
             />
           </div>
           <div className="mb-4">
-            <button
+            <Link
               type="submit"
+              to='/profile'
               className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300"
             >
               Login
-            </button>
+            </Link>
           </div>
         </form>
         <p className="text-sm text-gray-400 text-center">

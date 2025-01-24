@@ -7,6 +7,7 @@ import Field from "./components/devfields/field";
 import User from "./components/developer/user";
 import Sinup from './components/loginuser/sinup'
 import Login from "./components/loginuser/login";
+import Userprof from "./userdata/userprofile/userprof";
 function App() {
   
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/user" element={<User/>}/>
           <Route path="/signup" element={<Sinup/>}/>
           <Route path="/login" element={<Login/>}/>
+          <Route path="/profile" element={<Userprof/>}/>
         </Route>
       </Routes>
     </BrowserRouter>
