@@ -2,40 +2,90 @@ import { TbBaselineDensityMedium } from "react-icons/tb";
 function userprof() {
   const cards=[
     {
-      id:String,
-      name:String,
-      follow:String,
-      image:String
+      id:1,
+      name:"shubham",
+      follow:"Follow",
+      image:"/images/shubham varshney.jpeg"
       
     },
     {
-      id:String,
-      name:String,
-      follow:String,
-      image:String
+      id:2,
+      name:"shubham",
+      follow:"Follow",
+      image:"/images/shubham varshney.jpeg"
       
     },
     {
-      id:String,
-      name:String,
-      follow:String,
-      image:String
+      id:3,
+      name:"shubham",
+      follow:"Follow",
+      image:"/images/shubham varshney.jpeg"
       
     },
     {
-      id:String,
-      name:String,
-      follow:String,
-      image:String
+      id:4,
+      name:"shubham",
+      follow:"Follow",
+      image:"/images/shubham varshney.jpeg"
       
     },
     {
-      id:String,
-      name:String,
-      follow:String,
-      image:String
+      id:5,
+      name:"shubham",
+      follow:"Follow",
+      image:"/images/shubham varshney.jpeg"
       
     },
+    {
+      id:6,
+      name:"shubham",
+      follow:"Follow",
+      image:"/images/shubham varshney.jpeg"
+      
+    },
+    {
+      id:7,
+      name:"shubham",
+      follow:"Follow",
+      image:"/images/shubham varshney.jpeg"
+      
+    },
+    {
+      id:8,
+      name:"shubham",
+      follow:"Follow",
+      image:"/images/shubham varshney.jpeg"
+      
+    },
+    {
+      id:9,
+      name:"shubham",
+      follow:"Follow",
+      image:"/images/shubham varshney.jpeg"
+      
+    },
+    {
+      id:10,
+      name:"shubham",
+      follow:"Follow",
+      image:"/images/shubham varshney.jpeg"
+      
+    },
+    {
+      id:11,
+      name:"shubham",
+      follow:"Follow",
+      image:"/images/shubham varshney.jpeg"
+      
+    },
+    {
+      id:12,
+      name:"shubham",
+      follow:"Follow",
+      image:"/images/shubham varshney.jpeg"
+      
+    },
+    
   ]
   return (
     <div className=" ">
@@ -59,16 +109,16 @@ function userprof() {
   <h1 className="text-white text-4xl font-semibold text-center mb-8">Suggestions</h1>
   
   {/* Container for multiple suggestion boxes */}
-  <div className="">
+  <div className=" flex flex-wrap justify-evenly gap-y-4">
     {cards.map((card)=>(
-      <div className="border inline-block p-12 px-32 text-center bg-slate-800">
-      <img className="w-14 h-14 rounded-full border justify-center inline-block ">{card.image}</img>
-      <div className="text-center space-y-1 ">
-      <h1 className="text-green-600 border pl-8 pr-8 text-center">{card.name}</h1>
-      <h1 className="text-red-600 border text-center">{card.follow}</h1>
-      </div>
-    </div>
-    }))
+       <div key={card.id} className=" space-x-4 hover:cursor-pointer hover:scale-105 transition-all duration-300  border inline-block  p-12 px-32 text-center bg-slate-800">
+       <img src={card.image} alt={`${card.name}avatar`} className="w-14 h-14 rounded-full border text-center inline-block"/>
+       <div className="text-center space-y-1 ">
+       <h1 className="text-green-600 border pl-8 pr-8 text-center">{card.name}</h1>
+       <h1 className="text-red-600 border text-center">{card.follow}</h1>
+       </div>
+     </div>
+    ))}
   </div>
 </div>
 
