@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-// import Login from './login';
+// import Login from './login'
+import { useNavigate } from "react-router-dom";
 const RegisterUser = () => {
+  const navigate=useNavigate()
   const [data, setData] = useState({
     username: "",
     email: "",
@@ -22,7 +24,11 @@ const RegisterUser = () => {
             "Content-Type": "application/json",
           },
         }
+        
       );
+      if (response) {
+        navigate('/login')
+      }
       setmessage("You are register successfully Pls Login now");
       console.log("User registered successfully:", response.data);
     } catch (error: any) {

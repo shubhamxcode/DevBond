@@ -7,22 +7,23 @@ function Field() {
       <h1 className="text-6xl font-extrabold text-white text-center">Select Your Field to Meet Your Developer</h1>
       <div className="flex flex-wrap justify-center gap-8">
         <Link
-        to="/user"
+        to="/profile"
           className="transition-all duration-300 ease-in-out transform hover:bg-green-600 hover:scale-105 border-2 border-transparent rounded-xl text-4xl font-semibold text-white text-center p-14 hover:cursor-pointer hover:border-green-400 shadow-md"
         >
           <h1>Frontend</h1>
         </Link>
-        <div
-          
+        <Link
+          to='/profile'
           className="transition-all duration-300 ease-in-out transform hover:bg-green-600 hover:scale-105 border-2 border-transparent rounded-xl text-4xl font-semibold text-white text-center p-14 hover:cursor-pointer hover:border-green-400 shadow-md"
         >
           <h1>Backend</h1>
-        </div>
-        <div
+        </Link>
+        <Link
+         to="/profile"
           className="transition-all duration-300 ease-in-out transform hover:bg-green-600 hover:scale-105 border-2 border-transparent rounded-xl text-4xl font-semibold text-white text-center p-14 hover:cursor-pointer hover:border-green-400 shadow-md"
         >
           <h1>Fullstack</h1>
-        </div>
+        </Link>
       </div>
      
     </div>

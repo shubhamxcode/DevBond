@@ -15,8 +15,10 @@ const LoginPage = () => {
         try {
             const response = await axios.post('/api/users/login', { email, password });
             // Redirect to profile page on successful login
-            navigate('/profile');
+            if (response) {
+            navigate('/field');
             console.log(response);
+            }
             
         } catch (err: any) {
             console.error(err); // Log the entire error object
