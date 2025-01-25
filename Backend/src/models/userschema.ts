@@ -25,12 +25,13 @@ const userSchema = new mongoose.Schema<IUser>({
     required: true,
     trim: true,
     lowercase: true,
+    
   },
   password: {
     type: String,
     required: true,
     minlength: [4, 'Password must be at least 4 characters'],
-    maxlength: [6, 'Password must be at most 6 characters'],
+    maxlength: [12, 'Password must be at most 12 characters'],
   },
   refreshToken: {
     type: String,

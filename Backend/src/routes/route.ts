@@ -1,6 +1,8 @@
 import { Router } from "express";
-import registeruser from '../controller/user.controlller'
+import { regiesteruser } from "../controller/user.controlller";
+import { loginUser } from "../controller/user.controlller";
 const routes=Router()
 
-routes.route("/register").post(registeruser )
+routes.route("/register").post(regiesteruser )
+routes.route("/login").post(loginUser)
 export default routes
