@@ -106,7 +106,7 @@ function userprof() {
       </div>
     </div>
     <div className="p-6 bg-gray-900 min-h-screen">
-  <h1 className="text-white text-4xl font-semibold text-center mb-8">Suggestions</h1>
+  <h1 className="text-green-500 text-5xl font-semibold text-center mb-8"> Developer Suggestions</h1>
   
   {/* Container for multiple suggestion boxes */}
   <div className=" flex flex-wrap justify-evenly gap-y-4">

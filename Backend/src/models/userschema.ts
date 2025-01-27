@@ -1,4 +1,4 @@
- import mongoose from 'mongoose';
+import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import Jwt from 'jsonwebtoken';
 
@@ -7,6 +7,7 @@ interface IUser {
   email: string;
   password: string;
   refreshToken?: string;
+  selectedfield:String
 }
 
 
@@ -32,6 +33,10 @@ const userSchema = new mongoose.Schema<IUser>({
     required: true,
     minlength: [4, 'Password must be at least 4 characters'],
     maxlength: [12, 'Password must be at most 12 characters'],
+  },
+  selectedfield:{
+    type:String,
+    required:true,
   },
   refreshToken: {
     type: String,
@@ -73,4 +78,6 @@ userSchema.methods.getreftoken=function(){
         }
     )
 }
+
 export const User = mongoose.model('User', userSchema);
+

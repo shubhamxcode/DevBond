@@ -61,5 +61,19 @@ const loginUser = asynchandler(async (req, res) => {
 
     return res.status(200).json(new Apiresponse("Login successful"));
 });
+const selectfield=asynchandler(async(req,res)=>{
 
-export { regiesteruser, loginUser }; 
+    const{selectedfield,userid}=req.body
+    if (!userid || !selectedfield) {
+        throw new Apierror(400,"pls select your field")
+    }
+    const user=await User.findByIdAndUpdate(userid,{selectedfield},{new:true});
+    if (!user) {
+        throw new Apierror(404,"user not found")
+    }
+    return res.status(200).json(
+        new Apiresponse(user)
+    )
+})
+
+export { regiesteruser, loginUser,selectfield}; 

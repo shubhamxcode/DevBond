@@ -1,8 +1,10 @@
 import { Router } from "express";
-import { regiesteruser } from "../controller/user.controlller";
-import { loginUser } from "../controller/user.controlller";
-const routes=Router()
+import { regiesteruser, loginUser,selectfield} from "../controller/user.controlller";
 
-routes.route("/register").post(regiesteruser )
-routes.route("/login").post(loginUser)
-export default routes
+const routes = Router();
+
+routes.route("/register").post(regiesteruser);
+routes.route("/login").post(loginUser);
+routes.route("/devfield").post(selectfield)
+
+export default routes;
