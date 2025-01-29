@@ -15,7 +15,7 @@ const regiesteruser=asynchandler(async(req,res)=>{
     
     const {username,email,password}=req.body
     console.log("email:",email,"username:",username,"password:",password);
-     
+   
     if (
         [username,email,password].some((fields)=>fields?.trim()=="")
     ) {
@@ -59,21 +59,43 @@ const loginUser = asynchandler(async (req, res) => {
         throw new Apierror(401, "Invalid credentials");
     }
 
-    return res.status(200).json(new Apiresponse("Login successful"));
+    return res.status(200).json(new Apiresponse({ userId: user._id, message: "Login successful" }));
 });
-const selectfield=asynchandler(async(req,res)=>{
 
-    const{selectedfield,userid}=req.body
-    if (!userid || !selectedfield) {
-        throw new Apierror(400,"pls select your field")
+
+
+const updateUserField = asynchandler(async (req, res) => {
+    const { userId, selectedField } = req.body;
+
+    if (!userId || !selectedField) {
+        throw new Apierror(400, "User ID and selected field are required");
     }
-    const user=await User.findByIdAndUpdate(userid,{selectedfield},{new:true});
+
+    const user = await User.findByIdAndUpdate(userId, { selectedField }, { new: true });
+
     if (!user) {
-        throw new Apierror(404,"user not found")
+        throw new Apierror(404, "User not found");
     }
-    return res.status(200).json(
-        new Apiresponse(user)
-    )
-})
 
-export { regiesteruser, loginUser,selectfield}; 
+    return res.status(200).json(new Apiresponse(user));
+});
+
+const getLoggedInUser = asynchandler(async (req, res) => {
+    // Assuming you have a middleware that verifies the token and adds `req.user`
+    const userId = req.user?._id; // Extract user ID from the verified token
+    console.log(userId)
+    if (!userId) {
+        throw new Apierror(401, "Not authenticated");
+    }
+
+    const user = await User.findById(userId).select("-password -refreshToken");
+    if (!user) {
+        throw new Apierror(404, "User not found");
+    }
+
+    res.status(200).json({ userId: user._id, username: user.username, email: user.email });
+});
+
+
+
+export { regiesteruser, loginUser, updateUserField,getLoggedInUser}; 

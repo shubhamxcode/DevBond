@@ -1,10 +1,11 @@
 import { Router } from "express";
-import { regiesteruser, loginUser,selectfield} from "../controller/user.controlller";
+import { regiesteruser, loginUser, updateUserField,getLoggedInUser } from "../controller/user.controlller";
 
 const routes = Router();
 
 routes.route("/register").post(regiesteruser);
 routes.route("/login").post(loginUser);
-routes.route("/devfield").post(selectfield)
+routes.route("/update-field").post(updateUserField);
+routes.route("/getLoggedInUser").post(getLoggedInUser);
 
 export default routes;

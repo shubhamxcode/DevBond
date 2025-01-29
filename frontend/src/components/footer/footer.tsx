@@ -1,61 +1,42 @@
-
-
 function Footer() {
   return (
-    <footer
-      style={{
-        backgroundColor: "#0d1117",
-        color: "#ffffff",
-        padding: "50px 10%",
-        textAlign: "center",
-        borderTop: "1px solid #30363d",
-        marginTop: "50px",
-      }}
-    >
-      <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "space-between" }}>
-        {/* Column 1 */}
-        <div style={{ flex: "1", minWidth: "200px", marginBottom: "30px" }}>
-          <h2 style={{ fontSize: "22px", marginBottom: "15px", color: "#58a6ff" }}>
-            About Us
-          </h2>
-          <p style={{ fontSize: "14px", lineHeight: "1.8", color: "#c9d1d9" }}>
+    <footer className="bg-gradient-to-b from-black via-gray-900 to-black  text-white py-12 px-8 mt-12 border-t border-gray-700">
+      <div className="flex flex-wrap justify-between gap-12">
+        {/* Column 1: About Us */}
+        <div className="flex-1 min-w-[200px] mb-8">
+          <h2 className="text-xl mb-4 text-blue-400">About Us</h2>
+          <p className="text-sm leading-relaxed text-gray-400">
             We aim to provide the best tools, resources, and guidance for developers to
             enhance their skills. Join us and explore a world of opportunities!
           </p>
         </div>
 
-        {/* Column 2 */}
-        <div style={{ flex: "1", minWidth: "200px", marginBottom: "30px" }}>
-          <h2 style={{ fontSize: "22px", marginBottom: "15px", color: "#58a6ff" }}>
-            Quick Links
-          </h2>
-          <ul style={{ listStyle: "none", padding: 0, color: "#c9d1d9" }}>
-            <li style={{ marginBottom: "10px", fontSize: "14px" }}>Home</li>
-            <li style={{ marginBottom: "10px", fontSize: "14px" }}>Features</li>
-            <li style={{ marginBottom: "10px", fontSize: "14px" }}>Pricing</li>
-            <li style={{ marginBottom: "10px", fontSize: "14px" }}>Contact</li>
+        {/* Column 2: Quick Links */}
+        <div className="flex-1 min-w-[200px] mb-8">
+          <h2 className="text-xl mb-4 text-blue-400">Quick Links</h2>
+          <ul className="text-sm text-gray-400">
+            <li className="mb-2 hover:text-blue-400 transition-colors cursor-pointer">Home</li>
+            <li className="mb-2 hover:text-blue-400 transition-colors cursor-pointer">Features</li>
+            <li className="mb-2 hover:text-blue-400 transition-colors cursor-pointer">Pricing</li>
+            <li className="mb-2 hover:text-blue-400 transition-colors cursor-pointer">Contact</li>
           </ul>
         </div>
 
-        {/* Column 3 */}
-        <div style={{ flex: "1", minWidth: "200px", marginBottom: "30px" }}>
-          <h2 style={{ fontSize: "22px", marginBottom: "15px", color: "#58a6ff" }}>
-            Resources
-          </h2>
-          <ul style={{ listStyle: "none", padding: 0, color: "#c9d1d9" }}>
-            <li style={{ marginBottom: "10px", fontSize: "14px" }}>Blog</li>
-            <li style={{ marginBottom: "10px", fontSize: "14px" }}>Documentation</li>
-            <li style={{ marginBottom: "10px", fontSize: "14px" }}>FAQs</li>
-            <li style={{ marginBottom: "10px", fontSize: "14px" }}>API</li>
+        {/* Column 3: Resources */}
+        <div className="flex-1 min-w-[200px] mb-8">
+          <h2 className="text-xl mb-4 text-blue-400">Resources</h2>
+          <ul className="text-sm text-gray-400">
+            <li className="mb-2 hover:text-blue-400 transition-colors cursor-pointer">Blog</li>
+            <li className="mb-2 hover:text-blue-400 transition-colors cursor-pointer">Documentation</li>
+            <li className="mb-2 hover:text-blue-400 transition-colors cursor-pointer">FAQs</li>
+            <li className="mb-2 hover:text-blue-400 transition-colors cursor-pointer">API</li>
           </ul>
         </div>
 
-        {/* Column 4 */}
-        <div style={{ flex: "1", minWidth: "200px", marginBottom: "30px" }}>
-          <h2 style={{ fontSize: "22px", marginBottom: "15px", color: "#58a6ff" }}>
-            Contact Us
-          </h2>
-          <p style={{ fontSize: "14px", lineHeight: "1.8", color: "#c9d1d9" }}>
+        {/* Column 4: Contact Us */}
+        <div className="flex-1 min-w-[200px] mb-8">
+          <h2 className="text-xl mb-4 text-blue-400">Contact Us</h2>
+          <p className="text-sm leading-relaxed text-gray-400">
             Email: support@coolfooter.com
             <br />
             Phone: +123 456 7890
@@ -66,81 +47,24 @@ function Footer() {
       </div>
 
       {/* Social Media */}
-      <div style={{ marginTop: "30px" }}>
-        <h3 style={{ fontSize: "18px", color: "#58a6ff", marginBottom: "15px" }}>
-          Follow Us
-        </h3>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            gap: "15px",
-          }}
-        >
-          <div
-            style={{
-              width: "40px",
-              height: "40px",
-              background: "#21262d",
-              borderRadius: "50%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              transition: "transform 0.3s ease",
-            }}
-            onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-            onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          >
-            <span style={{ fontSize: "18px" }}>G</span>
+      <div className="mt-8">
+        <h3 className="text-lg text-blue-400 mb-4">Follow Us</h3>
+        <div className="flex justify-center gap-4">
+          {/* Social Media Icons */}
+          <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center cursor-pointer transition-transform transform hover:scale-110">
+            <span className="text-xl">G</span>
           </div>
-          <div
-            style={{
-              width: "40px",
-              height: "40px",
-              background: "#21262d",
-              borderRadius: "50%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              transition: "transform 0.3s ease",
-            }}
-            onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-            onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          >
-            <span style={{ fontSize: "18px" }}>L</span>
+          <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center cursor-pointer transition-transform transform hover:scale-110">
+            <span className="text-xl">L</span>
           </div>
-          <div
-            style={{
-              width: "40px",
-              height: "40px",
-              background: "#21262d",
-              borderRadius: "50%",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              cursor: "pointer",
-              transition: "transform 0.3s ease",
-            }}
-            onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-            onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
-          >
-            <span style={{ fontSize: "18px" }}>T</span>
+          <div className="w-10 h-10 bg-gray-700 rounded-full flex items-center justify-center cursor-pointer transition-transform transform hover:scale-110">
+            <span className="text-xl">T</span>
           </div>
         </div>
       </div>
 
       {/* Footer Bottom */}
-      <div
-        style={{
-          borderTop: "1px solid #30363d",
-          marginTop: "30px",
-          paddingTop: "20px",
-          fontSize: "14px",
-          color: "#8b949e",
-        }}
-      >
+      <div className="border-t border-gray-700 mt-8 pt-4 text-sm text-gray-500">
         <p>© {new Date().getFullYear()} Cool Footer. All rights reserved.</p>
       </div>
     </footer>

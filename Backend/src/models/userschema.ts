@@ -7,7 +7,7 @@ interface IUser {
   email: string;
   password: string;
   refreshToken?: string;
-  selectedfield:String
+  selectedField?: string;
 }
 
 
@@ -34,9 +34,9 @@ const userSchema = new mongoose.Schema<IUser>({
     minlength: [4, 'Password must be at least 4 characters'],
     maxlength: [12, 'Password must be at most 12 characters'],
   },
-  selectedfield:{
-    type:String,
-    required:true,
+  selectedField: {
+    type: String,
+    required: false,
   },
   refreshToken: {
     type: String,

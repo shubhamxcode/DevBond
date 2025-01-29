@@ -6,10 +6,9 @@ function Field() {
 
   const handleFieldSelect = async (field: string) => {
     setSelectedField(field)
-    const userId ="userid" // Replace with actual user ID from context or props
-
+    const userId =""
     try {
-      await axios.post("/api/users/devfield", { userId, selectedField: field })
+      await axios.post("/api/users/update-field", { userId, selectedField: field })
       console.log("Field updated successfully")
     } catch (error) {
       console.error("Error updating field:", error)
