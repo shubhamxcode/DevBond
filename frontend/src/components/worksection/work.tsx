@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { IoCreateOutline } from "react-icons/io5";
 import { motion, AnimatePresence } from "framer-motion";
+import Sinupimg from '../../Animation/Sinupimg';
+import LoginBackground from "../../Animation/Loginimg";
+import FieldBackground from "../../Animation/Fieldimg";
 
 interface Card {
   id: number;
-  num: number;
   image: JSX.Element;
   step: string;
   description: string;
@@ -13,24 +14,33 @@ interface Card {
 const cards: Card[] = [
   {
     id: 1,
-    num: 1,
-    image: <IoCreateOutline />,
+    image: (
+      <div className="w-full h-auto">
+        <Sinupimg />
+      </div>
+    ),
     step: "Step 1: Signup",
     description:
       "Create Accounts using GitHub and LeetCode to Earn Points and Enhance Website Development Skills",
   },
   {
     id: 2,
-    num: 2,
-    image: <IoCreateOutline />,
+    image: (
+      <div className="w-full h-auto">
+        <LoginBackground />
+      </div>
+    ),
     step: "Step 2: Login with GitHub/LeetCode",
     description:
       "Create Accounts on GitHub and LeetCode to Earn Points and Enhance Website Development Skills",
   },
   {
     id: 3,
-    num: 3,
-    image: <IoCreateOutline />,
+    image: (
+      <div className="min-w-full m-auto mt-[-40px]">
+        <FieldBackground />
+      </div>
+    ),
     step: "Step 3: Select Your Field",
     description:
       "Create Accounts on GitHub and LeetCode to Earn Points and Enhance your profile and unlock developer sticker",
@@ -42,7 +52,7 @@ function Work() {
   const selectcard = cards.find((card) => selectedId === card.id);
 
   return (
-    <div className=" bg-gradient-to-b from-black via-gray-900 to-black  p-5">
+    <div className="mt-24 bg-gradient-to-b from-black via-gray-900 to-black p-5">
       <div id="content" className="max-w-7xl mx-auto">
         <h1 className="text-center text-5xl font-bold mb-10 text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-gray-500">
           HOW IT WORKS?
@@ -59,10 +69,9 @@ function Work() {
                 className="h-96 flex flex-col items-center justify-center p-6 rounded-xl bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 shadow-2xl hover:shadow-gray-500/50 transition-all duration-300 hover:scale-105"
                 whileHover={{ y: -10 }}
               >
-                <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-r from-gray-500 to-gray-600 text-white text-2xl font-bold mb-6">
-                  {card.num}
+                <div className="text-4xl text-gray-300 mb-4 w-full">
+                  {card.image}
                 </div>
-                <div className="text-4xl text-gray-300 mb-4">{card.image}</div>
                 <h2 className="text-xl font-semibold text-gray-300 mb-2">
                   {card.step}
                 </h2>
@@ -92,9 +101,6 @@ function Work() {
                 exit={{ y: -50, opacity: 0 }}
               >
                 <div className="text-center">
-                  <div className="w-16 h-16 flex items-center justify-center rounded-full bg-gradient-to-r from-gray-500 to-gray-600 text-white text-2xl font-bold mb-6 mx-auto">
-                    {selectcard.num}
-                  </div>
                   <h2 className="text-xl font-semibold text-gray-300 mb-4">
                     {selectcard.step}
                   </h2>

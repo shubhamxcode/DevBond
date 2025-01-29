@@ -1,16 +1,18 @@
-import Interaction from '../../Animation/developerINteraction'
+import { FaMagic, FaChartLine, FaRobot, FaTrophy, FaAward, FaUsers } from 'react-icons/fa'; // Import icons from React Icons
+import Interaction from '../../Animation/developerINteraction';
 import Profileinhance from '../../Animation/profileInhace';
 import Chatbot from '../../Animation/guidancechatbot';
 import Leaderboard from '../../Animation/leaderboard';
 import Badges from '../../Animation/Badges';
 import CommunitySupport from '../../Animation/Community Support';
+
 function Page() {
   interface CardDataType {
     id: number;
     num: number;
     image?: string; // Optional for cards without an image
     animation?: React.ReactNode; // Optional for cards with an animation
-    icon: string;
+    icon: React.ReactNode; // Updated to use React.ReactNode for icons
     title: string;
     description: string;
   }
@@ -20,47 +22,47 @@ function Page() {
       id: 1, 
       num: 1, 
       animation: <Interaction />, 
-      icon: '✨', 
+      icon: <FaMagic className="text-4xl text-purple-600" />, // Purple color
       title: 'Interactive Feature', 
       description: 'Experience engaging animations that enhance your learning journey.' 
     },
     { 
       id: 2, 
       num: 2, 
-     animation:<Profileinhance/>,
-      icon: '📊', 
+      animation: <Profileinhance />,
+      icon: <FaChartLine className="text-4xl text-green-500" />, // Green color
       title: 'Profile Enhancement', 
       description: 'Enhance your profile with achievements and projects on GitHub and LeetCode.' 
     },
     { 
       id: 3, 
-      num: 2, 
-     animation:<Chatbot/>,
-      icon: '📊', 
+      num: 3, 
+      animation: <Chatbot />,
+      icon: <FaRobot className="text-4xl text-blue-400" />, // Blue color
       title: 'Guidance Chatbot', 
       description: 'Receive guidance and suggestions from our chatbot based on your progress.' 
     },
     { 
       id: 4, 
-      num: 2, 
-     animation:<Leaderboard/>,
-      icon: '📊', 
+      num: 4, 
+      animation: <Leaderboard />,
+      icon: <FaTrophy className="text-4xl text-yellow-400" />, // Yellow color
       title: 'Leaderboard System', 
       description: 'Compete with peers and track your performance on the leaderboard.'
     },
     { 
       id: 5, 
-      num: 2, 
-     animation:<Badges/>,
-      icon: '📊', 
+      num: 5, 
+      animation: <Badges />,
+      icon: <FaAward className="text-4xl text-red-500" />, // Red color
       title: 'Skill Badges',
       description: 'Earn badges for completing challenges and improving your skills.' 
     },
     { 
       id: 6, 
-      num: 2, 
-     animation:<CommunitySupport/>,
-      icon: '📊', 
+      num: 6, 
+      animation: <CommunitySupport />,
+      icon: <FaUsers className="text-4xl text-pink-400" />, // Pink color
       title: 'Community Support',  
       description: 'Connect with other developers for support and networking opportunities.'
     },
@@ -91,7 +93,7 @@ function Page() {
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
               <div className="absolute bottom-4 left-4 text-white text-2xl font-semibold flex items-center gap-3">
-                <span className="text-4xl drop-shadow-md">{card.icon}</span>
+                <span className="drop-shadow-md">{card.icon}</span> {/* Render the icon here */}
                 <span>{card.num}.</span>
               </div>
             </div>

@@ -1,7 +1,16 @@
 import { motion } from "framer-motion";
 import LottieAnimation from "../../Animation/LottieAnimation";
+import Introvideo from '../videos/Devbond intro.mp4'
+import { useRef } from 'react';
 
 function Page() {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleLoadedMetadata = () => {
+    if (videoRef.current) {
+      videoRef.current.currentTime = 4; // Start video at 3 seconds
+    }
+  };
 
   return (
     <>
@@ -59,6 +68,17 @@ function Page() {
           </motion.div>
         </div>
       </motion.div>
+      <video
+              ref={videoRef}
+              src={Introvideo}
+              autoPlay
+              muted
+              loop
+              className=" rounded-3xl flex m-auto w-[100%] border-2 border-gray-800"
+              onLoadedMetadata={handleLoadedMetadata}
+            >
+              Your browser does not support the video tag.
+            </video>
     </>
   );
 }
