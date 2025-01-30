@@ -6,9 +6,9 @@ const Nav: FC = () => {
   return (
     <div className="text-white">
       <nav className="flex justify-between items-center p-4 bg-gradient-to-b from-black via-gray-900 to-black  border-gray-700 shadow-lg">
-        <div className="text-5xl text-white bg-gradient-to-r from-blue-600 to-blue-500 p-3 rounded-full hover:from-blue-500 hover:to-blue-400 transition-all duration-300 transform hover:scale-110">
+        <Link to="/" className="text-5xl text-white bg-gradient-to-r from-blue-600 to-blue-500 p-3 rounded-full hover:from-blue-500 hover:to-blue-400 transition-all duration-300 transform hover:scale-110">
           <GiBodySwapping />
-        </div>
+        </Link>
         <ul className="flex gap-8 text-2xl font-medium">
           <Link to="/" className="hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-300 cursor-pointer">
             Home
