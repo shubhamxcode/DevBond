@@ -1,15 +1,32 @@
-import { FC } from "react";
+import { FC, useState } from "react";
 import { GiBodySwapping } from "react-icons/gi";
 import { Link } from "react-router-dom";
 
 const Nav: FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
   return (
     <div className="text-white">
-      <nav className="flex justify-between items-center p-4 bg-gradient-to-b from-black via-gray-900 to-black  border-gray-700 shadow-lg">
+      <nav className="flex justify-between items-center p-4 bg-gradient-to-b from-black via-gray-900 to-black border-gray-700 shadow-lg">
+        {/* Logo */}
         <Link to="/" className="text-5xl text-white bg-gradient-to-r from-blue-600 to-blue-500 p-3 rounded-full hover:from-blue-500 hover:to-blue-400 transition-all duration-300 transform hover:scale-110">
           <GiBodySwapping />
         </Link>
-        <ul className="flex gap-8 text-2xl font-medium">
+
+        {/* Mobile Menu Button - Only for small screens */}
+        <button
+          onClick={toggleMenu}
+          className="text-2xl text-white focus:outline-none md:hidden" // Changed from lg:hidden to md:hidden
+        >
+          ☰
+        </button>
+
+        {/* Navigation Links - Visible on md screens and larger */}
+        <ul className={`hidden md:flex gap-8 text-2xl font-medium ${isMenuOpen ? "flex flex-col absolute top-16 right-4 bg-gray-900 p-4 rounded-lg shadow-lg" : "hidden"}`}>
           <Link to="/" className="hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-300 cursor-pointer">
             Home
           </Link>
@@ -27,8 +44,8 @@ const Nav: FC = () => {
           </Link>
         </ul>
 
-        {/* Adjust Link to point to the correct Signin component */}
-        <Link to='/signup' className="text-2xl px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 transition-all duration-300 font-semibold transform hover:scale-105">
+        {/* Login Button - Visible on md screens and larger */}
+        <Link to='/signup' className="hidden md:block text-2xl px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 transition-all duration-300 font-semibold transform hover:scale-105">
           Login
         </Link>
       </nav>
