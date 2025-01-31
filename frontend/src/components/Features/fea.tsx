@@ -1,10 +1,5 @@
 import { FaMagic, FaChartLine, FaRobot, FaTrophy, FaAward, FaUsers } from 'react-icons/fa'; // Import icons from React Icons
-import Interaction from '../../Animation/developerINteraction';
-import Profileinhance from '../../Animation/profileInhace';
-import Chatbot from '../../Animation/guidancechatbot';
-import Leaderboard from '../../Animation/leaderboard';
-import Badges from '../../Animation/Badges';
-import CommunitySupport from '../../Animation/Community Support';
+
 
 function Page() {
   interface CardDataType {
@@ -21,7 +16,7 @@ function Page() {
     { 
       id: 1, 
       num: 1, 
-      animation: <Interaction />, 
+       
       icon: <FaMagic className="text-4xl text-purple-600" />, // Purple color
       title: 'Interactive Feature', 
       description: 'Experience engaging animations that enhance your learning journey.' 
@@ -29,7 +24,7 @@ function Page() {
     { 
       id: 2, 
       num: 2, 
-      animation: <Profileinhance />,
+     
       icon: <FaChartLine className="text-4xl text-green-500" />, // Green color
       title: 'Profile Enhancement', 
       description: 'Enhance your profile with achievements and projects on GitHub and LeetCode.' 
@@ -37,7 +32,7 @@ function Page() {
     { 
       id: 3, 
       num: 3, 
-      animation: <Chatbot />,
+      
       icon: <FaRobot className="text-4xl text-blue-400" />, // Blue color
       title: 'Guidance Chatbot', 
       description: 'Receive guidance and suggestions from our chatbot based on your progress.' 
@@ -45,7 +40,7 @@ function Page() {
     { 
       id: 4, 
       num: 4, 
-      animation: <Leaderboard />,
+     
       icon: <FaTrophy className="text-4xl text-yellow-400" />, // Yellow color
       title: 'Leaderboard System', 
       description: 'Compete with peers and track your performance on the leaderboard.'
@@ -53,7 +48,7 @@ function Page() {
     { 
       id: 5, 
       num: 5, 
-      animation: <Badges />,
+     
       icon: <FaAward className="text-4xl text-red-500" />, // Red color
       title: 'Skill Badges',
       description: 'Earn badges for completing challenges and improving your skills.' 
@@ -61,7 +56,7 @@ function Page() {
     { 
       id: 6, 
       num: 6, 
-      animation: <CommunitySupport />,
+     
       icon: <FaUsers className="text-4xl text-pink-400" />, // Pink color
       title: 'Community Support',  
       description: 'Connect with other developers for support and networking opportunities.'

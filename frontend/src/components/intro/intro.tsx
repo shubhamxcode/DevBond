@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import LottieAnimation from "../../Animation/LottieAnimation";
+
 import Introvideo from '../videos/Devbond intro.mp4'
 import { useRef } from 'react';
 
@@ -64,7 +64,7 @@ function Page() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 1, delay: 2 }}
           >
-            <LottieAnimation/>
+           
           </motion.div>
         </div>
       </motion.div>

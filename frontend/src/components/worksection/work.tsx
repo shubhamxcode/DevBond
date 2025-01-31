@@ -1,8 +1,5 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Sinupimg from '../../Animation/Sinupimg';
-import LoginBackground from "../../Animation/Loginimg";
-import FieldBackground from "../../Animation/Fieldimg";
 
 interface Card {
   id: number;
@@ -16,7 +13,7 @@ const cards: Card[] = [
     id: 1,
     image: (
       <div className="w-full h-auto">
-        <Sinupimg />
+        {/* <Sinupimg /> */}
       </div>
     ),
     step: "Step 1: Signup",
@@ -27,7 +24,7 @@ const cards: Card[] = [
     id: 2,
     image: (
       <div className="w-full h-auto">
-        <LoginBackground />
+        {/* <LoginBackground /> */}
       </div>
     ),
     step: "Step 2: Login with GitHub/LeetCode",
@@ -38,7 +35,7 @@ const cards: Card[] = [
     id: 3,
     image: (
       <div className="min-w-full m-auto mt-[-40px]">
-        <FieldBackground />
+        {/* <FieldBackground /> */}
       </div>
     ),
     step: "Step 3: Select Your Field",
