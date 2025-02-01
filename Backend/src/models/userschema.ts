@@ -79,5 +79,7 @@ userSchema.methods.getreftoken=function(){
     )
 }
 
+
 export const User = mongoose.model('User', userSchema);
 
+console.log(User);

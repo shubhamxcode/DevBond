@@ -59,14 +59,14 @@ const loginUser = asynchandler(async (req, res) => {
         throw new Apierror(401, "Invalid credentials");
     }
 
-    return res.status(200).json(new Apiresponse({ userId: user._id, message: "Login successful" }));
+    return res.status(200).json(new Apiresponse({ UserId: user._id, message: "Login successful" }));
 });
 
 
 
 const updateUserField = asynchandler(async (req, res) => {
+    console.log(req.body); // Log the request body
     const { userId, selectedField } = req.body;
-
     if (!userId || !selectedField) {
         throw new Apierror(400, "User ID and selected field are required");
     }
@@ -80,22 +80,4 @@ const updateUserField = asynchandler(async (req, res) => {
     return res.status(200).json(new Apiresponse(user));
 });
 
-const getLoggedInUser = asynchandler(async (req, res) => {
-    // Assuming you have a middleware that verifies the token and adds `req.user`
-    const userId = req.user?._id; // Extract user ID from the verified token
-    console.log(userId)
-    if (!userId) {
-        throw new Apierror(401, "Not authenticated");
-    }
-
-    const user = await User.findById(userId).select("-password -refreshToken");
-    if (!user) {
-        throw new Apierror(404, "User not found");
-    }
-
-    res.status(200).json({ userId: user._id, username: user.username, email: user.email });
-});
-
-
-
-export { regiesteruser, loginUser, updateUserField,getLoggedInUser}; 
+export { regiesteruser, loginUser, updateUserField}; 

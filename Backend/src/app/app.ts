@@ -1,23 +1,22 @@
-import express from 'express'
+import express from 'express';
 import Cors from 'cors';
-import cookieparser from 'cookie-parser'
+import cookieparser from 'cookie-parser';
 
-const app =express()
+const app = express();
+
 app.use(Cors({
-    origin:process.env.CORS_ORIGIN,
-    methods: ['GET','POST', 'PUT', 'DELETE'],
-    credentials:true
-}))
-app.use(express.json({limit:"16kb"}));
-app.use(express.urlencoded({extended:true,limit:"16kb"}))
-app.use(cookieparser())
+    origin: process.env.CORS_ORIGIN,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
+}));
+app.use(express.json({ limit: "16kb" }));
+app.use(express.urlencoded({ extended: true, limit: "16kb" }));
+app.use(cookieparser());
 
-//import routes 
+// Import your routes here
+import userrouter from '../routes/route.ts';
 
-import userrouter from '../routes/route.ts'
+app.use("/api/users", userrouter);
 
-// routes declaration
-
-app.use("/api/users",userrouter)
-//http://localhost2000/api/v1/users/
-export default app
+// Export your app as the handler for Vercel
+export default app;
