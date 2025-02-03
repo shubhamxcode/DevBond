@@ -59,7 +59,11 @@ const loginUser = asynchandler(async (req, res) => {
         throw new Apierror(401, "Invalid credentials");
     }
 
-    return res.status(200).json(new Apiresponse({ UserId: user._id, message: "Login successful" }));
+    return res.status(200).json({
+        UserId: user._id,
+        username: user.username,
+        message: "Login successful"
+    });
 });
 
 
@@ -80,4 +84,9 @@ const updateUserField = asynchandler(async (req, res) => {
     return res.status(200).json(new Apiresponse(user));
 });
 
-export { regiesteruser, loginUser, updateUserField}; 
+const getAllUsers = asynchandler(async (req, res) => {
+    const users = await User.find();
+    return res.status(200).json(users);
+});
+
+export { regiesteruser, loginUser, updateUserField, getAllUsers}; 

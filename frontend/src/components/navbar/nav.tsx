@@ -1,9 +1,11 @@
 import { FC, useState } from "react";
 import { GiBodySwapping } from "react-icons/gi";
 import { Link } from "react-router-dom";
+import { useUser } from "../../context/UserContext";
 
 const Nav: FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { username } = useUser();
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -62,13 +64,19 @@ const Nav: FC = () => {
           </Link>
         </ul>
 
-        {/* Login Button - Visible on md screens and larger */}
-        <Link
-          to="/signup"
-          className="hidden md:block text-2xl px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 transition-all duration-300 font-semibold transform hover:scale-105"
-        >
-          Login
-        </Link>
+        {/* Conditional Rendering for Login or Username */}
+        <div className="hidden md:block text-2xl px-6 py-2 rounded-full">
+          {username ? (
+            <span className="text-white">{username}</span>
+          ) : (
+            <Link
+              to="/signup"
+              className="text-2xl px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 transition-all duration-300 font-semibold transform hover:scale-105"
+            >
+              Login
+            </Link>
+          )}
+        </div>
 
         {/* Mobile Menu - Visible only on small screens */}
         {isMenuOpen && (
@@ -103,13 +111,18 @@ const Nav: FC = () => {
             >
               Help
             </Link>
-            {/* Login Button in Mobile Menu */}
-            <Link
-              to="/signup"
-              className="text-center px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 transition-all duration-300 font-semibold transform hover:scale-105"
-            >
-              Login
-            </Link>
+            <li>
+              {username ? (
+                <span className="text-white">{username}</span>
+              ) : (
+                <Link
+                  to="/signup"
+                  className="text-center px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 transition-all duration-300 font-semibold transform hover:scale-105"
+                >
+                  Login
+                </Link>
+              )}
+            </li>
           </ul>
         )}
       </nav>
