@@ -38,7 +38,7 @@ const regiesteruser=asynchandler(async(req,res)=>{
         throw new Apierror(500,"something went wrong sorry ")
     }
     return res.status(201).json(
-        new Apiresponse("user register succesfully")
+        new Apiresponse(createdUser,"user register succesfully")
     )
 })
 

@@ -15,7 +15,8 @@ const LoginPage = () => {
         setError('');
 
         try {
-            const response = await axios.post('/api/users/login', { email, password });
+            const Render=import.meta.env.RENDER_URL_
+            const response = await axios.post(`${Render}/api/users/login`, { email, password });
             // Redirect to profile page on successful login
             if (response) {
                 setUsername(response.data.username);

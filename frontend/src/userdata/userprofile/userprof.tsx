@@ -3,7 +3,12 @@ import { TbBaselineDensityMedium } from "react-icons/tb";
 import axios from "axios";
 
 function UserProf() {
-  const [users, setUsers] = useState([]); // State to hold the users
+  interface User{
+    username:string,
+    _id:string,
+    image?:string
+  }
+  const [users, setUsers] = useState<User[]>([]); // State to hold the users
   const [loading, setLoading] = useState(true); // State to manage loading state
   const [error, setError] = useState(""); // State to manage error messages
 
