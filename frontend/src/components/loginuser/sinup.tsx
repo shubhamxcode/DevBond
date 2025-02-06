@@ -16,9 +16,8 @@ const RegisterUser = () => {
     e.preventDefault();
 
     try {
-      const Render=import.meta.env.RENDER_URL_
       const response = await axios.post(
-       `${Render}/api/users/register`,
+        "/api/users/register",
         data, // Pass the user data as the request body
         {
           headers: {
