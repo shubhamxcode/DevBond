@@ -1,132 +1,157 @@
-import { FC, useState } from "react";
-import { GiBodySwapping } from "react-icons/gi";
-import { Link } from "react-router-dom";
+import { FC, useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { useUser } from "../../context/UserContext";
+import { motion, AnimatePresence } from "framer-motion";
+import { RiRocketLine } from "react-icons/ri";
+import { HiOutlineMenuAlt4, HiOutlineX } from "react-icons/hi";
 
 const Nav: FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { username } = useUser();
+  const location = useLocation();
 
-  const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
-  };
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const navLinks = [
+    { path: "/", label: "Home" },
+    { path: "/feature", label: "Features" },
+    { path: "/work", label: "Work" },
+    { path: "/contact", label: "Contact" },
+    { path: "/help", label: "Help" },
+  ];
+
 
   return (
-    <div className="text-white">
-      <nav className="flex justify-between items-center p-4 bg-gradient-to-b from-black via-gray-900 to-black border-gray-700 shadow-lg">
-        {/* Logo */}
-        <Link
-          to="/"
-          className="text-5xl text-white bg-gradient-to-r from-blue-600 to-blue-500 p-3 rounded-full hover:from-blue-500 hover:to-blue-400 transition-all duration-300 transform hover:scale-110"
-        >
-          <GiBodySwapping />
-        </Link>
+    <header 
+      className={`fixed w-full top-0 z-50 transition-all duration-300 ${
+        isScrolled ? 'bg-gray-950/95 backdrop-blur-lg border-b border-gray-800/50' : ''
+      }`}
+    >
+      <div className="max-w-[1536px] mx-auto">
+        <nav className="flex items-center justify-between h-20 px-4">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-3">
+            <div className="relative group">
+              <div className="absolute -inset-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur opacity-40 group-hover:opacity-75 transition duration-300" />
+              <div className="relative p-2">
+                <RiRocketLine className="h-8 w-8 text-blue-500" />
+              </div>
+            </div>
+            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
+              BOND
+            </span>
+          </Link>
 
-        {/* Mobile Menu Button - Only for small screens */}
-        <button
-          onClick={toggleMenu}
-          className="text-2xl text-white focus:outline-none md:hidden"
-        >
-          ☰
-        </button>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center gap-8">
+            {/* Nav Links */}
+            <div className="flex items-center gap-6">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  className={`relative px-2 py-1 text-sm font-medium transition-colors duration-200 ${
+                    location.pathname === link.path 
+                      ? 'text-blue-400' 
+                      : 'text-gray-400 hover:text-white'
+                  }`}
+                >
+                  {link.label}
+                  {location.pathname === link.path && (
+                    <span className="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-blue-400 to-purple-400" />
+                  )}
+                </Link>
+              ))}
+            </div>
 
-        {/* Navigation Links - Visible on md screens and larger */}
-        <ul className="hidden md:flex gap-8 text-2xl font-medium">
-          <Link
-            to="/"
-            className="hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-300 cursor-pointer"
-          >
-            Home
-          </Link>
-          <Link
-            to="/feature"
-            className="hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-300 cursor-pointer"
-          >
-            Feature
-          </Link>
-          <Link
-            to="/work"
-            className="hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-300 cursor-pointer"
-          >
-            Work
-          </Link>
-          <Link
-            to="/contact"
-            className="hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-300 cursor-pointer"
-          >
-            Contact
-          </Link>
-          <Link
-            to="/help"
-            className="hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-300 cursor-pointer"
-          >
-            Help
-          </Link>
-        </ul>
-
-        {/* Conditional Rendering for Login or Username */}
-        <div className="hidden md:block text-2xl px-6 py-2 rounded-full">
-          {username ? (
-            <span className="text-white">{username}</span>
-          ) : (
-            <Link
-              to="/signup"
-              className="text-2xl px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 transition-all duration-300 font-semibold transform hover:scale-105"
-            >
-              Login
-            </Link>
-          )}
-        </div>
-
-        {/* Mobile Menu - Visible only on small screens */}
-        {isMenuOpen && (
-          <ul className="md:hidden flex flex-col absolute top-16 right-4 bg-gray-900 p-4 rounded-lg shadow-lg gap-4 text-2xl font-medium">
-            <Link
-              to="/"
-              className="hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-300 cursor-pointer"
-            >
-              Home
-            </Link>
-            <Link
-              to="/feature"
-              className="hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-300 cursor-pointer"
-            >
-              Feature
-            </Link>
-            <Link
-              to="/work"
-              className="hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-300 cursor-pointer"
-            >
-              Work
-            </Link>
-            <Link
-              to="/contact"
-              className="hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-300 cursor-pointer"
-            >
-              Contact
-            </Link>
-            <Link
-              to="/help"
-              className="hover:text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-300 cursor-pointer"
-            >
-              Help
-            </Link>
-            <li>
+            {/* Auth Button */}
+            <div className="pl-6 border-l border-gray-800">
               {username ? (
-                <span className="text-white">{username}</span>
+                <div className="flex items-center gap-3 bg-gray-900/50 px-4 py-2 rounded-full">
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
+                    <span className="text-sm font-medium text-white">
+                      {username[0].toUpperCase()}
+                    </span>
+                  </div>
+                  <span className="text-sm text-gray-300">{username}</span>
+                </div>
               ) : (
                 <Link
                   to="/signup"
-                  className="text-center px-6 py-2 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 transition-all duration-300 font-semibold transform hover:scale-105"
+                  className="px-6 py-2 text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 
+                           rounded-full hover:from-blue-500 hover:to-purple-500 transition-all duration-200"
                 >
-                  Login
+                  Sign In
                 </Link>
               )}
-            </li>
-          </ul>
-        )}
-      </nav>
-    </div>
+            </div>
+          </div>
+
+          {/* Mobile Menu Button */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden p-2 text-gray-400 hover:text-white focus:outline-none"
+          >
+            {isMenuOpen ? (
+              <HiOutlineX className="h-6 w-6" />
+            ) : (
+              <HiOutlineMenuAlt4 className="h-6 w-6" />
+            )}
+          </button>
+        </nav>
+
+        {/* Mobile Menu */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden px-4 pb-4"
+            >
+              <div className="bg-gray-900/95 backdrop-blur-lg rounded-2xl border border-gray-800/50 overflow-hidden">
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.path}
+                    to={link.path}
+                    onClick={() => setIsMenuOpen(false)}
+                    className={`block px-4 py-3 text-sm font-medium transition-colors duration-200 ${
+                      location.pathname === link.path
+                        ? 'text-blue-400 bg-gray-800/50'
+                        : 'text-gray-400 hover:text-white hover:bg-gray-800/30'
+                    }`}
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+                {!username && (
+                  <div className="p-4 border-t border-gray-800/50">
+                    <Link
+                      to="/signup"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block w-full py-2.5 text-center text-sm font-medium text-white 
+                               bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg
+                               hover:from-blue-500 hover:to-purple-500 transition-all duration-200"
+                    >
+                      Sign In
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+    </header>
   );
 };
 

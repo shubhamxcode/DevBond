@@ -49,8 +49,8 @@ function Work() {
   const selectcard = cards.find((card) => selectedId === card.id);
 
   return (
-    <div className=" bg-gradient-to-b from-black via-gray-900 to-black px-4 py-8 sm:p-6 lg:p-8">
-      <div id="content" className="max-w-7xl mx-auto">
+    <section className="bg-gradient-to-b from-black via-gray-900 to-black">
+      <div className="container mx-auto px-4 py-16 md:py-24">
         <h1 className="text-center text-3xl sm:text-4xl md:text-5xl font-bold mb-6 md:mb-10 text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-gray-500">
           HOW IT WORKS?
         </h1>
@@ -117,7 +117,7 @@ function Work() {
           )}
         </AnimatePresence>
       </div>
-    </div>
+    </section>
   );
 }
 
