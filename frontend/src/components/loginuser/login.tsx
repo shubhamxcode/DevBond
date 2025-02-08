@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useUser } from '../../context/UserContext';
-
+// import { useUser } from '../../context/UserContext';
+import { useDispatch } from 'react-redux';
+import { setUsername } from '../Slices/userslice';
 const LoginPage = () => {
-    const { setUsername } = useUser();
+    const dispatch = useDispatch();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -16,13 +17,12 @@ const LoginPage = () => {
 
         try {
             const response = await axios.post('/api/users/login', { email, password });
-            // Redirect to profile page on successful login
             if (response) {
-                setUsername(response.data.username);
+                dispatch(setUsername(response.data.username));
                 navigate('/field');
             }
         } catch (err: any) {
-            console.error(err); // Log the entire error object
+            console.error(err);
             setError(err.response?.data?.message || "Login failed");
         }
     };

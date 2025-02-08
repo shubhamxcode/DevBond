@@ -1,14 +1,14 @@
 import { FC, useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { useUser } from "../../context/UserContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { RiRocketLine } from "react-icons/ri";
 import { HiOutlineMenuAlt4, HiOutlineX } from "react-icons/hi";
-
+import { RootState } from "../../Redux/store";
+import { useSelector } from "react-redux";
 const Nav: FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { username } = useUser();
+  const username = useSelector((state: RootState) => state.userProfile.username);
   const location = useLocation();
 
   // Handle scroll effect

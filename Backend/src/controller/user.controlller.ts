@@ -44,7 +44,7 @@ const regiesteruser=asynchandler(async(req,res)=>{
 
 const loginUser = asynchandler(async (req, res) => {
     const { email, password } = req.body;
-
+    
     if (!email || !password) {
         throw new Apierror(400, "Email and password are required");
     }
@@ -68,25 +68,25 @@ const loginUser = asynchandler(async (req, res) => {
 
 
 
-const updateUserField = asynchandler(async (req, res) => {
-    console.log(req.body); // Log the request body
-    const { userId, selectedField } = req.body;
-    if (!userId || !selectedField) {
-        throw new Apierror(400, "User ID and selected field are required");
-    }
+// const updateUserField = asynchandler(async (req, res) => {
+//     console.log(req.body); // Log the request body
+//     const { userId, selectedField } = req.body;
+//     if (!userId || !selectedField) {
+//         throw new Apierror(400, "User ID and selected field are required");
+//     }
 
-    const user = await User.findByIdAndUpdate(userId, { selectedField }, { new: true });
+//     const user = await User.findByIdAndUpdate(userId, { selectedField }, { new: true });
 
-    if (!user) {
-        throw new Apierror(404, "User not found");
-    }
+//     if (!user) {
+//         throw new Apierror(404, "User not found");
+//     }
 
-    return res.status(200).json(new Apiresponse(user));
-});
+//     return res.status(200).json(new Apiresponse(user));
+// });
 
 const getAllUsers = asynchandler(async (req, res) => {
     const users = await User.find();
     return res.status(200).json(users);
 });
 
-export { regiesteruser, loginUser, updateUserField, getAllUsers}; 
+export { regiesteruser, loginUser, getAllUsers}; 
