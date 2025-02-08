@@ -1,6 +1,6 @@
 import Introvideo from '../videos/Devbond intro.mp4';
 import { useRef } from 'react';
-
+import { Link } from 'react-router-dom';
 function IntroSection() {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -31,13 +31,13 @@ function IntroSection() {
             </p>
 
             <div className="flex gap-4">
-              <button className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 
+              <Link to="/signup" className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 
                                hover:from-blue-700 hover:to-purple-700 text-white font-semibold 
                                rounded-lg transform transition-all duration-300 hover:scale-105 
                                focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 
                                focus:ring-offset-gray-900">
                 Get Started
-              </button>
+              </Link>
               <button className="px-8 py-4 border-2 border-gray-700 text-gray-300 
                                hover:border-gray-500 hover:text-white font-semibold rounded-lg 
                                transform transition-all duration-300 hover:scale-105">

@@ -5,14 +5,16 @@ import { RootState } from "../../Redux/store";
 import { useSelector } from "react-redux";
 
 function UserProf() {
-  const username = useSelector((state: RootState) => state.userProfile.username);
-  
+  const username = useSelector(
+    (state: RootState) => state.userProfile.username
+  );
+
   interface User {
-    username: string,
-    _id: string,
-    image?: string
+    username: string;
+    _id: string;
+    image?: string;
   }
-  
+
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -50,9 +52,7 @@ function UserProf() {
           <h1 className="text-white text-5xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
             Developer Suggestions
           </h1>
-          <h2 className="text-white text-5xl font-semibold">
-            For You
-          </h2>
+          <h2 className="text-white text-5xl font-semibold">For You</h2>
           <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
             {username}
           </h2>
@@ -69,14 +69,18 @@ function UserProf() {
                      hover:transform hover:-translate-y-1 overflow-hidden"
           >
             {/* Decorative background element */}
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 
-                          group-hover:opacity-100 opacity-0 transition-opacity duration-300" />
-            
+            <div
+              className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 
+                          group-hover:opacity-100 opacity-0 transition-opacity duration-300"
+            />
+
             {/* Profile image container */}
             <div className="relative">
-              <div className="w-24 h-24 mx-auto rounded-full overflow-hidden 
+              <div
+                className="w-24 h-24 mx-auto rounded-full overflow-hidden 
                             border-4 border-blue-500/50 group-hover:border-blue-400 
-                            transition-all duration-300 shadow-lg">
+                            transition-all duration-300 shadow-lg"
+              >
                 <img
                   src={user.image || "default-image-path.jpg"}
                   alt={`${user.username} avatar`}
@@ -87,18 +91,22 @@ function UserProf() {
 
             {/* User info */}
             <div className="mt-6 text-center relative z-10">
-              <h2 className="text-white text-xl font-semibold mb-4 
-                           group-hover:text-blue-400 transition-colors duration-300">
+              <h2
+                className="text-white text-xl font-semibold mb-4 
+                           group-hover:text-blue-400 transition-colors duration-300"
+              >
                 {user.username}
               </h2>
-              
-              <button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 
+
+              <button
+                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 
                                text-white px-6 py-2.5 rounded-lg font-medium
                                hover:from-blue-500 hover:to-blue-600
                                transform transition-all duration-300
                                shadow-md hover:shadow-xl
                                focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900
-                               focus:outline-none">
+                               focus:outline-none"
+              >
                 Follow
               </button>
             </div>
