@@ -12,7 +12,7 @@ const LoginPage = () => {
     const navigate = useNavigate();
 
     // Set API URL dynamically: Use local URL if running locally, otherwise use Render URL
-    const apiUrl = import.meta.env.VITE_RENDER_URL || "http://localhost:2000"; // Use local URL if running locally
+    const apiUrl = import.meta.env.VITE_RENDER_URL_ || "http://localhost:2000"; // Use local URL if running locally
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
