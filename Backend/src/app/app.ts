@@ -5,7 +5,7 @@ import cookieparser from 'cookie-parser';
 const app = express();
 
 app.use(Cors({
-  origin: process.env.CORS_ORIGIN || "http://localhost:3000", // Adjust this to your frontend URL
+  origin: process.env.CORS_ORIGIN || "http://localhost:2000", // Adjust this to your frontend URL
   credentials: true,
 }));
 app.use(express.json({ limit: "16kb" }));

@@ -22,7 +22,12 @@ function UserProf() {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get("/api/users");
+        // Set API URL dynamically: Use local URL if running locally, otherwise use Render or Vercel URL
+        const apiUrl = import.meta.env.DEV
+          ? "http://localhost:5174"  // Local backend for development
+          : import.meta.env.VITE_RENDER_URL_ || "https://your-vercel-url.com";  // Use Render or Vercel backend for production
+
+        const response = await axios.get(`${apiUrl}/api/users`); // Fetch users from the backend
         setUsers(response.data);
       } catch (err) {
         setError("Failed to fetch users");
@@ -100,12 +105,12 @@ function UserProf() {
 
               <button
                 className="w-full bg-gradient-to-r from-blue-600 to-blue-700 
-                               text-white px-6 py-2.5 rounded-lg font-medium
-                               hover:from-blue-500 hover:to-blue-600
-                               transform transition-all duration-300
-                               shadow-md hover:shadow-xl
-                               focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900
-                               focus:outline-none"
+                           text-white px-6 py-2.5 rounded-lg font-medium
+                           hover:from-blue-500 hover:to-blue-600
+                           transform transition-all duration-300
+                           shadow-md hover:shadow-xl
+                           focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900
+                           focus:outline-none"
               >
                 Follow
               </button>

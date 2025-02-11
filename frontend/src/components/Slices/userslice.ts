@@ -5,7 +5,7 @@ interface Userprofilestate{
 }
 const initialState: Userprofilestate = {
     username: "",
-  };
+};
 
 const userProfileSlice=createSlice({
     name:"userProfile",

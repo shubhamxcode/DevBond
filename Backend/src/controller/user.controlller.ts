@@ -66,8 +66,6 @@ const loginUser = asynchandler(async (req, res) => {
     });
 });
 
-
-
 // const updateUserField = asynchandler(async (req, res) => {
 //     console.log(req.body); // Log the request body
 //     const { userId, selectedField } = req.body;
