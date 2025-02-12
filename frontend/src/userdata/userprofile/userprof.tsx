@@ -21,11 +21,11 @@ function UserProf() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const apiUrl = import.meta.env.DEV
-          ? "http://localhost:5174"
-          : import.meta.env.VITE_RENDER_URL_ || "https://your-vercel-url.com";
+        // const apiUrl = import.meta.env.DEV
+        //   ? "http://localhost:5173"
+        //   : import.meta.env.VITE_RENDER_URL_;
 
-        const response = await axios.get(`${apiUrl}/api/users/${username}`);
+        const response = await axios.get(`/api/users/${username}`);
         setUserData(response.data);
       } catch (err) {
         setError("Failed to fetch user data");

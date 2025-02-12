@@ -4,8 +4,14 @@ import cookieparser from 'cookie-parser';
 
 const app = express();
 
+// Update CORS configuration
+const allowedOrigins = [
+  process.env.CORS_ORIGIN || "http://localhost:5173", // Adjust this to match your frontend port
+  "https://your-vercel-app-url.vercel.app" // Replace with your actual Vercel URL
+];
+
 app.use(Cors({
-  origin: process.env.CORS_ORIGIN || "http://localhost:2000", // Adjust this to your frontend URL
+  origin: allowedOrigins,
   credentials: true,
 }));
 app.use(express.json({ limit: "16kb" }));

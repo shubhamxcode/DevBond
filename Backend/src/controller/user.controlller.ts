@@ -72,4 +72,26 @@ const getAllUsers = asynchandler(async (req, res) => {
     return res.status(200).json(users);
 });
 
-export { regiesteruser, loginUser, getAllUsers}; 
+const updateUserField = asynchandler(async (req, res) => {
+    const { userId, selectedField } = req.body;
+
+    // Validate input
+    if (!userId || !selectedField) {
+        throw new Apierror(400, "User ID and selected field are required");
+    }
+
+    // Update the user's selected field
+    const updatedUser = await User.findByIdAndUpdate(
+        userId,
+        { selectedField },
+        { new: true } // Return the updated user
+    );
+
+    if (!updatedUser) {
+        throw new Apierror(404, "User not found");
+    }
+
+    return res.status(200).json(new Apiresponse(updatedUser, "User field updated successfully"));
+});
+
+export { regiesteruser, loginUser, getAllUsers, updateUserField }; 
