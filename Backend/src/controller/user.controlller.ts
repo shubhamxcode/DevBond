@@ -67,11 +67,6 @@ const loginUser = asynchandler(async (req, res) => {
     });
 });
 
-const getAllUsers = asynchandler(async (req, res) => {
-    const users = await User.find();
-    return res.status(200).json(users);
-});
-
 const updateUserField = asynchandler(async (req, res) => {
     const { userId, selectedField } = req.body;
 
@@ -105,4 +100,4 @@ const getUsersByField = asynchandler(async (req, res) => {
     return res.status(200).json(users);
 });
 
-export { regiesteruser, loginUser, getAllUsers, updateUserField, getUsersByField }; 
+export { regiesteruser, loginUser, updateUserField, getUsersByField }; 

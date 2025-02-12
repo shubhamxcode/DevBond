@@ -1,66 +1,40 @@
-import { useEffect, useState } from "react";
-import { TbBaselineDensityMedium } from "react-icons/tb";
-import axios from "axios";
-import { RootState } from "../../Redux/store";
 import { useSelector } from "react-redux";
+import { RootState } from "../../Redux/store";
+import { TbBaselineDensityMedium } from "react-icons/tb";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-interface UserData {
+// Define an interface for the user data
+interface User {
   username: string;
-  email: string;
   selectedField: string;
-  // Add other fields as necessary
 }
 
 function UserProf() {
-  const username = useSelector(
-    (state: RootState) => state.userProfile.username
-  );
+  const [fieldData, setFieldData] = useState<User[]>([]);
+  const username = useSelector((state: RootState) => state.userProfile.username);
   const userId = useSelector((state: RootState) => state.userProfile.userId);
-  const [userData, setUserData] = useState<UserData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [suggestedUsers, setSuggestedUsers] = useState<UserData[]>([]);
+  const selectedField = useSelector((state: RootState) => state.userProfile.selectedField);
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchFieldData = async () => {
+      console.log("Fetching data for selectedField:", selectedField);
       try {
-        const apiUrl = import.meta.env.DEV
-          ? "http://localhost:5173"
-          : import.meta.env.VITE_RENDER_URL_;
-
-        const response = await axios.get(`${apiUrl}/api/users/${username}`);
-        setUserData(response.data);
-        fetchSuggestedUsers(response.data.selectedField);
-        console.log(userId);
-        
-      } catch (err) {
-        setError("Failed to fetch user data");
-      } finally {
-        setLoading(false);
+        const response = await axios.get(`/api/users/users-by-field?selectedField=${selectedField}`);
+        console.log("Response data:", response.data);
+        setFieldData(response.data);
+      } catch (error) {
+        console.log("Error fetching field data:", error);
       }
     };
 
-    fetchUserData();
-  }, [username]);
-
-  const fetchSuggestedUsers = async (selectedField: string) => {
-    console.log("Fetching suggested users for field:", selectedField);
-    try {
-      const response = await axios.get(`/api/users/users-by-field?selectedField=${selectedField}`);
-      console.log("Suggested users response:", response.data);
-      setSuggestedUsers(response.data);
-    } catch (err) {
-      setError("Failed to fetch suggested users");
-      console.error(err);
+    if (selectedField) {
+      fetchFieldData();
     }
-  };
-
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  }, [selectedField]);
 
   return (
     <div className="bg-gray-900 min-h-screen p-6">
-      {/* Header Section */}
       <div className="flex justify-between items-center mb-8">
         <div className="flex items-center gap-x-2">
           <TbBaselineDensityMedium className="text-white text-2xl" />
@@ -68,35 +42,22 @@ function UserProf() {
         </div>
       </div>
 
-      {/* Main Content Section */}
       <div className="text-center mb-12 p-8 rounded-lg shadow-2xl bg-gradient-to-br from-gray-800 to-gray-900">
-        <div className="space-y-4">
-          <h1 className="text-white text-5xl font-bold bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
-            Developer Suggestions
-          </h1>
-          <h2 className="text-white text-5xl font-semibold">For You</h2>
-          <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-            {username}
-          </h2>
-          {userData && (
-            <div className="text-white">
-              <p>Email: {userData.email}</p>
-              <p>Selected Field: {userData.selectedField}</p>
-            </div>
+        <h1 className="text-white text-5xl font-bold">Developer Suggestions</h1>
+        <h2 className="text-white text-5xl font-semibold">For You</h2>
+        <h2 className="text-5xl font-bold text-green-400">{username}</h2>
+        <p className="text-white text-2xl mt-2">User ID: <span className="text-green-400 font-bold">{userId}</span></p>
+        <p className="text-white text-2xl mt-2">Selected Field: <span className="text-green-400 font-bold">{selectedField}</span></p>
+        
+        {/* Display fetched field data */}
+        <div className="mt-4">
+          {fieldData.length > 0 ? (
+            fieldData.map((item, index) => (
+              <div key={index} className="text-white text-lg">{item.username} - {item.selectedField}</div>
+            ))
+          ) : (
+            <p className="text-white">No suggestions available.</p>
           )}
-        </div>
-      </div>
-
-      {/* Suggested Users Section */}
-      <div className="text-center mb-12">
-        <h2 className="text-white text-4xl font-semibold">Suggested Users in {userData?.selectedField}</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {suggestedUsers.map((user) => (
-            <div key={user.username} className="text-white bg-green-500 p-4 rounded-lg shadow-md">
-              <h3 className="text-white text-xl">{user.username}</h3>
-              <p className="text-gray-400">{user.email}</p>
-            </div>
-          ))}
         </div>
       </div>
     </div>
