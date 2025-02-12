@@ -91,7 +91,6 @@ const updateUserField = asynchandler(async (req, res) => {
 
 const getUsersByField = asynchandler(async (req, res) => {
     const { selectedField } = req.query;
-
     if (!selectedField) {
         throw new Apierror(400, "Selected field is required");
     }

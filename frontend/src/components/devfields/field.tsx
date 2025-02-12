@@ -3,22 +3,20 @@ import { useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../Redux/store";
-import { setUser } from "../Slices/userslice";
-const apiUrl = import.meta.env.DEV
-? "http://localhost:2000"  // Local backend for development
-: import.meta.env.VITE_RENDER_URL_;  // Render backend for production
+import { setUser, setSuggestions } from '../Slices/userslice';
+
 function Field() {
-  
+  const [error, setError] = useState("");
   const userId = useSelector((state: RootState) => state.userProfile.userId);
   const dispatch = useDispatch();
-  const [error, setError] = useState("");
 
   const handleFieldClick = async (selectedField: string) => {
     try {
-      await axios.post(`${apiUrl}/api/users/update-field`, {
-        userId
-      });
-      dispatch(setUser({field:selectedField}))
+      await axios.post("/api/users/update-field", { userId, selectedField });
+      dispatch(setUser({ selectedField }));
+
+      const response = await axios.get(`/api/users/users-by-field?selectedField=${selectedField}`);
+      dispatch(setSuggestions(response.data));
     } catch (err) {
       setError("Error saving field selection");
     }
@@ -30,16 +28,27 @@ function Field() {
         Select Your Field to Meet Your Developer
       </h1>
       <div className="flex flex-wrap justify-center gap-8">
-        {["Frontend", "Backend", "Fullstack"].map((field) => (
-          <Link
-            key={field}
-            to="/profile"
-            onClick={() => handleFieldClick(field)}
-            className="transition-all duration-300 ease-in-out transform hover:bg-green-600 hover:scale-105 border-2 border-transparent rounded-xl text-4xl font-semibold text-white text-center p-14 hover:cursor-pointer hover:border-green-400 shadow-md"
-          >
-            <h1>{field}</h1>
-          </Link>
-        ))}
+        <Link
+          to="/profile"
+          onClick={() => handleFieldClick("Frontend")}
+          className="transition-all duration-300 ease-in-out transform hover:bg-green-600 hover:scale-105 border-2 border-transparent rounded-xl text-4xl font-semibold text-white text-center p-14 hover:cursor-pointer hover:border-green-400 shadow-md"
+        >
+          <h1>Frontend</h1>
+        </Link>
+        <Link
+          to="/profile"
+          onClick={() => handleFieldClick("Backend")}
+          className="transition-all duration-300 ease-in-out transform hover:bg-green-600 hover:scale-105 border-2 border-transparent rounded-xl text-4xl font-semibold text-white text-center p-14 hover:cursor-pointer hover:border-green-400 shadow-md"
+        >
+          <h1>Backend</h1>
+        </Link>
+        <Link
+          to="/profile"
+          onClick={() => handleFieldClick("Fullstack")}
+          className="transition-all duration-300 ease-in-out transform hover:bg-green-600 hover:scale-105 border-2 border-transparent rounded-xl text-4xl font-semibold text-white text-center p-14 hover:cursor-pointer hover:border-green-400 shadow-md"
+        >
+          <h1>Fullstack</h1>
+        </Link>
       </div>
       {error && <p className="text-red-500">{error}</p>}
     </div>

@@ -1,15 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { User } from '../../types';
 
 interface UserState {
   userId: string | null;
   username: string | null;
-  selectedField: string 
+  selectedField: string;
+  suggestions: User[];
 }
 
 const initialState: UserState = {
   userId: null,
   username: null,
-  selectedField: ""
+  selectedField: '',
+  suggestions: [],
 };
 
 const userSlice = createSlice({
@@ -21,8 +24,11 @@ const userSlice = createSlice({
       state.username = action.payload.username;
       state.selectedField = action.payload.selectedField;
     },
+    setSuggestions(state, action) {
+      state.suggestions = action.payload;
+    },
   },
 });
 
-export const { setUser } = userSlice.actions;
+export const { setUser, setSuggestions } = userSlice.actions;
 export default userSlice.reducer;
