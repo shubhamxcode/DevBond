@@ -16,11 +16,15 @@ function UserProf() {
   const userId = useSelector((state: RootState) => state.userProfile.userId);
   const selectedField = useSelector((state: RootState) => state.userProfile.selectedField);
 
+  const apiUrl = import.meta.env.DEV
+        ? "http://localhost:2000"  // Local backend for development
+        : import.meta.env.VITE_RENDER_URL_;  // Render backend for production
   useEffect(() => {
     const fetchFieldData = async () => {
+      
       console.log("Fetching data for selectedField:", selectedField);
       try {
-        const response = await axios.get(`/api/users/users-by-field?selectedField=${selectedField}`);
+        const response = await axios.get(`${apiUrl}/api/users/users-by-field?selectedField=${selectedField}`);
         console.log("Response data:", response.data);
         setFieldData(response.data);
       } catch (error) {
