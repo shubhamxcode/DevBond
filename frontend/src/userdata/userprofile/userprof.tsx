@@ -7,7 +7,6 @@ import { useSelector } from "react-redux";
 interface UserData {
   username: string;
   email: string;
-  // Add other fields as necessary
 }
 
 function UserProf() {
@@ -21,11 +20,11 @@ function UserProf() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // const apiUrl = import.meta.env.DEV
-        //   ? "http://localhost:5173"
-        //   : import.meta.env.VITE_RENDER_URL_;
+        const apiUrl = import.meta.env.DEV
+          ? "http://localhost:5173"
+          : import.meta.env.VITE_RENDER_URL_;
 
-        const response = await axios.get(`/api/users/${username}`);
+        const response = await axios.get(`${apiUrl}/api/users/${username}`);
         setUserData(response.data);
       } catch (err) {
         setError("Failed to fetch user data");
