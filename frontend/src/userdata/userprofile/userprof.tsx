@@ -24,11 +24,11 @@ function UserProf() {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        // const apiUrl = import.meta.env.DEV
-        //   ? "http://localhost:5173"
-        //   : import.meta.env.VITE_RENDER_URL_;
+        const apiUrl = import.meta.env.DEV
+          ? "http://localhost:5173"
+          : import.meta.env.VITE_RENDER_URL_;
 
-        const response = await axios.get(`/api/users/${username}`);
+        const response = await axios.get(`${apiUrl}/api/users/${username}`);
         setUserData(response.data);
         fetchSuggestedUsers(response.data.selectedField);
         console.log(userId);
