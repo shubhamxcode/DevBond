@@ -31,6 +31,8 @@ function UserProf() {
         const response = await axios.get(`/api/users/${username}`);
         setUserData(response.data);
         fetchSuggestedUsers(response.data.selectedField);
+        console.log(userId);
+        
       } catch (err) {
         setError("Failed to fetch user data");
       } finally {
