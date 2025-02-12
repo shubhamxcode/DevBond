@@ -4,15 +4,18 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { setUser } from "../Slices/userslice";
-
+const apiUrl = import.meta.env.DEV
+? "http://localhost:2000"  // Local backend for development
+: import.meta.env.VITE_RENDER_URL_;  // Render backend for production
 function Field() {
+  
   const userId = useSelector((state: RootState) => state.userProfile.userId);
   const dispatch = useDispatch();
   const [error, setError] = useState("");
 
   const handleFieldClick = async (selectedField: string) => {
     try {
-      await axios.post(`/api/users/update-field`, {
+      await axios.post(`${apiUrl}/api/users/update-field`, {
         userId
       });
       dispatch(setUser({field:selectedField}))
