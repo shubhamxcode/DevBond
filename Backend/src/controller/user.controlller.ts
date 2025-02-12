@@ -94,4 +94,15 @@ const updateUserField = asynchandler(async (req, res) => {
     return res.status(200).json(new Apiresponse(updatedUser, "User field updated successfully"));
 });
 
-export { regiesteruser, loginUser, getAllUsers, updateUserField }; 
+const getUsersByField = asynchandler(async (req, res) => {
+    const { selectedField } = req.query;
+
+    if (!selectedField) {
+        throw new Apierror(400, "Selected field is required");
+    }
+
+    const users = await User.find({ selectedField });
+    return res.status(200).json(users);
+});
+
+export { regiesteruser, loginUser, getAllUsers, updateUserField, getUsersByField }; 

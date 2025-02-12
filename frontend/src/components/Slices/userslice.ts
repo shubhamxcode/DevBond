@@ -1,21 +1,25 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface Userprofilestate{
-    username:string
+interface UserState {
+  userId: string | null;
+  username: string | null;
 }
-const initialState: Userprofilestate = {
-    username: "",
+
+const initialState: UserState = {
+  userId: null,
+  username: null,
 };
 
-const userProfileSlice=createSlice({
-    name:"userProfile",
-    initialState,
-    reducers:{
-        setUsername:(state,action)=>{
-            state.username=action.payload
-        }
-    }
-})
+const userSlice = createSlice({
+  name: 'userProfile',
+  initialState,
+  reducers: {
+    setUser(state, action: PayloadAction<{ userId: string; username: string }>) {
+      state.userId = action.payload.userId;
+      state.username = action.payload.username;
+    },
+  },
+});
 
-export const {setUsername}=userProfileSlice.actions
-export default userProfileSlice.reducer
+export const { setUser} = userSlice.actions;
+export default userSlice.reducer;

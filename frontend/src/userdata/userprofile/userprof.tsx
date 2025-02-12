@@ -7,25 +7,30 @@ import { useSelector } from "react-redux";
 interface UserData {
   username: string;
   email: string;
+  selectedField: string;
+  // Add other fields as necessary
 }
 
 function UserProf() {
   const username = useSelector(
     (state: RootState) => state.userProfile.username
   );
+  const userId = useSelector((state: RootState) => state.userProfile.userId);
   const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [suggestedUsers, setSuggestedUsers] = useState<UserData[]>([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const apiUrl = import.meta.env.DEV
-          ? "http://localhost:5173"
-          : import.meta.env.VITE_RENDER_URL_;
+        // const apiUrl = import.meta.env.DEV
+        //   ? "http://localhost:5173"
+        //   : import.meta.env.VITE_RENDER_URL_;
 
-        const response = await axios.get(`${apiUrl}/api/users/${username}`);
+        const response = await axios.get(`/api/users/${username}`);
         setUserData(response.data);
+        fetchSuggestedUsers(response.data.selectedField);
       } catch (err) {
         setError("Failed to fetch user data");
       } finally {
@@ -35,6 +40,18 @@ function UserProf() {
 
     fetchUserData();
   }, [username]);
+
+  const fetchSuggestedUsers = async (selectedField: string) => {
+    console.log("Fetching suggested users for field:", selectedField);
+    try {
+      const response = await axios.get(`/api/users/users-by-field?selectedField=${selectedField}`);
+      console.log("Suggested users response:", response.data);
+      setSuggestedUsers(response.data);
+    } catch (err) {
+      setError("Failed to fetch suggested users");
+      console.error(err);
+    }
+  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -62,15 +79,23 @@ function UserProf() {
           {userData && (
             <div className="text-white">
               <p>Email: {userData.email}</p>
-              {/* Add other user data fields here */}
+              <p>Selected Field: {userData.selectedField}</p>
             </div>
           )}
         </div>
       </div>
 
-      {/* Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {/* Render user-related cards or suggestions here */}
+      {/* Suggested Users Section */}
+      <div className="text-center mb-12">
+        <h2 className="text-white text-4xl font-semibold">Suggested Users in {userData?.selectedField}</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {suggestedUsers.map((user) => (
+            <div key={user.username} className="text-white bg-green-500 p-4 rounded-lg shadow-md">
+              <h3 className="text-white text-xl">{user.username}</h3>
+              <p className="text-gray-400">{user.email}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

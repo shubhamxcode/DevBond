@@ -1,13 +1,15 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Redux/store"; // Adjust the import based on your store structure
 
 function Field() {
   const [error, setError] = useState("");
+  const userId = useSelector((state: RootState) => state.userProfile.userId); // Assuming userId is stored in userProfile
 
   const handleFieldClick = async (selectedField: string) => {
     try {
-      const userId = "679e82548ce371be3642e78c"; // Replace with actual user ID from your auth context or state
       await axios.post("/api/users/update-field", { userId, selectedField });
     } catch (err) {
       setError("Error saving field selection");
