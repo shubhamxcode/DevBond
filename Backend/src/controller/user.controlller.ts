@@ -62,25 +62,10 @@ const loginUser = asynchandler(async (req, res) => {
     return res.status(200).json({
         UserId: user._id,
         username: user.username,
+        email: user.email,
         message: "Login successful"
     });
 });
-
-// const updateUserField = asynchandler(async (req, res) => {
-//     console.log(req.body); // Log the request body
-//     const { userId, selectedField } = req.body;
-//     if (!userId || !selectedField) {
-//         throw new Apierror(400, "User ID and selected field are required");
-//     }
-
-//     const user = await User.findByIdAndUpdate(userId, { selectedField }, { new: true });
-
-//     if (!user) {
-//         throw new Apierror(404, "User not found");
-//     }
-
-//     return res.status(200).json(new Apiresponse(user));
-// });
 
 const getAllUsers = asynchandler(async (req, res) => {
     const users = await User.find();

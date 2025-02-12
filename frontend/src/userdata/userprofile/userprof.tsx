@@ -4,39 +4,38 @@ import axios from "axios";
 import { RootState } from "../../Redux/store";
 import { useSelector } from "react-redux";
 
+interface UserData {
+  username: string;
+  email: string;
+  // Add other fields as necessary
+}
+
 function UserProf() {
   const username = useSelector(
     (state: RootState) => state.userProfile.username
   );
-
-  interface User {
-    username: string;
-    _id: string;
-    image?: string;
-  }
-
-  const [users, setUsers] = useState<User[]>([]);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchUserData = async () => {
       try {
-        // Set API URL dynamically: Use local URL if running locally, otherwise use Render or Vercel URL
         const apiUrl = import.meta.env.DEV
-          ? "http://localhost:5174"  // Local backend for development
-          : import.meta.env.VITE_RENDER_URL_ || "https://your-vercel-url.com";  // Use Render or Vercel backend for production
+          ? "http://localhost:5174"
+          : import.meta.env.VITE_RENDER_URL_ || "https://your-vercel-url.com";
 
-        const response = await axios.get(`${apiUrl}/api/users`); // Fetch users from the backend
-        setUsers(response.data);
+        const response = await axios.get(`${apiUrl}/api/users/${username}`);
+        setUserData(response.data);
       } catch (err) {
-        setError("Failed to fetch users");
+        setError("Failed to fetch user data");
       } finally {
         setLoading(false);
       }
     };
-    fetchUsers();
-  }, []);
+
+    fetchUserData();
+  }, [username]);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
@@ -61,62 +60,18 @@ function UserProf() {
           <h2 className="text-5xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
             {username}
           </h2>
+          {userData && (
+            <div className="text-white">
+              <p>Email: {userData.email}</p>
+              {/* Add other user data fields here */}
+            </div>
+          )}
         </div>
       </div>
 
       {/* Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {users.map((user) => (
-          <div
-            key={user._id}
-            className="group relative bg-gradient-to-br from-gray-800 to-gray-900 p-6 rounded-xl 
-                     shadow-lg hover:shadow-2xl transition-all duration-300 
-                     hover:transform hover:-translate-y-1 overflow-hidden"
-          >
-            {/* Decorative background element */}
-            <div
-              className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10 
-                          group-hover:opacity-100 opacity-0 transition-opacity duration-300"
-            />
-
-            {/* Profile image container */}
-            <div className="relative">
-              <div
-                className="w-24 h-24 mx-auto rounded-full overflow-hidden 
-                            border-4 border-blue-500/50 group-hover:border-blue-400 
-                            transition-all duration-300 shadow-lg"
-              >
-                <img
-                  src={user.image || "default-image-path.jpg"}
-                  alt={`${user.username} avatar`}
-                  className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-300"
-                />
-              </div>
-            </div>
-
-            {/* User info */}
-            <div className="mt-6 text-center relative z-10">
-              <h2
-                className="text-white text-xl font-semibold mb-4 
-                           group-hover:text-blue-400 transition-colors duration-300"
-              >
-                {user.username}
-              </h2>
-
-              <button
-                className="w-full bg-gradient-to-r from-blue-600 to-blue-700 
-                           text-white px-6 py-2.5 rounded-lg font-medium
-                           hover:from-blue-500 hover:to-blue-600
-                           transform transition-all duration-300
-                           shadow-md hover:shadow-xl
-                           focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-900
-                           focus:outline-none"
-              >
-                Follow
-              </button>
-            </div>
-          </div>
-        ))}
+        {/* Render user-related cards or suggestions here */}
       </div>
     </div>
   );
