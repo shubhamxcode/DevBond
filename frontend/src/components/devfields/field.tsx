@@ -3,7 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../Redux/store";
-import { setUser, setSuggestions } from '../Slices/userslice';
+import { setUser } from '../Slices/userslice';
 
 const apiUrl = import.meta.env.DEV
 ? "http://localhost:2000"  // Local backend for development
@@ -18,9 +18,6 @@ function Field() {
     try {
       await axios.post(`${apiUrl}/api/users/update-field`, { userId, selectedField });
       dispatch(setUser({ selectedField }));
-
-      const response = await axios.get(`/api/users/users-by-field?selectedField=${selectedField}`);
-      dispatch(setSuggestions(response.data));
     } catch (err) {
       setError("Error saving field selection");
     }

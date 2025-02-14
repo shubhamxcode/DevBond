@@ -51,9 +51,11 @@ userSchema.pre('save', async function (next) {
 });
 
 
-userSchema.methods.isCorrectPassword = async function (password: string): Promise<boolean> {
-  return await bcrypt.compare(password, this.password);
-};
+// userSchema.methods.isCorrectPassword = async function (password: string): Promise<boolean> {
+//   return await bcrypt.compare(password, this.password);
+// };
+
+
 userSchema.methods.getAccessToken=function(){
     return Jwt.sign(
         {

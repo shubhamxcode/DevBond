@@ -4,6 +4,27 @@ import {User} from '../models/userschema.ts'
 import Apiresponse   from "../utils/apiresponse.ts";
 import bcrypt from 'bcrypt';
 
+// interface IUser extends Document {
+//     username: string;
+//     email: string;
+//     password: string;
+//     getAccessToken: () => string;
+//     getRefreshToken: () => string;
+//     refreshToken?: string 
+//     save: (options?: SaveOptions) => Promise<IUser>;
+// }
+const generateTokens = async (user: any) => {
+    const id=await User.findById(user)
+    const accessToken = user.getAccessToken();
+    const refreshToken = user.getRefreshToken();
+    // Save the refresh token in the database
+    user.refreshToken=refreshToken
+    await user.save({ validateBeforeSave: false });
+    return { accessToken, refreshToken };  
+}
+
+
+
 const regiesteruser=asynchandler(async(req,res)=>{
     //get user detail from frontend 
     //validation-not empty 
@@ -37,6 +58,7 @@ const regiesteruser=asynchandler(async(req,res)=>{
     if (!createdUser) {
         throw new Apierror(500,"something went wrong sorry ")
     }
+    
     return res.status(201).json(
         new Apiresponse(createdUser,"user register succesfully")
     )
@@ -58,19 +80,34 @@ const loginUser = asynchandler(async (req, res) => {
     if (!isMatch) {
         throw new Apierror(401, "Invalid credentials");
     }
+     const {accessToken,refreshToken}=await generateTokens(user._id);
 
-    return res.status(200).json({
-        UserId: user._id,
-        username: user.username,
-        email: user.email,
-        message: "Login successful"
-    });
+     const loggedinuser=await User.findById(user._id).select("-password -refreshToken")
+
+     const options={
+        httponly:true,
+        secure:true,
+     }
+    // return res.status(200).json({
+    //     UserId: user._id,
+    //     username: user.username,
+    //     email: user.email,
+    //     message: "Login successful"
+    // });
+    res.status(200).cookie("accessToken",accessToken,options).cookie("refreshToken",refreshToken,options)
+    .json(
+        new Apiresponse(
+            {
+                user:loggedinuser,accessToken,refreshToken
+            },
+            "user logged in succefully"
+        )
+    )
 });
 
 const updateUserField = asynchandler(async (req, res) => {
     const { userId, selectedField } = req.body;
 
-    // Validate input
     if (!userId || !selectedField) {
         throw new Apierror(400, "User ID and selected field are required");
     }
@@ -92,7 +129,8 @@ const updateUserField = asynchandler(async (req, res) => {
 const getUsersByField = asynchandler(async (req, res) => {
     const { selectedField } = req.query;
     const userId = req.user?._id; // Get logged-in user ID from authentication middleware
-
+    console.log("userlogin id:",userId);
+    
     if (!selectedField) {
         throw new Apierror(400, "Selected field is required");
     }
