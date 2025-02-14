@@ -20,7 +20,7 @@ import bcrypt from 'bcrypt';
 //     // Save the refresh token in the database
 //     user.refreshToken=refreshToken
 //     await user.save({ validateBeforeSave: false });
-//     return { accessToken, refreshToken };  
+//     return { accessToken, refreshToken };
 // }
 
 
@@ -88,24 +88,21 @@ const loginUser = asynchandler(async (req, res) => {
     //     httponly:true,
     //     secure:true,
     //  }
-    // // return res.status(200).json({
-    // //     UserId: user._id,
-    // //     username: user.username,
-    // //     email: user.email,
-    // //     message: "Login successful"
-    // // });
+    return res.status(200).json({
+        UserId: user._id,
+        username: user.username,
+        email: user.email,
+        message: "Login successful"
+    });
     // res.status(200).cookie("accessToken",accessToken,options).cookie("refreshToken",refreshToken,options)
     // .json(
     //     new Apiresponse(
     //         {
     //             user:loggedinuser,accessToken,refreshToken
     //         },
-    //         "user logged in succefully"
+    //         "user login succefully"
     //     )
     // )
-    return res.status(200).json(
-        "you are login succefully"
-    )
 });
 
 const updateUserField = asynchandler(async (req, res) => {
