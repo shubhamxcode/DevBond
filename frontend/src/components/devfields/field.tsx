@@ -5,9 +5,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { setUser, setSuggestions } from '../Slices/userslice';
 
-const apiUrl = import.meta.env.DEV
-? "http://localhost:2000"  // Local backend for development
-: import.meta.env.VITE_RENDER_URL_;  // Render backend for production
+// const apiUrl = import.meta.env.DEV
+// ? "http://localhost:2000"  // Local backend for development
+// : import.meta.env.VITE_RENDER_URL_;  // Render backend for production
 
 function Field() {
   const [error, setError] = useState("");
@@ -16,7 +16,7 @@ function Field() {
 
   const handleFieldClick = async (selectedField: string) => {
     try {
-      await axios.post(`${apiUrl}/api/users/update-field`, { userId, selectedField });
+      await axios.post(`/api/users/update-field`, { userId, selectedField });
       dispatch(setUser({ selectedField }));
 
       const response = await axios.get(`/api/users/users-by-field?selectedField=${selectedField}`);

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { setUser } from '../Slices/userslice';
+
 const LoginPage = () => {
     const dispatch = useDispatch();
     const [email, setEmail] = useState('');
@@ -11,16 +12,16 @@ const LoginPage = () => {
     const navigate = useNavigate();
 
     // Set API URL dynamically: Use local URL if running locally, otherwise use Render URL
-    const apiUrl = import.meta.env.DEV
-        ? "http://localhost:2000"  // Local backend for development
-        : import.meta.env.VITE_RENDER_URL_;  // Render backend for production
+    // const apiUrl = import.meta.env.DEV
+    //     ? "http://localhost:2000"  // Local backend for development
+    //     : import.meta.env.VITE_RENDER_URL_;  // Render backend for production
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
 
         try {
-            const response = await axios.post(`${apiUrl}/api/users/login`, { email, password });
+            const response = await axios.post(`/api/users/login`, { email, password });
 
             if (response) {
                 dispatch(setUser({ userId: response.data.UserId, username: response.data.username }));

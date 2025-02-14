@@ -12,19 +12,21 @@ interface User {
 
 function UserProf() {
   const [fieldData, setFieldData] = useState<User[]>([]);
+  
+
   const username = useSelector((state: RootState) => state.userProfile.username);
-  const userId = useSelector((state: RootState) => state.userProfile.userId);
+ 
   const selectedField = useSelector((state: RootState) => state.userProfile.selectedField);
 
 
-  const apiUrl = import.meta.env.DEV
-        ? "http://localhost:2000"  // Local backend for development
-        : import.meta.env.VITE_RENDER_URL_;  // Render backend for production
+  // const apiUrl = import.meta.env.DEV
+  //       ? "http://localhost:2000"  // Local backend for development
+  //       : import.meta.env.VITE_RENDER_URL_;  // Render backend for production
   useEffect(() => {
     const fetchFieldData = async () => {
       if (selectedField) {
         try {
-          const response = await axios.get(`${apiUrl}/api/users/users-by-field?selectedField=${selectedField}`);
+          const response = await axios.get(`/api/users/users-by-field?selectedField=${selectedField}`);
           setFieldData(response.data);
         } catch (error) {
           console.log("Error fetching field data:", error);
@@ -48,8 +50,7 @@ function UserProf() {
         <h1 className="text-white text-5xl font-bold">Developer Suggestions</h1>
         <h2 className="text-white text-5xl font-semibold">For You</h2>
         <h2 className="text-5xl font-bold text-green-400">{username}</h2>
-        <p className="text-white text-2xl mt-2">User ID: <span className="text-green-400 font-bold">{userId}</span></p>
-        <p className="text-white text-2xl mt-2">Selected Field: <span className="text-green-400 font-bold">{selectedField}</span></p>
+
         
         {/* Display fetched field data */}
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -64,20 +65,6 @@ function UserProf() {
             <p className="text-white">No suggestions available.</p>
           )}
         </div>
-
-        {/* Removed duplicate suggestions display */}
-        {/* <div className="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {suggestions.length > 0 ? (
-            suggestions.map((item, index) => (
-              <div key={index} className="bg-gray-700 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                <h3 className="text-white text-lg font-semibold">{item.username}</h3>
-                <p className="text-gray-300">{item.selectedField}</p>
-              </div>
-            ))
-          ) : (
-            <p className="text-white">No suggestions available.</p>
-          )}
-        </div> */}
       </div>
     </div>
   );

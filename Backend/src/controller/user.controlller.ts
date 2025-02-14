@@ -91,11 +91,15 @@ const updateUserField = asynchandler(async (req, res) => {
 
 const getUsersByField = asynchandler(async (req, res) => {
     const { selectedField } = req.query;
+    const userId = req.user?._id; // Get logged-in user ID from authentication middleware
+
     if (!selectedField) {
         throw new Apierror(400, "Selected field is required");
     }
 
-    const users = await User.find({ selectedField });
+    // Find users in the same field but exclude the logged-in user
+    const users = await User.find({ selectedField, _id: { $ne: userId } });
+
     return res.status(200).json(users);
 });
 
