@@ -13,15 +13,15 @@ import bcrypt from 'bcrypt';
 //     refreshToken?: string 
 //     save: (options?: SaveOptions) => Promise<IUser>;
 // }
-const generateTokens = async (user: any) => {
-    const id=await User.findById(user)
-    const accessToken = user.getAccessToken();
-    const refreshToken = user.getRefreshToken();
-    // Save the refresh token in the database
-    user.refreshToken=refreshToken
-    await user.save({ validateBeforeSave: false });
-    return { accessToken, refreshToken };  
-}
+// const generateTokens = async (user: any) => {
+//     const id=await User.findById(user)
+//     const accessToken = user.getAccessToken();
+//     const refreshToken = user.getRefreshToken();
+//     // Save the refresh token in the database
+//     user.refreshToken=refreshToken
+//     await user.save({ validateBeforeSave: false });
+//     return { accessToken, refreshToken };  
+// }
 
 
 
@@ -80,28 +80,31 @@ const loginUser = asynchandler(async (req, res) => {
     if (!isMatch) {
         throw new Apierror(401, "Invalid credentials");
     }
-     const {accessToken,refreshToken}=await generateTokens(user._id);
+    //  const {accessToken,refreshToken}=await generateTokens(user._id);
 
-     const loggedinuser=await User.findById(user._id).select("-password -refreshToken")
+    //  const loggedinuser=await User.findById(user._id).select("-password -refreshToken")
 
-     const options={
-        httponly:true,
-        secure:true,
-     }
-    // return res.status(200).json({
-    //     UserId: user._id,
-    //     username: user.username,
-    //     email: user.email,
-    //     message: "Login successful"
-    // });
-    res.status(200).cookie("accessToken",accessToken,options).cookie("refreshToken",refreshToken,options)
-    .json(
-        new Apiresponse(
-            {
-                user:loggedinuser,accessToken,refreshToken
-            },
-            "user logged in succefully"
-        )
+    //  const options={
+    //     httponly:true,
+    //     secure:true,
+    //  }
+    // // return res.status(200).json({
+    // //     UserId: user._id,
+    // //     username: user.username,
+    // //     email: user.email,
+    // //     message: "Login successful"
+    // // });
+    // res.status(200).cookie("accessToken",accessToken,options).cookie("refreshToken",refreshToken,options)
+    // .json(
+    //     new Apiresponse(
+    //         {
+    //             user:loggedinuser,accessToken,refreshToken
+    //         },
+    //         "user logged in succefully"
+    //     )
+    // )
+    return res.status(200).json(
+        "you are login succefully"
     )
 });
 
