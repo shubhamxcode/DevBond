@@ -4,15 +4,15 @@ import {User} from '../models/userschema.ts'
 import Apiresponse   from "../utils/apiresponse.ts";
 import bcrypt from 'bcrypt';
 
-// interface IUser extends Document {
-//     username: string;
-//     email: string;
-//     password: string;
-//     getAccessToken: () => string;
-//     getRefreshToken: () => string;
-//     refreshToken?: string 
-//     save: (options?: SaveOptions) => Promise<IUser>;
-// }
+interface IUser extends Document {
+    username: string;
+    email: string;
+    password: string;
+    getAccessToken: () => string;
+    getRefreshToken: () => string;
+    refreshToken?: string 
+    // save: (options?: SaveOptions) => Promise<IUser>;
+}
 const generateTokens = async (user: any) => {
     const id=await User.findById(user)
     const accessToken = user.getAccessToken();
