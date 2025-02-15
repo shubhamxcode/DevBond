@@ -1,15 +1,16 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
 import bcrypt from 'bcrypt';
 import Jwt from 'jsonwebtoken';
 
-interface IUser {
+interface IUser extends Document {
   username: string;
   email: string;
   password: string;
   refreshToken?: string;
   selectedField?: string;
+  getAccessToken: () => string;
+  getreftoken: () => string;
 }
-
 
 const userSchema = new mongoose.Schema<IUser>({
   username: {
@@ -26,7 +27,6 @@ const userSchema = new mongoose.Schema<IUser>({
     required: true,
     trim: true,
     lowercase: true,
-    
   },
   password: {
     type: String,
@@ -43,33 +43,27 @@ const userSchema = new mongoose.Schema<IUser>({
   },
 }, { timestamps: true });
 
-
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
   this.password = await bcrypt.hash(this.password, 6);
   next();
 });
 
-
-// userSchema.methods.isCorrectPassword = async function (password: string): Promise<boolean> {
-//   return await bcrypt.compare(password, this.password);
-// };
-
-
-userSchema.methods.getAccessToken=function(){
+userSchema.methods.getAccessToken = function (this: IUser): string {
     return Jwt.sign(
         {
             _id: this._id,
-          email: this.email,
-         username: this.username,
+            email: this.email,
+            username: this.username,
         },
         process.env.ACCESS_TOKEN_SECRET as string,
         {
             expiresIn: process.env.ACCESS_TOKEN_EXPIRE,
         }
-    )
-}
-userSchema.methods.getreftoken=function(){
+    );
+};
+
+userSchema.methods.getreftoken = function (this: IUser): string {
     return Jwt.sign(
         {
             _id: this._id,
@@ -78,10 +72,7 @@ userSchema.methods.getreftoken=function(){
         {
             expiresIn: process.env.REFRESH_TOKEN_EXPIRE,
         }
-    )
-}
+    );
+};
 
-
-export const User = mongoose.model('User', userSchema);
-
-console.log(User);
+export const User = mongoose.model<IUser>('User', userSchema);

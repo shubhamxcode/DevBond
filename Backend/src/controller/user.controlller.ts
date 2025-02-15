@@ -14,7 +14,7 @@ interface IUser extends Document {
     // save: (options?: SaveOptions) => Promise<IUser>;
 }
 const generateTokens = async (user: any) => {
-    const id=await User.findById(user)
+
     const accessToken = user.getAccessToken();
     const refreshToken = user.getRefreshToken();
     // Save the refresh token in the database
@@ -80,7 +80,7 @@ const loginUser = asynchandler(async (req, res) => {
     if (!isMatch) {
         throw new Apierror(401, "Invalid credentials");
     }
-     const {accessToken,refreshToken}=await generateTokens(user._id);
+     const {accessToken,refreshToken}=await generateTokens(user);
 
      const loggedinuser=await User.findById(user._id).select("-password -refreshToken")
 
