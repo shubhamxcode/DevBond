@@ -1,4 +1,3 @@
-
 class Apierror extends Error{
     statusCode:number;
     message: string;

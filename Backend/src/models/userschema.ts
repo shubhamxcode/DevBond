@@ -31,8 +31,6 @@ const userSchema = new mongoose.Schema<IUser>({
   password: {
     type: String,
     required: true,
-    minlength: [4, 'Password must be at least 4 characters'],
-    maxlength: [12, 'Password must be at most 12 characters'],
   },
   selectedField: {
     type: String,

@@ -3,8 +3,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../Redux/store";
-import { setUser } from '../Slices/userslice';
-
+import { setselectedfield } from '../Slices/userslice';
 const apiUrl = import.meta.env.DEV
 ? "http://localhost:2000"  // Local backend for development
 : import.meta.env.VITE_RENDER_URL_;  // Render backend for production
@@ -15,13 +14,22 @@ function Field() {
   const dispatch = useDispatch();
 
   const handleFieldClick = async (selectedField: string) => {
+    console.log("UserId before sending:", userId);  // Debugging log
+    if (!userId) {
+      setError("User ID is missing. Please log in again.");
+      return;
+    }
+  
     try {
-      await axios.post(`${apiUrl}/api/users/update-field`, { userId, selectedField });
-      dispatch(setUser({ selectedField }));
+      const response = await axios.post(`${apiUrl}/api/users/update-field`, { userId, selectedField });
+      console.log("API Response:",response.data);  // Debugging log
+      dispatch(setselectedfield({ selectedField }));
     } catch (err) {
+      console.error("Error sending request:", err);
       setError("Error saving field selection");
     }
   };
+  
 
   return (
     <div className="flex flex-col items-center justify-center space-y-8 bg-gradient-to-r from-gray-900 via-black to-gray-900 min-h-screen py-10 px-4">

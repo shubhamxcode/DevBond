@@ -16,7 +16,7 @@ interface IUser extends Document {
 const generateTokens = async (user: any) => {
 
     const accessToken = user.getAccessToken();
-    const refreshToken = user.getRefreshToken();
+    const refreshToken = user.getreftoken();
     // Save the refresh token in the database
     user.refreshToken=refreshToken
     await user.save({ validateBeforeSave: false });
@@ -98,7 +98,8 @@ const loginUser = asynchandler(async (req, res) => {
     .json(
         new Apiresponse(
             {
-                user:loggedinuser,accessToken,refreshToken
+                user:loggedinuser,accessToken,refreshToken,
+                userId:user._id
             },
             "user login succefully"
         )
@@ -106,37 +107,46 @@ const loginUser = asynchandler(async (req, res) => {
 });
 
 const updateUserField = asynchandler(async (req, res) => {
-    const { userId, selectedField } = req.body;
-
-    if (!userId || !selectedField) {
-        throw new Apierror(400, "User ID and selected field are required");
-    }
-
-    // Update the user's selected field
-    const updatedUser = await User.findByIdAndUpdate(
-        userId,
-        { selectedField },
-        { new: true } // Return the updated user
-    );
-
-    if (!updatedUser) {
-        throw new Apierror(404, "User not found");
-    }
-
-    return res.status(200).json(new Apiresponse(updatedUser, "User field updated successfully"));
+   
+        const { userId, selectedField } = req.body;
+        console.log("Received userId:", userId, "Selected field:", selectedField);
+      
+        if (!userId) {
+          return res.status(400).json({ message: "User ID is required" });
+        }
+      
+        try {
+          const user = await User.findById(userId);
+          if (!user) {
+            return res.status(404).json({ message: "User not found" });
+          }
+      
+          user.selectedField = selectedField;
+          await user.save();
+          res.json({ message: "Field updated successfully", user });
+        } catch (error) {
+          console.error("Error updating field:", error);
+          res.status(500).json({ message: "Server error" });
+        }
+      
 });
 
 const getUsersByField = asynchandler(async (req, res) => {
     const { selectedField } = req.query;
     const userId = req.user?._id; // Get logged-in user ID from authentication middleware
-    console.log("userlogin id:",userId);
-    
+    console.log("userlogin id:",userId,typeof userId,"value",userId);
+
     if (!selectedField) {
         throw new Apierror(400, "Selected field is required");
     }
 
     // Find users in the same field but exclude the logged-in user
-    const users = await User.find({ selectedField, _id: { $ne: userId } });
+    const users = await User.find({ 
+        selectedField: { $regex: new RegExp(selectedField, "i") }, 
+        _id: { $ne: userId }  // Exclude logged-in user
+    });
+    
+
 
     return res.status(200).json(users);
 });

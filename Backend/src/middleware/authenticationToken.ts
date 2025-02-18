@@ -4,7 +4,7 @@ import Jwt,{JwtPayload} from "jsonwebtoken";
 import { User } from "../models/userschema";
  const verfiyjwt=asynchandler(async(req,res,next)=>{
   try {
-     const token= req.cookie?.accessToken||req.header("Authorization")?.replace("Bearer ","")
+     const token= req.cookies?.accessToken||req.header("Authorization")?.replace("Bearer ","")
      if (!token) {
       throw new Apierror(401,"unauthorized request")
      }
@@ -14,7 +14,7 @@ import { User } from "../models/userschema";
       throw new Apierror(401,"invalid excess token")
      }
      req.user=user
-     next() 
+     next()
   } catch (error) {
     throw new Apierror(401,"invalid token ")
   }

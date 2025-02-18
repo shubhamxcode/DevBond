@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../Slices/userslice';
+import { setUserId, setusername} from '../Slices/userslice';
+import { setaccessToken } from '../Slices/userslice';
 
 const LoginPage = () => {
     const dispatch = useDispatch();
@@ -19,19 +20,25 @@ const LoginPage = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-
+    
         try {
             const response = await axios.post(`${apiUrl}/api/users/login`, { email, password });
-
-            if (response) {
-                dispatch(setUser({ userId: response.data.UserId, username: response.data.username }));
-                navigate('/field');
+    
+            if (response.data?.data?.user) {
+                const { userId, user } = response.data.data;
+                console.log(response.data.data);
+                dispatch(setUserId(userId)); // Correctly accessing userId
+                dispatch(setusername(user.username)); // Correctly accessing username
+                dispatch(setaccessToken(response.data.data.accessToken))
             }
+            navigate('/field');
+    
         } catch (err: any) {
             console.error(err);
             setError(err.response?.data?.message || "Login failed");
         }
     };
+    
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-900">
