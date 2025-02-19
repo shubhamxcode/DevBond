@@ -12,16 +12,16 @@ const RegisterUser = () => {
   const [message, setMessage] = useState("");
 
   // Set API URL dynamically: Use local URL if running locally, otherwise use Render URL
-  // const apiUrl = import.meta.env.DEV
-  //   ? "http://localhost:2000"  // Local backend for development
-  //   : import.meta.env.VITE_RENDER_URL_;  // Render backend for production
+  const apiUrl = import.meta.env.DEV
+    ? "http://localhost:2000"  // Local backend for development
+    : import.meta.env.VITE_RENDER_URL_;  // Render backend for production
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
       const response = await axios.post(
-        `/api/users/register`,  // Use dynamic API URL
+        `${apiUrl}/api/users/register`,  // Use dynamic API URL
         data,
         {
           headers: {
