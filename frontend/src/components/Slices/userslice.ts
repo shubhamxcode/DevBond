@@ -1,18 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit';
-// import { User } from '../../types';
 
 interface UserState {
   userId: string | null;
   username: string | null;
   selectedField: string;
-  accessToken:null
+  accessToken: null;
+  followedUsers: string[]; // New state to manage followed users
 }
 
 const initialState: UserState = {
   userId: null,
   username: null,
   selectedField: '',
-  accessToken:null
+  accessToken: null,
+  followedUsers: [], // Initialize as an empty array
 };
 
 const userSlice = createSlice({
@@ -28,11 +29,19 @@ const userSlice = createSlice({
     setusername: (state, action) => {
       state.username = action.payload;
     },
-    setaccessToken:(state,action)=>{
-      state.accessToken=action.payload
-    }
+    setaccessToken: (state, action) => {
+      state.accessToken = action.payload;
+    },
+    followUser: (state, action) => {
+      if (!state.followedUsers.includes(action.payload)) {
+        state.followedUsers.push(action.payload); // Add user ID to followed users
+      }
+    },
+    unfollowUser: (state, action) => {
+      state.followedUsers = state.followedUsers.filter(id => id !== action.payload); // Remove user ID from followed users
+    },
   },
 });
 
-export const { setUserId, setselectedfield, setusername,setaccessToken } = userSlice.actions;
+export const { setUserId, setselectedfield, setusername, setaccessToken, followUser, unfollowUser } = userSlice.actions;
 export default userSlice.reducer;

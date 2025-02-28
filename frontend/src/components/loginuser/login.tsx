@@ -30,6 +30,9 @@ const LoginPage = () => {
                 dispatch(setUserId(userId)); // Correctly accessing userId
                 dispatch(setusername(user.username)); // Correctly accessing username
                 dispatch(setaccessToken(response.data.data.accessToken))
+
+                // Store user data in local storage
+                localStorage.setItem('userData', JSON.stringify(response.data.data));
             }
             navigate('/field');
     
