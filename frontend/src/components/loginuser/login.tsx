@@ -26,7 +26,7 @@ const LoginPage = () => {
     
             if (response.data?.data?.user) {
                 const { userId, user } = response.data.data;
-                console.log(response.data.data);
+                console.log("hey shubham u have got response",response);
                 dispatch(setUserId(userId)); // Correctly accessing userId
                 dispatch(setusername(user.username)); // Correctly accessing username
                 dispatch(setaccessToken(response.data.data.accessToken))

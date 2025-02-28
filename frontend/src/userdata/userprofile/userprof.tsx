@@ -19,10 +19,11 @@ function UserProf() {
 
   const selectedField = useSelector((state: RootState) => state.userProfile.selectedField);
   const accessToken = useSelector((state: RootState) => state.userProfile.accessToken);
+ 
 
-  console.log("Token:", accessToken);
-  console.log("Selected Field:", selectedField);
-  console.log("Followed Users:", followedUsers);
+  // console.log("Token:", accessToken);
+  // console.log("Selected Field:", selectedField);
+  // console.log("Followed Users:", followedUsers);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -35,7 +36,7 @@ function UserProf() {
           const response = await axios.get(`/api/users/users-by-field?selectedField=${selectedField}`, {
             headers: { Authorization: `Bearer ${accessToken}` }
           });
-          console.log("Response received:", response);
+          console.log("Response received:", response.data);
           setFieldData(response.data);
           setError(null);
         } catch (error) {
@@ -47,6 +48,21 @@ function UserProf() {
 
     fetchFieldData();
   }, [selectedField, accessToken]);
+  
+
+  useEffect(() => {
+    try {
+      axios.post(`/api/users/followUser`,{fieldData},{
+        headers:{
+          "Content-Type":"application/json"
+        }
+      })
+    } catch (error) {
+      console.log("somthing went wrong",error);
+      
+    }
+  }, [])
+  
 
   return (
     <div className="bg-gray-900 min-h-screen">

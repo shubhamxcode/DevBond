@@ -3,6 +3,7 @@ import Apierror from "../utils/apierror.ts";
 import {User} from '../models/userschema.ts'
 import Apiresponse   from "../utils/apiresponse.ts";
 import bcrypt from 'bcrypt';
+import { Follow } from "../models/userfollower.ts";
 
 interface IUser extends Document {
     username: string;
@@ -151,4 +152,18 @@ const getUsersByField = asynchandler(async (req, res) => {
     return res.status(200).json(users);
 });
 
-export { regiesteruser, loginUser, updateUserField, getUsersByField }; 
+
+
+const followUser = asynchandler(async (req, res) => {
+    const { followerId, followingId } = req.body; // Assuming these IDs are sent in the request body
+    if (!followerId || !followingId) {
+        throw new Apierror(400, "Follower and following IDs are required");
+    }
+
+    const newFollow = new Follow({ follower: followerId, following: followingId });
+    await newFollow.save();
+
+    res.status(201).json({ message: "User followed successfully", follow: newFollow });
+});
+
+export { regiesteruser, loginUser, updateUserField, getUsersByField,followUser}; 
