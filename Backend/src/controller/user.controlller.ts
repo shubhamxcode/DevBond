@@ -155,12 +155,15 @@ const getUsersByField = asynchandler(async (req, res) => {
 
 
 const followUser = asynchandler(async (req, res) => {
-    const { followerId, followingId } = req.body; // Assuming these IDs are sent in the request body
-    if (!followerId || !followingId) {
+    const { followerId } = req.body; // Assuming these IDs are sent in the request body
+    if (!followerId) {
         throw new Apierror(400, "Follower and following IDs are required");
     }
-
-    const newFollow = new Follow({ follower: followerId, following: followingId });
+    const existeduser=await Follow.findOne({follower:followerId})
+    if (existeduser) {
+        throw new Apierror(500,"You have already follow that developer")
+    }
+    const newFollow = new Follow({ follower: followerId });
     await newFollow.save();
 
     res.status(201).json({ message: "User followed successfully", follow: newFollow });

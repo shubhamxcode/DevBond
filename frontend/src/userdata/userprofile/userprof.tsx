@@ -7,7 +7,7 @@ import { followUser } from "../../components/Slices/userslice"; // Import follow
 interface User {
   username: string;
   selectedField: string;
-  userId?: string; // Ensure userId exists in API response
+  _id?: string; // Ensure userId exists in API response
 }
 
 function UserProf() {
@@ -48,21 +48,7 @@ function UserProf() {
 
     fetchFieldData();
   }, [selectedField, accessToken]);
-  
 
-  useEffect(() => {
-    try {
-      axios.post(`/api/users/followUser`,{fieldData},{
-        headers:{
-          "Content-Type":"application/json"
-        }
-      })
-    } catch (error) {
-      console.log("somthing went wrong",error);
-      
-    }
-  }, [])
-  
 
   return (
     <div className="bg-gray-900 min-h-screen">
@@ -100,8 +86,9 @@ function UserProf() {
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {fieldData.length > 0 ? (
             fieldData.map((item, index) => {
-              const userId = item.userId || item.username; // Use userId or fallback to username
-
+              const userId = item._id || item.username; // Use userId or fallback to username
+              console.log("there is an id",userId);
+              
               return (
                 <div 
                   key={index} 
@@ -122,10 +109,15 @@ function UserProf() {
                         ? "bg-gray-600 cursor-not-allowed"
                         : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500"
                     } text-white py-2 px-4 rounded-lg transition-colors duration-300 font-medium flex items-center justify-center space-x-2`}
-                    onClick={() => {
+                    onClick={async() => {
                       if (!followedUsers.includes(userId)) {
-                        dispatch(followUser(userId)); // Dispatch action to follow
-                        console.log("Following user:", userId);
+                        try {
+                          const response=await axios.post('api/users/userfollower',{followerId:userId})
+                          console.log(response)
+                          dispatch(followUser(userId)); // Dispatch action to follow
+                        } catch (error) {
+                          console.log("there is an error while following user",error)
+                        }
                       }
                     }}
                     disabled={followedUsers.includes(userId)} // Disable button if already followed
