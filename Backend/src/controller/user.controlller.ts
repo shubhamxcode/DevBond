@@ -121,7 +121,6 @@ const updateUserField = asynchandler(async (req, res) => {
           if (!user) {
             return res.status(404).json({ message: "User not found" });
           }
-      
           user.selectedField = selectedField;
           await user.save();
           res.json({ message: "Field updated successfully", user });
@@ -168,5 +167,25 @@ const followUser = asynchandler(async (req, res) => {
 
     res.status(201).json({ message: "User followed successfully", follow: newFollow });
 });
+
+const logout=asynchandler(async(req,res)=>{
+    await User.findByIdAndUpdate(req.user._id,{
+        $set:{
+            refreshToken:undefined
+        },
+       
+    },{
+        new:true
+    })
+    const options={
+        httpOnly:true,
+        secure:true
+    }
+    return res.status(200).clearCookie("accessToken",options)
+    .clearCookie("refreshToken",options).json(
+        new Apiresponse(200,"user Logout")
+    )
+
+})
 
 export { regiesteruser, loginUser, updateUserField, getUsersByField,followUser}; 

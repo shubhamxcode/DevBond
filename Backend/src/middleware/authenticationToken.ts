@@ -2,7 +2,7 @@ import Apierror from "../utils/apierror";
 import asynchandler from "../utils/asynchandler";
 import Jwt,{JwtPayload} from "jsonwebtoken";
 import { User } from "../models/userschema";
- const verfiyjwt=asynchandler(async(req,res,next)=>{
+ const verfiyjwt=asynchandler(async(req,_,next)=>{
   try {
      const token= req.cookies?.accessToken||req.header("Authorization")?.replace("Bearer ","")
      if (!token) {
