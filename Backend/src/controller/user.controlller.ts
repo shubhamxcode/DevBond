@@ -4,6 +4,7 @@ import {User} from '../models/userschema.ts'
 import Apiresponse   from "../utils/apiresponse.ts";
 import bcrypt from 'bcrypt';
 import { Follow } from "../models/userfollower.ts";
+import jwt,{JwtPayload} from "jsonwebtoken";
 
 interface IUser extends Document {
     username: string;
@@ -12,7 +13,6 @@ interface IUser extends Document {
     getAccessToken: () => string;
     getRefreshToken: () => string;
     refreshToken?: string 
-    // save: (options?: SaveOptions) => Promise<IUser>;
 }
 const generateTokens = async (user: any) => {
 
@@ -185,7 +185,33 @@ const logout=asynchandler(async(req,res)=>{
     .clearCookie("refreshToken",options).json(
         new Apiresponse(200,"user Logout")
     )
+})
+const refreshacesstoken=asynchandler(async(req,res)=>{
+    const incomingreftoken= req.body.refreshToken||req.cookies.refreshToken
+    if (!incomingreftoken) {
+        throw new Apierror(400,"there is inavalid Token")
+    }
+   try {
+     const decodedToken=jwt.verify(incomingreftoken,process.env.REFRESH_TOKEN_SECREAT as string)
+     const user = await User.findById((decodedToken as JwtPayload)._id);
+     if (!user) {
+         throw new Apierror(400,"invalid refreshtoken")
+     }
+     if (incomingreftoken!==user?.refreshToken) {
+         throw new Apierror(401,"refreshtoken is expired or use")
+     }
+ 
+     const {accessToken,refreshToken}=await generateTokens(user._id);
+     const options={
+         httpOnly:true,
+         secure:true
+     }
+     res.status(200).cookie("accessToken",accessToken,options).cookie("refreshToken",refreshToken,options)
+     .json(new Apiresponse(200,"refreshToken refreshed"))
+   } catch (error) {
+    throw new Apierror(400,"invalid refreshtoken")
+   }
 
 })
 
-export { regiesteruser, loginUser, updateUserField, getUsersByField,followUser}; 
+export { regiesteruser, loginUser, updateUserField, getUsersByField,followUser,logout,refreshacesstoken}; 

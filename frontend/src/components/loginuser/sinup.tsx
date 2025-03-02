@@ -29,6 +29,7 @@ const RegisterUser = () => {
           },
         }
       );
+      console.log("here u got the register data:",response)
 
       if (response) {
         setMessage("You are registered successfully! Please log in.");
