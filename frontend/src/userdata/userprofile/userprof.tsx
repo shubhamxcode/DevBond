@@ -119,7 +119,7 @@ function UserProf() {
                     onClick={async() => {
                       if (!followedUsers.includes(userId)) {
                         try {
-                          const response=await axios.post('api/users/userfollower',{followerId:userId})
+                          const response=await axios.post(`${apiUrl}api/users/userfollower`,{followerId:userId})
                           console.log(response)
                           dispatch(followUser(userId)); // Dispatch action to follow
                         } catch (error) {
