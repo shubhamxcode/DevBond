@@ -28,6 +28,9 @@ function UserProf() {
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+  const apiUrl = import.meta.env.DEV
+  ? "http://localhost:2000"  // Local backend for development
+  : import.meta.env.VITE_RENDER_URL_;  // Render backend for production
 
   useEffect(() => {
     const fetchFieldData = async () => {
@@ -36,7 +39,7 @@ function UserProf() {
           // Add a console log to debug the request
           console.log("Fetching users with field:", selectedField);
           
-          const response = await axios.get(`/api/users/users-by-field?selectedField=${selectedField}`, {
+          const response = await axios.get(`${apiUrl}/api/users/users-by-field?selectedField=${selectedField}`, {
             headers: { Authorization: `Bearer ${accessToken}` }
           });
           

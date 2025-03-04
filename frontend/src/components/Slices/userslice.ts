@@ -24,13 +24,7 @@ const userSlice = createSlice({
       state.userId = action.payload;
     },
     setselectedfield: (state, action) => {
-      // Check if action.payload is an object with selectedField property
-      if (typeof action.payload === 'object' && action.payload.selectedField) {
-        state.selectedField = action.payload.selectedField;
-      } else {
-        // If it's just a string, set it directly
-        state.selectedField = action.payload;
-      }
+      state.selectedField = action.payload;
     },
     setusername: (state, action) => {
       state.username = action.payload;
