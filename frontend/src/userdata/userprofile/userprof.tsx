@@ -33,9 +33,13 @@ function UserProf() {
     const fetchFieldData = async () => {
       if (selectedField && accessToken) {
         try {
+          // Add a console log to debug the request
+          console.log("Fetching users with field:", selectedField);
+          
           const response = await axios.get(`/api/users/users-by-field?selectedField=${selectedField}`, {
             headers: { Authorization: `Bearer ${accessToken}` }
           });
+          
           console.log("Response received:", response.data);
           setFieldData(response.data);
           setError(null);
@@ -43,13 +47,13 @@ function UserProf() {
           console.error("Error fetching field data:", error);
           setError("Failed to fetch developer suggestions.");
         }
+      } else {
+        console.log("Missing selectedField or accessToken:", { selectedField, accessToken });
       }
     };
-
+  
     fetchFieldData();
   }, [selectedField, accessToken]);
-
-
   return (
     <div className="bg-gray-900 min-h-screen">
       {/* Profile Dropdown */}

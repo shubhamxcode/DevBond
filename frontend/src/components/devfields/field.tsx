@@ -14,7 +14,9 @@ function Field() {
   const dispatch = useDispatch();
 
   const handleFieldClick = async (selectedField: string) => {
-    console.log("UserId before sending:", userId);  // Debugging log
+    console.log("UserId before sending:", userId);
+    console.log("Selected field:", selectedField);
+    
     if (!userId) {
       setError("User ID is missing. Please log in again.");
       return;
@@ -22,15 +24,16 @@ function Field() {
   
     try {
       const response = await axios.post(`/api/users/update-field`, { userId, selectedField });
-      console.log("API Response:",response.data);  // Debugging log
-      dispatch(setselectedfield({ selectedField }));
+      console.log("API Response:", response.data);
+      
+      // Make sure we're dispatching the field correctly
+      dispatch(setselectedfield(selectedField));
+      
     } catch (err) {
       console.error("Error sending request:", err);
       setError("Error saving field selection");
     }
   };
-  
-
   return (
     <div className="flex flex-col items-center justify-center space-y-8 bg-gradient-to-r from-gray-900 via-black to-gray-900 min-h-screen py-10 px-4">
       <h1 className="text-6xl font-extrabold text-white text-center">
