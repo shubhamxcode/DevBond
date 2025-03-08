@@ -214,4 +214,22 @@ const refreshacesstoken=asynchandler(async(req,res)=>{
 
 })
 
-export { regiesteruser, loginUser, updateUserField, getUsersByField,followUser,logout,refreshacesstoken}; 
+const unfollowUser = asynchandler(async (req, res) => {
+    const { followerId } = req.body;
+    
+    if (!followerId) {
+        throw new Apierror(400, "Follower ID is required");
+    }
+    
+    const existingFollow = await Follow.findOne({ follower: followerId });
+    
+    if (!existingFollow) {
+        throw new Apierror(404, "You are not following this developer");
+    }
+    
+    await Follow.findOneAndDelete({ follower: followerId });
+    
+    res.status(200).json({ message: "User unfollowed successfully" });
+});
+
+export { regiesteruser, loginUser, updateUserField, getUsersByField, followUser, unfollowUser, logout, refreshacesstoken }; 
