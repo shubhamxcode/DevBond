@@ -77,8 +77,8 @@ function UserProf() {
   const followUserAction = async (userId: string) => {
     setFollowLoading(userId);
     try {
-      const response = await axios.post(`/api/users/userfollower`, { followerId: userId });
-      dispatch(followUser(userId));
+      const response = await axios.post(`/api/users/userfollower`, { followerId: userId, username:username,selectedField:selectedField});
+      dispatch(followUser({userId,username,selectedField}));
       console.log("Follow response:", response);
     } catch (error) {
       console.log(`Error following user:`, error);
@@ -93,8 +93,9 @@ function UserProf() {
   const unfollowUserAction = async (userId: string) => {
     setFollowLoading(userId);
     try {
-      dispatch(unfollowUser(userId));
-      const response = await axios.post(`/api/users/userunfollow`, { followerId: userId });
+     
+      const response = await axios.post(`/api/users/userunfollow`, { followerId: userId, username:username,selectedField:selectedField });
+      dispatch(unfollowUser({userId,username,selectedField}));
       console.log("Unfollow response:", response);
     } catch (error) {
       console.log(`Error unfollowing user:`, error);

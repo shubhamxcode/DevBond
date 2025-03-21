@@ -13,6 +13,7 @@ interface IUser extends Document {
     getAccessToken: () => string;
     getRefreshToken: () => string;
     refreshToken?: string 
+
 }
 const generateTokens = async (user: any) => {
 
@@ -145,27 +146,34 @@ const getUsersByField = asynchandler(async (req, res) => {
         selectedField: { $regex: new RegExp(selectedField, "i") }, 
         _id: { $ne: userId }  // Exclude logged-in user
     });
-    
-
-
     return res.status(200).json(users);
 });
 
 
 
+
 const followUser = asynchandler(async (req, res) => {
-    const { followerId } = req.body; // Assuming these IDs are sent in the request body
-    if (!followerId) {
+    const { followerId,username,selectedField} = req.body; // Assuming these IDs are sent in the request body
+    if (!followerId&&username&&selectedField) {
         throw new Apierror(400, "Follower and following IDs are required");
     }
     const existeduser=await Follow.findOne({follower:followerId})
     if (existeduser) {
         throw new Apierror(500,"You have already follow that developer")
     }
-    const newFollow = new Follow({ follower: followerId });
+    const followedUser=await User.findById(followerId);
+    if (!followedUser) {
+        throw new Apierror(404,"User is not found")
+    }
+    const newFollow = new Follow({
+         follower: followerId,
+         username:followedUser.username,
+         selectedField:followedUser.selectedField
+         });
     await newFollow.save();
+    const populatefollow=await Follow.findById(newFollow._id).populate('follower','username selectedField')
 
-    res.status(201).json({ message: "User followed successfully", follow: newFollow });
+    res.status(201).json({ message: "User followed successfully", follow:populatefollow });
 });
 
 const logout=asynchandler(async(req,res)=>{

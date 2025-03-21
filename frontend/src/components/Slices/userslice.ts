@@ -33,10 +33,15 @@ const userSlice = createSlice({
       state.accessToken = action.payload;
     },
     followUser: (state, action) => {
-      state.followedUsers.push(action.payload); // Add user ID to followed users
-    },
+     const {userId,username,selectedField}=action.payload
+     if (!state.followedUsers.includes(userId)) {
+      state.followedUsers.push(userId)
+      
+     }
+  },
     unfollowUser: (state, action) => {
-      state.followedUsers = state.followedUsers.filter(id => id !== action.payload); // Remove user ID from followed users
+      const {userId}=action.payload
+      state.followedUsers = state.followedUsers.filter(id => id !==userId); // Remove user ID from followed users
     },
   },
 });
