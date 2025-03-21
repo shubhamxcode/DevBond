@@ -1,3 +1,9 @@
+export interface FollowedUser {
+  userId: string;
+  username: string;
+  selectedField: string;
+}
+
 export interface User {
   userId: string;
   username: string;

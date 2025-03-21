@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { FollowedUser } from '../../types'; // Import the FollowedUser type
 
 interface UserState {
   userId: string | null;
   username: string | null;
   selectedField: string;
-  accessToken: null;
-  followedUsers: string[]; // New state to manage followed users
+  accessToken: string | null;
+  followedUsers: FollowedUser[]; // Update this line
 }
 
 const initialState: UserState = {
@@ -33,15 +34,14 @@ const userSlice = createSlice({
       state.accessToken = action.payload;
     },
     followUser: (state, action) => {
-     const {userId,username,selectedField}=action.payload
-     if (!state.followedUsers.includes(userId)) {
-      state.followedUsers.push(userId)
-      
-     }
-  },
+      const { userId, username, selectedField } = action.payload;
+      if (!state.followedUsers.includes(userId)) {
+        state.followedUsers.push({ userId, username, selectedField });
+      }
+    },
     unfollowUser: (state, action) => {
-      const {userId}=action.payload
-      state.followedUsers = state.followedUsers.filter(id => id !==userId); // Remove user ID from followed users
+      const { userId } = action.payload;
+      state.followedUsers = state.followedUsers.filter(user => user.userId !== userId);
     },
   },
 });
