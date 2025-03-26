@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 interface User {
   username: string;
   selectedField: string;
-  _id?: string; // Ensure userId exists in API response
+  _id?:any; // Ensure userId exists in API response
 }
 
 function UserProf() {
@@ -64,7 +64,7 @@ function UserProf() {
   }, [selectedField, accessToken]);
 
   const handleFollowToggle = async (userId: string, isFollowing: boolean) => {
-    if (isFollowing) {
+    if (isFollowing){
       // Show confirmation dialog for unfollow
       setUserToUnfollow(userId);
       setShowUnfollowConfirm(true);
@@ -77,13 +77,13 @@ function UserProf() {
   const followUserAction = async (userId: string) => {
     setFollowLoading(userId);
     try {
-      const response = await axios.post(`${apiUrl}/api/users/userfollower`, { followerId: userId, username:username,selectedField:selectedField});
-      dispatch(followUser({userId,username,selectedField}));
+      const response = await axios.post(`${apiUrl}/api/users/userfollower`, {userId, username,selectedField});
+      dispatch(followUser({userId:userId.toString(),username,selectedField}));
       console.log("Follow response:", response);
     } catch (error) {
       console.log(`Error following user:`, error);
       // Revert optimistic update on error
-      dispatch(unfollowUser(userId));
+      dispatch(unfollowUser({userId:userId.toString(),username,selectedField}));
       setError("Failed to follow user. Please try again.");
     } finally {
       setFollowLoading(null);
@@ -94,12 +94,12 @@ function UserProf() {
     setFollowLoading(userId);
     try {
      
-      const response = await axios.post(`${apiUrl}/api/users/userunfollow`, { followerId: userId, username:username,selectedField:selectedField });
-      dispatch(unfollowUser({userId,username,selectedField}));
+      const response = await axios.post(`${apiUrl}/api/users/userunfollow`, {  userId });
+      dispatch(unfollowUser({userId:userId.toString()}));
       console.log("Unfollow response:", response);
     } catch (error) {
       console.log(`Error unfollowing user:`, error);
-      dispatch(followUser(userId));
+      dispatch(followUser({userId:userId.toString()}));
       setError("Failed to unfollow user. Please try again.");
     } finally {
       setFollowLoading(null);
@@ -250,9 +250,10 @@ function UserProf() {
         <div className="mt-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {fieldData.length > 0 ? (
             fieldData.map((item, index) => {
-              const userId = item._id || item.username; // Use userId or fallback to username
+              const userId = item._id; // Use userId or fallback to username
               console.log("hey shubham ur userid is delivered",userId)
-              const isFollowing = followedUsers.includes(userId);
+              const isFollowing = followedUsers.some(user => user.userId === userId);
+              
               
               return (
                 <div 

@@ -153,20 +153,20 @@ const getUsersByField = asynchandler(async (req, res) => {
 
 
 const followUser = asynchandler(async (req, res) => {
-    const { followerId,username,selectedField} = req.body; // Assuming these IDs are sent in the request body
-    if (!followerId&&username&&selectedField) {
+    const { userId,username,selectedField} = req.body; // Assuming these IDs are sent in the request body
+    if (!userId&&username&&selectedField) {
         throw new Apierror(400, "Follower and following IDs are required");
     }
-    const existeduser=await Follow.findOne({follower:followerId})
+    const existeduser=await Follow.findOne({follower:userId})
     if (existeduser) {
         throw new Apierror(500,"You have already follow that developer")
     }
-    const followedUser=await User.findById(followerId);
+    const followedUser=await User.findById(userId);
     if (!followedUser) {
         throw new Apierror(404,"User is not found")
     }
     const newFollow = new Follow({
-         follower: followerId,
+         follower: userId,
          username:followedUser.username,
          selectedField:followedUser.selectedField
          });
@@ -223,20 +223,27 @@ const refreshacesstoken=asynchandler(async(req,res)=>{
 })
 
 const unfollowUser = asynchandler(async (req, res) => {
-    const { followerId } = req.body;
-    
-    if (!followerId) {
-        throw new Apierror(400, "Follower ID is required");
+    const { userId } = req.body;  // The user you want to unfollow
+    if (!userId) {
+        throw new Apierror(400, "User ID is required to unfollow");
     }
-    
-    const existingFollow = await Follow.findOne({ follower: followerId });
-    
+
+    // Find the specific relationship
+    const existingFollow = await Follow.findOne({
+        follower: userId,  
+          // Ensure you're targeting the correct relationship
+    });
+
     if (!existingFollow) {
         throw new Apierror(404, "You are not following this developer");
     }
-    
-    await Follow.findOneAndDelete({ follower: followerId });
-    
+
+    // Delete the follow relationship
+    await Follow.findOneAndDelete({
+        follower: userId,
+       
+    });
+
     res.status(200).json({ message: "User unfollowed successfully" });
 });
 

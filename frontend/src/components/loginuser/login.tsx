@@ -12,7 +12,7 @@ const LoginPage = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    // Set API URL dynamically: Use local URL if running locally, otherwise use Render URL
+    // // Set API URL dynamically: Use local URL if running locally, otherwise use Render URL
     const apiUrl = import.meta.env.DEV
         ? "http://localhost:2000"  // Local backend for development
         : import.meta.env.VITE_RENDER_URL_;  // Render backend for production
