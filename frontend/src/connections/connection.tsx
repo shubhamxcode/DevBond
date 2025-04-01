@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../Redux/store";
+import { Link } from "react-router-dom";
 
 function Connection() {
   const followerData = useSelector(
@@ -27,9 +28,9 @@ function Connection() {
               </div>
 
               <div className="p-4 pt-2">
-                <button className="w-full bg-blue-600 hover:bg-blue-500 text-white py-2 rounded-md font-medium transition-colors duration-200">
+                <Link to='/developer' className="w-full bg-blue-600 hover:bg-blue-500 text-white py-2 rounded-md font-medium transition-colors duration-200">
                   Chat with developer
-                </button>
+                </Link>
               </div>
             </div>
           ))}

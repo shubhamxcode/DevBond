@@ -1,27 +1,68 @@
 import { Server } from "socket.io";
+import Redis from 'ioredis';
 
- class socketservice {
-    private _io:Server;
-    constructor(){
-        console.log(`init socket server....`);
-        this._io=new Server()
-    }
-    public initlistners(){
-        console.log('init socketListners...');
-        
-        const io=this.io
-        io.on("connect",(socket)=>{
-            console.log(`new socket connected`,socket.id);
-            socket.on("event:message",async({message}:{message:string})=>{ 
-                console.log("new message received",message);
-                
-            })
-        })
-    }
-    get io(){
-        return this._io
-    }
- }
+const pub = new Redis({
+    host: "valkey-622fdf3-devbond.c.aivencloud.com",
+    port: 20914,
+    username: "default",
+    password: "AVNS_ES68ikMnwqwlWYI05b_"
+});
 
+const sub = new Redis({
+    host: "valkey-622fdf3-devbond.c.aivencloud.com",
+    port: 20914,
+    username: "default",
+    password: "AVNS_ES68ikMnwqwlWYI05b_"
+});
 
- export default socketservice
+class SocketService {
+    private _io: Server;
+
+    constructor() {
+        console.log("Initializing socket server...");
+        this._io = new Server({
+            cors: {
+                allowedHeaders: ["*"],
+                origin: "*",
+            }
+        });
+
+        // Subscribe to Valkey (Redis) channel
+        sub.subscribe("MESSAGES");
+
+        // Listen for messages from Valkey
+        sub.on("message", (channel: string, message: string) => {
+            console.log(`Received message from Valkey channel ${channel}: ${message}`);
+
+            if (channel === "MESSAGES") {
+                this._io.emit("message", JSON.parse(message)); // Broadcast to clients
+            }
+        });
+    }
+
+    public initListeners() {
+        console.log("Initializing socket listeners...");
+
+        this._io.on("connection", (socket) => {
+            console.log(`New socket connected: ${socket.id}`);
+
+            // Listen for messages and publish to Valkey
+            socket.on("event:message", async ({ message }: { message: string }) => {
+                console.log("New message received:", message);
+
+                // Publish to Valkey channel
+                await pub.publish("MESSAGES", JSON.stringify({ message }));
+            });
+        });
+    }
+
+    get io() {
+        return this._io;
+    }
+
+    public attachServer(server: any) {
+        this._io.attach(server);
+    }
+}
+
+export default SocketService;

@@ -1,33 +1,29 @@
 import dotenv from "dotenv";
 import connectDB from "./Database/data.ts";
 import app from "./app/app.ts";
-import socketservice from "./services/socket.ts";
-import http from "http"
+import SocketService from "./services/socket.ts";
+import http from "http";
 
 dotenv.config({
   path: "./.env",
 });
+
+// Create a single HTTP server for both Express and WebSocket
+const httpServer = http.createServer(app);
+
 connectDB()
   .then(() => {
-    app.listen(process.env.PORT || 4000, () => {
-      console.log(`server is running at port ${process.env.PORT}`);
+    const PORT = process.env.PORT || 4000;
+    
+    // Attach Socket.IO to the existing HTTP server
+    const socket = new SocketService();
+    socket.io.attach(httpServer);
+    socket.initListeners();
+
+    httpServer.listen(PORT, () => {
+      console.log(`Server is running on port ${PORT}`);
     });
   })
   .catch((err) => {
-    console.log("mongoDB connection pls check", err);
+    console.log("MongoDB connection error, please check:", err);
   });
-
-  /////////////////////////////////websocket///////////////////////////////////
-
-  async function init() {
-    const socket=new socketservice()
-    const httpserver=http.createServer()
-    const PORT=process.env.PORT2||3000
-    socket.io.attach(httpserver)
-    httpserver.listen(PORT,()=>{
-      console.log(`http server started at the port:${PORT}`);
-      
-    })
-    socket.initlistners()
-  }
-  init()

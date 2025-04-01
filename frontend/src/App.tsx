@@ -7,6 +7,7 @@ import Sinup from './components/loginuser/sinup'
 import Login from "./components/loginuser/login";
 import Userprof from "./userdata/userprofile/userprof";
 import Connection from "./connections/connection";
+import Developer from "./components/chatarea/developer";
 function App() {
   return (
     <Routes>
@@ -17,6 +18,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Userprof />} />
         <Route path="/connection" element={<Connection/>}/>
+        <Route path="/developer" element={<Developer/>}/>
       </Route>
     </Routes>
   );
