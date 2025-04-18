@@ -15,13 +15,13 @@ Backend/node_modules/
 # Build output
 dist/
 frontend/dist/
-backend/dist/
+Backend/dist/
 dist-ssr/
 *.local
 
 # .env files
 frontend/.env
-backend/.env
+Backend/.env
 
 # IDE and Editor settings
 .vscode/
@@ -39,6 +39,6 @@ backend/.env
 *.tgz
 *.gz
 
-# package lockfiles you don't want
+# Wrongly named package lock (accidentally created)
 frontend/package-lock.json.git
-backend/package-lock.json.git
+Backend/package-lock.json.git
