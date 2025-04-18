@@ -7,38 +7,22 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-# Dependency folders
-node_modules/
-frontend/node_modules/
-Backend/node_modules/
-
-# Build output
-dist/
-frontend/dist/
-Backend/dist/
-dist-ssr/
+node_modules
+dist
+dist-ssr
 *.local
 
-# .env files
-frontend/.env
-Backend/.env
-
-# IDE and Editor settings
-.vscode/
+# Editor directories and files
+.vscode/*
 !.vscode/extensions.json
-.idea/
+.idea
 .DS_Store
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+/home/shubhamv/Web development/fullstack-devbond/DevBond/frontend/.env
+/home/shubhamv/Web development/fullstack-devbond/DevBond/Backend/.env
 
-# Miscellaneous
-*.git
-*.tgz
-*.gz
-
-# Wrongly named package lock (accidentally created)
-frontend/package-lock.json.git
-Backend/package-lock.json.git
+.env
