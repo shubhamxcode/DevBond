@@ -2,17 +2,17 @@ import { Server } from "socket.io";
 import Redis from 'ioredis';
 
 const pub = new Redis({
-    host: "valkey-622fdf3-devbond.c.aivencloud.com",
-    port: 20914,
-    username: "default",
-    password: "AVNS_ES68ikMnwqwlWYI05b_"
+    // host: "valkey-622fdf3-devbond.c.aivencloud.com",
+    // port: 20914,
+    // username: "default",
+    // password: "AVNS_ES68ikMnwqwlWYI05b_"
 });
 
 const sub = new Redis({
-    host: "valkey-622fdf3-devbond.c.aivencloud.com",
-    port: 20914,
-    username: "default",
-    password: "AVNS_ES68ikMnwqwlWYI05b_"
+    // host: "valkey-622fdf3-devbond.c.aivencloud.com",
+    // port: 20914,
+    // username: "default",
+    // password: "AVNS_ES68ikMnwqwlWYI05b_"
 });
 
 class SocketService {
