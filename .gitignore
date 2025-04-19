@@ -24,5 +24,5 @@ dist-ssr
 *.sw?
 /home/shubhamv/Web development/fullstack-devbond/DevBond/frontend/.env
 /home/shubhamv/Web development/fullstack-devbond/DevBond/Backend/.env
-
+Backend/node_modules
 .env
