@@ -41,12 +41,13 @@ function Developer() {
           <button
             onClick={() => {
               sendmessage(message);
-              setmessage(""); // Clear input after sending
+              setmessage("") ; // Clear input after sending
             }}
             className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
           >
             Send
           </button>
+          
         </div>
       </div>
     </div>

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { followUser, unfollowUser } from "../../components/Slices/userslice"; // Import unfollowUser action
 import { Link } from "react-router-dom";
+import { IoIosNotifications } from "react-icons/io";
 
 interface User {
   username: string;
@@ -174,6 +175,10 @@ function UserProf() {
                 <span className="bg-purple-600/30 text-purple-400 text-xs font-medium px-2 py-1 rounded-full">
                   {selectedField || "Not set"}
                 </span>
+              </div>
+              <div className="flex justify-between ">
+                <p className="text-white">Notification</p>
+                <span className="text-red-500 text-2xl"><IoIosNotifications/></span>
               </div>
             </div>
             

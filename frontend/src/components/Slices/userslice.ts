@@ -34,14 +34,14 @@ const userSlice = createSlice({
       state.accessToken = action.payload;
     },
     followUser: (state, action) => {
-      const { userId, username, selectedField } = action.payload;
-      if (!state.followedUsers.includes(userId)) {
-        state.followedUsers.push({ userId, username, selectedField });
+      const { touserId } = action.payload;
+      if (!state.followedUsers.includes(touserId)) {
+        state.followedUsers.push(touserId);
       }
     },
     unfollowUser: (state, action) => {
-      const { userId } = action.payload;
-      state.followedUsers = state.followedUsers.filter(user => user.userId !== userId);
+      const { touserId } = action.payload;
+      state.followedUsers = state.followedUsers.filter(user => user.userId !== touserId);
     },
   },
 });

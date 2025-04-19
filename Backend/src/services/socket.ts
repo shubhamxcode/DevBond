@@ -1,18 +1,22 @@
 import { Server } from "socket.io";
 import Redis from 'ioredis';
 
+
 const pub = new Redis({
-    // host: "valkey-622fdf3-devbond.c.aivencloud.com",
-    // port: 20914,
-    // username: "default",
-    // password: "AVNS_ES68ikMnwqwlWYI05b_"
+    host: process.env.AIVEN_HOST,
+    port: Number(process.env.AIVEN_PORT),
+    username: process.env.AIVEN_USERNAME,
+    password: process.env.AIVEN_PASSWORD,
+    tls: {},
 });
 
 const sub = new Redis({
-    // host: "valkey-622fdf3-devbond.c.aivencloud.com",
-    // port: 20914,
-    // username: "default",
-    // password: "AVNS_ES68ikMnwqwlWYI05b_"
+    host: process.env.AIVEN_HOST,
+    port: Number(process.env.AIVEN_PORT),
+    username: process.env.AIVEN_USERNAME,
+    password: process.env.AIVEN_PASSWORD,
+    tls: {},
+   
 });
 
 class SocketService {
@@ -26,7 +30,6 @@ class SocketService {
                 origin: "*",
             }
         });
-
         // Subscribe to Valkey (Redis) channel
         sub.subscribe("MESSAGES");
 

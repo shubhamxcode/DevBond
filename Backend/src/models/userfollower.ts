@@ -23,5 +23,3 @@ const followerSchema = new mongoose.Schema<Follower>({
 }, { timestamps: true });
 
 export const Follow = mongoose.model<Follower>("Follow", followerSchema);
-
-

@@ -34,7 +34,7 @@ export const SocketProvider: React.FC<Types> = ({ children }) => {
         const {message}=JSON.parse(msg) as {message:string}
         setmessages((prev)=>([...prev,message ]))
         
-    },[])
+    },[]) 
 
     useEffect(() => {
 
