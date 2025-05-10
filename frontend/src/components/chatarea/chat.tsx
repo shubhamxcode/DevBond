@@ -29,12 +29,12 @@ export const SocketProvider: React.FC<Types> = ({ children }) => {
         }
         
     },[socket])
-    const onmessagereceive=useCallback((msg:string)=>{
-        console.log(`from server msg received:`,msg);
-        const {message}=JSON.parse(msg) as {message:string}
-        setmessages((prev)=>([...prev,message ]))
-        
-    },[]) 
+    const onmessagereceive = useCallback((msg: { message: string }) => {
+        console.log(`from server msg received:`, msg);
+        const { message } = msg;
+        setmessages((prev) => [...prev, message]);
+    }, []);
+    
 
     useEffect(() => {
 

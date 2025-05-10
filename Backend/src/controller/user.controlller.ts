@@ -3,9 +3,10 @@ import Apierror from "../utils/apierror.ts";
 import { User } from "../models/userschema.ts";
 import Apiresponse from "../utils/apiresponse.ts";
 import bcrypt from "bcrypt";
-import { Follow } from "../models/userfollower.ts";
 import jwt, { JwtPayload } from "jsonwebtoken";
-
+import { FollowRequest } from "../models/userfollowrequest.ts";
+import { Notification } from "../models/notification"; // Import the Notification model
+import { Follower } from "../models/Follower.ts";
 interface IUser extends Document {
   username: string;
   email: string;
@@ -148,33 +149,71 @@ const getUsersByField = asynchandler(async (req, res) => {
   return res.status(200).json(users);
 });
 
-const followUser = asynchandler(async (req, res) => {
-  const { userId, username, selectedField } = req.body; // Assuming these IDs are sent in the request body
-  if (!userId && username && selectedField) {
-    throw new Apierror(400, "Follower and following IDs are required");
+const followreqaccept = asynchandler(async (req, res) => {
+  const { userId, status } = req.body; // Get userId and status from request body
+
+  if (!userId || !status) {
+    throw new Apierror(400, "Follower ID and status are required");
   }
-  const existeduser = await Follow.findOne({ follower: userId });
-  if (existeduser) {
-    throw new Apierror(500, "You have already follow that developer");
-  }
-  const followedUser = await User.findById(userId);
-  if (!followedUser) {
-    throw new Apierror(404, "User is not found");
-  }
-  const newFollow = new Follow({
-    follower: userId,
-    username: followedUser.username,
-    selectedField: followedUser.selectedField,
-  });
-  await newFollow.save();
-  const populatefollow = await Follow.findById(newFollow._id).populate(
-    "follower",
-    "username selectedField"
+
+  const notification = await Notification.findOneAndUpdate(
+    { following: userId, status: "pending" },
+    { status: status }, // Update the status to accepted or rejected
+    { new: true }
   );
 
-  res
-    .status(201)
-    .json({ message: "User followed successfully", follow: populatefollow });
+  if (!notification) {
+    throw new Apierror(404, "Notification not found");
+  }
+
+  if (status === "accepted") {
+    // Logic to add the follower to the followed users
+    const newFollow = new Follower({
+      follower: notification.follower,
+      following: notification.following,
+    });
+    await newFollow.save();
+  }
+
+  res.status(200).json({ message: "Follow request updated", notification });
+});
+
+const followreq = asynchandler(async (req, res) => {
+  const { UserIdtoFollow, currentUserId } = req.body;
+
+  // Validate that both IDs are provided
+  if (!UserIdtoFollow || !currentUserId) {
+    return res.status(400).json({ message: "Both User IDs are required." });
+  }
+
+  try {
+    // Check if the follow request already exists
+    const alreadyReq = await FollowRequest.findOne({ from: currentUserId, to: UserIdtoFollow });
+    if (alreadyReq) {
+      return res.status(400).json({ message: "User already followed" });
+    }
+
+    // Create a new follow request
+    const newRequest = new FollowRequest({
+      from: currentUserId,
+      to: UserIdtoFollow,
+      status: "pending",
+    });
+    await newRequest.save();
+
+    // Create a notification for the recipient
+    const notification = new Notification({
+      follower: currentUserId,
+      following: UserIdtoFollow,
+      status: "pending",
+    });
+    await notification.save();
+
+    res.status(200).json({ message: "Follow request sent", request: newRequest });
+  } catch (error) {
+    console.error("Error processing follow request:", error);
+    res.status(500).json({ message: "There was an error processing your request." });
+  }
 });
 
 const logout = asynchandler(async (req, res) => {
@@ -238,22 +277,17 @@ const unfollowUser = asynchandler(async (req, res) => {
     throw new Apierror(400, "User ID is required to unfollow");
   }
 
-  // Find the specific relationship
-  const existingFollow = await Follow.findOne({
-    follower: userId,
-    // Ensure you're targeting the correct relationship
-  });
-
-  if (!existingFollow) {
-    throw new Apierror(404, "You are not following this developer");
-  }
-
-  // Delete the follow relationship
-  await Follow.findOneAndDelete({
-    follower: userId,
-  });
-
   res.status(200).json({ message: "User unfollowed successfully" });
+});
+
+const getNotifications = asynchandler(async (req, res) => {
+  const userId = req._id; // Get the logged-in user's ID
+
+  const notifications = await Notification.find({ following: userId })
+    .populate("follower", "username") // Populate follower's username
+    .sort({ createdAt: -1 }); // Sort by latest first
+
+  res.status(200).json(notifications);
 });
 
 export {
@@ -261,8 +295,10 @@ export {
   loginUser,
   updateUserField,
   getUsersByField,
-  followUser,
+  followreqaccept,
   unfollowUser,
   logout,
   refreshacesstoken,
+  followreq,
+  getNotifications,
 };

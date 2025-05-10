@@ -6,6 +6,8 @@ function Connection() {
   const followerData = useSelector(
     (state: RootState) => state.userProfile.followedUsers
   );
+  console.log(`Folllower data is here shubhamji`,followerData);
+  
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -24,6 +26,8 @@ function Connection() {
                 </div>
                 <h3 className="text-white text-lg font-semibold">
                   {data.username}
+
+                  
                 </h3>
               </div>
 

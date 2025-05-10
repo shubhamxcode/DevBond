@@ -34,9 +34,9 @@ const userSlice = createSlice({
       state.accessToken = action.payload;
     },
     followUser: (state, action) => {
-      const { touserId } = action.payload;
-      if (!state.followedUsers.includes(touserId)) {
-        state.followedUsers.push(touserId);
+      const {userId} = action.payload;
+      if (!state.followedUsers.includes(userId)) {
+        state.followedUsers.push(userId);
       }
     },
     unfollowUser: (state, action) => {

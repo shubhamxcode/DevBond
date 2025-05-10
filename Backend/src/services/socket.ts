@@ -52,8 +52,6 @@ class SocketService {
             // Listen for messages and publish to Valkey
             socket.on("event:message", async ({ message }: { message: string }) => {
                 console.log("New message received:", message);
-
-                // Publish to Valkey channel
                 await pub.publish("MESSAGES", JSON.stringify({ message }));
             });
         });
