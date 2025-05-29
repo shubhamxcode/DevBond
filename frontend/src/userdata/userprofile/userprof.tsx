@@ -129,7 +129,7 @@ function UserProf() {
               </div>
 
               <div className="flex justify-between">
-                <p className="text-white">Notification</p>
+                <Link to='/notify' className="text-white">Notification</Link>
                 <span className="text-red-500 text-2xl">
                   <IoIosNotifications />
                 </span>

@@ -20,7 +20,7 @@ function App() {
         <Route path="/profile" element={<Userprof />} />
         <Route path="/connection" element={<Connection/>}/>
         <Route path="/developer" element={<Developer/>}/>
-        <Route path="/notification" element={<Notification/>}/>
+        <Route path="/notify" element={<Notification/>}/>
       </Route>
     </Routes>
   );

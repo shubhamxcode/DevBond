@@ -4,6 +4,7 @@ interface IFollowRequest extends Document {
   from: mongoose.Types.ObjectId; // user who sent request
   to: mongoose.Types.ObjectId;   // user who receives request
   status: "pending" | "accepted" | "rejected";
+  username: string;
 }
 
 const followRequestSchema = new mongoose.Schema<IFollowRequest>({
@@ -21,6 +22,10 @@ const followRequestSchema = new mongoose.Schema<IFollowRequest>({
     type: String,
     enum: ["pending", "accepted", "rejected"],
     default: "pending"
+  },
+  username: {
+    type: String,
+    required: true
   }
 }, { timestamps: true });
 
