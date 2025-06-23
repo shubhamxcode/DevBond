@@ -23,13 +23,15 @@ const FollowRequests: React.FC = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const accessToken = useSelector((state: RootState) => state.userProfile.accessToken);
 
+  const apiUrl=import.meta.env.DEV ? "http://localhost:2000":import.meta.env.VITE_RENDER_URL_ 
+
   useEffect(() => {
     const fetchRequests = async () => {
       if (!accessToken) return;
 
       try {
         setLoading(true);
-        const response = await axios.get('/api/users/followreq/pending', {
+        const response = await axios.get(`${apiUrl}/api/users/followreq/pending`, {
           headers: { 'Authorization': `Bearer ${accessToken}` }
         });
 
@@ -59,7 +61,7 @@ const FollowRequests: React.FC = () => {
     setError('');
 
     try {
-      const response = await axios.post('/api/users/followreq/accept', 
+      const response = await axios.post(`${apiUrl}/api/users/followreq/accept`, 
         { 
           userId: requestId, 
           status: action === 'accept' ? 'accepted' : 'rejected' 

@@ -42,6 +42,8 @@ function UserProf() {
 
   const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
 
+  const apiUrl=import.meta.env.DEV ? "http://localhost:2000":import.meta.env.VITE_RENDER_URL_ 
+
   const toggleMenu = () => setIsOpen(!isOpen);
 
   // Authentication check effect
@@ -66,7 +68,7 @@ function UserProf() {
       if (accessToken) {
         try {
           console.log("Fetching user's connections...");
-          const response = await axios.get('/api/users/connections', {
+          const response = await axios.get(`${apiUrl}/api/users/connections`, {
             headers: { Authorization: `Bearer ${accessToken}` }
           });
           

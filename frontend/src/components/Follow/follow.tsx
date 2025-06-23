@@ -18,6 +18,8 @@ const FollowButton: React.FC<FollowButtonProps> = ({ UserIdtoFollow, username, s
   const [status, setStatus] = useState<FollowStatus>('not_following');
   const [error, setError] = useState('');
 
+  const apiUrl=import.meta.env.DEV ? "http://localhost:2000" : import.meta.env.VITE_RENDER_URL_
+
   // Check the current follow status when component mounts
   useEffect(() => {
     const checkFollowStatus = async () => {
@@ -27,7 +29,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ UserIdtoFollow, username, s
         setStatus('loading');
         
         // Get follow status from backend
-        const response = await axios.get(`/api/users/follow-status/${UserIdtoFollow}`, {
+        const response = await axios.get(`${apiUrl}/api/users/follow-status/${UserIdtoFollow}`, {
           headers: { 'Authorization': `Bearer ${accessToken}` }
         });
         
@@ -67,7 +69,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ UserIdtoFollow, username, s
 
     try {
       // Send follow request
-      const response = await axios.post(`/api/users/followreq`, 
+      const response = await axios.post(`${apiUrl}/api/users/followreq`, 
         { userIdToFollow: UserIdtoFollow },
         { headers: { 'Authorization': `Bearer ${accessToken}` }}
       );
@@ -103,7 +105,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ UserIdtoFollow, username, s
 
     try {
       // Send unfollow request
-      const response = await axios.post(`/api/users/userunfollow`, 
+      const response = await axios.post(`${apiUrl}/api/users/userunfollow`, 
         { userId: UserIdtoFollow },
         { headers: { 'Authorization': `Bearer ${accessToken}` }}
       );
@@ -128,7 +130,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ UserIdtoFollow, username, s
 
     try {
       // Accept follow request
-      const response = await axios.post(`/api/users/followreq/accept`, 
+      const response = await axios.post(`${apiUrl}/api/users/followreq/accept`, 
         { userId: UserIdtoFollow, status: 'accepted' },
         { headers: { 'Authorization': `Bearer ${accessToken}` }}
       );
@@ -161,7 +163,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ UserIdtoFollow, username, s
 
     try {
       // Reject follow request
-      const response = await axios.post(`/api/users/followreq/accept`, 
+      const response = await axios.post(`${apiUrl}/api/users/followreq/accept`, 
         { userId: UserIdtoFollow, status: 'rejected' },
         { headers: { 'Authorization': `Bearer ${accessToken}` }}
       );
