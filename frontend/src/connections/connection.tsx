@@ -32,8 +32,11 @@ function Connection() {
               </div>
 
               <div className="p-4 pt-2">
-                <Link to='/developer' className="w-full bg-blue-600 hover:bg-blue-500 text-white py-2 rounded-md font-medium transition-colors duration-200">
-                  Chat with developer
+                <Link 
+                  to={`/developer/${data.userId}`}
+                  className="w-full bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded-md font-medium transition-colors duration-200 block text-center"
+                >
+                  Chat with {data.username}
                 </Link>
               </div>
             </div>

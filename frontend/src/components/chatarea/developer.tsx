@@ -1,17 +1,30 @@
-import { usersocket } from "./chat";
+import { useSocket } from "./chat";
 import { useState, useEffect, useRef } from "react";
+import { useSelector } from "react-redux";
+import { RootState } from "../../Redux/store";
+import { useParams } from "react-router-dom";
 
 function Developer() {
-  const { sendmessage, messages } = usersocket();
+  const { sendPrivateMessage, messages, joinUser, isConnected } = useSocket();
+  const { recipientId } = useParams<{ recipientId: string }>();
+  const currentUser = useSelector((state: RootState) => state.userProfile);
   const [message, setMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const handleSendMessage = () => {
-    if (message.trim()) {
-      sendmessage(message);
+    if (message.trim() && recipientId) {
+      sendPrivateMessage(recipientId, message);
       setMessage("");
     }
   };
+
+  // Join user when component mounts
+  useEffect(() => {
+    if (currentUser.userId && currentUser.username && joinUser) {
+      console.log('Joining user:', currentUser.userId, currentUser.username);
+      joinUser(currentUser.userId, currentUser.username);
+    }
+  }, [currentUser.userId, currentUser.username, joinUser]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -21,7 +34,14 @@ function Developer() {
     <div className="flex flex-col h-screen bg-gradient-to-br from-gray-900 to-gray-800">
       {/* Header */}
       <header className="bg-gray-800 p-5 border-b border-gray-700 shadow-md">
-        <h1 className="text-2xl font-bold text-indigo-400">Dark Chat</h1>
+        <h1 className="text-2xl font-bold text-indigo-400">
+          Private Chat {!isConnected && <span className="text-red-400">(Disconnected)</span>}
+        </h1>
+        {recipientId && (
+          <p className="text-gray-400 text-sm">
+            Chatting with: {recipientId}
+          </p>
+        )}
       </header>
 
       {/* Messages Area */}
@@ -30,13 +50,30 @@ function Developer() {
           messages.map((msg, index) => (
             <div
               key={index}
-              className="p-3 bg-indigo-700 bg-opacity-20 backdrop-blur-md text-white rounded-2xl max-w-sm break-words animate-fadeIn"
+              className={`p-3 backdrop-blur-md text-white rounded-2xl max-w-sm break-words animate-fadeIn ${
+                msg.senderId === currentUser.userId 
+                  ? 'bg-blue-600 bg-opacity-50 ml-auto' 
+                  : 'bg-indigo-700 bg-opacity-20'
+              }`}
             >
-              {msg}
+              <div className="text-xs text-gray-300 mb-1">
+                {msg.senderId === currentUser.userId ? 'You' : msg.senderName}
+              </div>
+              {msg.message}
+              <div className="text-xs text-gray-400 mt-1">
+                {new Date(msg.timestamp).toLocaleTimeString()}
+              </div>
             </div>
           ))
         ) : (
-          <p className="text-gray-400 text-center mt-10">No messages yet. Start the conversation!</p>
+          <p className="text-gray-400 text-center mt-10">
+            No messages yet. Start the conversation!
+            {!recipientId && (
+              <span className="block text-red-400 mt-2">
+                Error: No recipient specified
+              </span>
+            )}
+          </p>
         )}
         <div ref={messagesEndRef} />
       </main>

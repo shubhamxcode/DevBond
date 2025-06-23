@@ -43,7 +43,9 @@ const userSchema = new mongoose.Schema<IUser>({
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next();
-  this.password = await bcrypt.hash(this.password, 6);
+  
+  // Increase bcrypt rounds from 6 to 10 for better security
+  this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 

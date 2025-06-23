@@ -1,17 +1,33 @@
 import { Router } from "express";
-import { regiesteruser, loginUser, updateUserField, getUsersByField,logout,refreshacesstoken,followreq } from '../controller/user.controlller'
-import verfiyjwt from "../middleware/authenticationToken";
+import { 
+  registerUser, 
+  loginUser, 
+  updateUserField, 
+  getUsersByField,
+  followRequestAccept,
+  logout,
+  refreshAccessToken, 
+  unfollowUser,
+  sendFollowRequest,
+  getFollowStatus,
+  getPendingFollowRequests,
+  getConnections
+} from '../controller/user.controller'
+import verifyJwt from "../middleware/authenticationToken";
 
 const routes = Router();
 
-routes.route("/register").post(regiesteruser);
-routes.route("/login").post(loginUser)
+routes.route("/register").post(registerUser);
+routes.route("/login").post(loginUser);
 routes.route("/update-field").post(updateUserField);
-routes.route("/users-by-field").get(verfiyjwt, getUsersByField);
-routes.route("/followreq").post(followreq)
-routes.route("/logout").post(logout)
-routes.route("/refreshToken").post(refreshacesstoken)
-// routes.route("/userunfollow").post(unfollowUser)
-// routes.route("/followreq/accept").post(followreqaccept)
+routes.route("/users-by-field").get(verifyJwt, getUsersByField);
+routes.route("/followreq").post(verifyJwt, sendFollowRequest);
+routes.route("/logout").post(verifyJwt, logout);
+routes.route("/refreshToken").post(refreshAccessToken);
+routes.route("/userunfollow").post(verifyJwt, unfollowUser);
+routes.route("/followreq/accept").post(verifyJwt, followRequestAccept);
+routes.route("/follow-status/:userId").get(verifyJwt, getFollowStatus);
+routes.route("/followreq/pending").get(verifyJwt, getPendingFollowRequests);
+routes.route("/connections").get(verifyJwt, getConnections);
 // routes.route("/notifications").get(getNotifications)
 export default routes;

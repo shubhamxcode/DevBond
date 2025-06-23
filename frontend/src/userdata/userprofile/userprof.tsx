@@ -2,10 +2,10 @@ import {useSelector,useDispatch} from "react-redux";
 import { RootState } from "../../Redux/store";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoIosNotifications } from "react-icons/io";
 import FollowButton from "../../components/Follow/follow";
-import {followUser } from "../../components/Slices/userslice";
+import { logoutUser, setConnections } from "../../components/Slices/userslice";
 
 interface User {
   username: string;
@@ -13,11 +13,19 @@ interface User {
   _id?: string;
 }
 
+interface Connection {
+  userId?: string;
+  _id?: string;
+  username: string;
+  selectedField: string;
+}
+
 function UserProf() {
   const [fieldData, setFieldData] = useState<User[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const dispatch=useDispatch()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const selectedField = useSelector(
     (state: RootState) => state.userProfile.selectedField
@@ -28,32 +36,94 @@ function UserProf() {
   const username = useSelector(
     (state: RootState) => state.userProfile.username
   );
+  const followedUsers = useSelector(
+    (state: RootState) => state.userProfile.followedUsers
+  );
 
   const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
+  // Authentication check effect
+  useEffect(() => {
+    // Log auth state to help with debugging
+    console.log("Auth state on page load:", {
+      isLoggedIn: !!accessToken,
+      username,
+      selectedField
+    });
+    
+    // If not authenticated, redirect to login
+    if (!accessToken) {
+      console.warn("No access token found - redirecting to login");
+      navigate('/login');
+    }
+  }, [accessToken, username, selectedField, navigate]);
+
+  // Fetch user's actual connections/followers
+  useEffect(() => {
+    const fetchConnections = async () => {
+      if (accessToken) {
+        try {
+          console.log("Fetching user's connections...");
+          const response = await axios.get('/api/users/connections', {
+            headers: { Authorization: `Bearer ${accessToken}` }
+          });
+          
+          if (response.data && response.data.data) {
+            // Set all connections from backend
+            const connectionsData = response.data.data.map((connection: Connection) => ({
+              userId: connection.userId || connection._id,
+              username: connection.username,
+              selectedField: connection.selectedField
+            }));
+            dispatch(setConnections(connectionsData));
+          }
+        } catch (error) {
+          console.error("Error fetching connections:", error);
+          // Don't set error state here as connections might not be available yet
+        }
+      }
+    };
+
+    fetchConnections();
+  }, [accessToken, dispatch]);
+
   useEffect(() => {
     const fetchFieldData = async () => {
       if (selectedField && accessToken) {
         try {
+          console.log("Fetching developers with field:", selectedField);
+          console.log("Using access token:", accessToken);
+          
           const response = await axios.get(
             `/api/users/users-by-field?selectedField=${selectedField}`,
             {
               headers: { Authorization: `Bearer ${accessToken}` },
             }
           );
-          setFieldData(response.data);
           
-          if (response.data && Array.isArray(response.data)) {
-            response.data.forEach((user: User) => {
-              if (user._id) {
-                dispatch(followUser({ userId: user._id }));
-              }
-            });
+          console.log("Raw API response:", response);
+          
+          // Handle the API response properly
+          // Our improved backend returns data in { data: [...], message: "..." } format
+          if (response.data && response.data.data) {
+            // If the response follows the ApiResponse format
+            setFieldData(response.data.data);
+            
+            // Note: We don't dispatch followUser here since these are just suggestions, not actual connections
+            // The followUser action should only be dispatched when someone actually accepts a follow request
+          } else if (Array.isArray(response.data)) {
+            // For backward compatibility, if the response is directly an array
+            setFieldData(response.data);
+            
+            // Note: We don't dispatch followUser here since these are just suggestions, not actual connections
+          } else {
+            console.error("Unexpected API response format:", response.data);
+            setFieldData([]);
+            setError("Invalid data format received from server");
           }
           
-          setError(null);
         } catch (error) {
           console.error("Error fetching field data:", error);
           setError("Failed to fetch developer suggestions.");
@@ -61,15 +131,28 @@ function UserProf() {
       }
     };
     fetchFieldData();
-  }, [selectedField, accessToken]);
+  }, [selectedField, accessToken, dispatch]);
 
   const handleSignOut = () => setShowSignOutConfirm(true);
 
   const confirmSignOut = async () => {
     try {
+      // Clear the user data from Redux store
+      dispatch(logoutUser());
+      
+      // Also try to logout from the backend
+      await axios.post('/api/users/logout', {}, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      }).catch(error => {
+        // Even if backend logout fails, we still want to logout locally
+        console.warn("Backend logout failed:", error);
+      });
+      
       setShowSignOutConfirm(false);
       setIsOpen(false);
-      window.location.href = "/login";
+      
+      // Navigate to login page
+      navigate('/login');
     } catch (error) {
       console.error("Error signing out:", error);
     }
@@ -113,14 +196,36 @@ function UserProf() {
               <div className="flex justify-between items-center mb-2">
                 <Link
                   to="/connection"
-                  className="text-gray-300 text-sm font-medium"
+                  className="text-gray-300 text-sm font-medium hover:text-indigo-400 transition-colors"
                 >
                   Connections
                 </Link>
                 <span className="bg-indigo-600/30 text-indigo-400 text-xs font-medium px-2 py-1 rounded-full">
-                  {followUser.length}
+                  {followedUsers.length}
                 </span>
               </div>
+              {/* Show follower names if there are any */}
+              {followedUsers.length > 0 && (
+                <div className="mb-3 px-2">
+                  <div className="max-h-20 overflow-y-auto">
+                    {followedUsers.slice(0, 3).map((user, index) => (
+                      <div key={user.userId || index} className="flex items-center gap-2 mb-1">
+                        <div className="w-4 h-4 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-bold">
+                          {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
+                        </div>
+                        <span className="text-gray-400 text-xs truncate">
+                          {user.username || 'Unknown User'}
+                        </span>
+                      </div>
+                    ))}
+                    {followedUsers.length > 3 && (
+                      <div className="text-gray-500 text-xs mt-1">
+                        +{followedUsers.length - 3} more...
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
               <div className="flex justify-between items-center mb-2">
                 <p className="text-gray-300 text-sm font-medium">Field</p>
                 <span className="bg-purple-600/30 text-purple-400 text-xs font-medium px-2 py-1 rounded-full">
@@ -129,7 +234,7 @@ function UserProf() {
               </div>
 
               <div className="flex justify-between">
-                <Link to='/notify' className="text-white">Notification</Link>
+                <p className="text-white">Notification</p>
                 <span className="text-red-500 text-2xl">
                   <IoIosNotifications />
                 </span>
@@ -212,7 +317,11 @@ function UserProf() {
                       {user.selectedField}
                     </p>
                   </div>
-                  <FollowButton UserIdtoFollow={user._id!} />
+                  <FollowButton 
+                    UserIdtoFollow={user._id!} 
+                    username={user.username}
+                    selectedField={user.selectedField}
+                  />
                 </div>
                 
               ))

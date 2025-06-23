@@ -10,12 +10,12 @@ import { SocketProvider } from './components/chatarea/chat.tsx'
 createRoot(document.getElementById('root')!).render(
   
     <StrictMode>
-      <SocketProvider>
       <Provider store={store}>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <SocketProvider>
+          <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+            <App />
+          </BrowserRouter>
+        </SocketProvider>
       </Provider>
-      </SocketProvider>
     </StrictMode>
 )
