@@ -21,6 +21,9 @@ interface IsocketContext{
     joinUser: (userId: string, username: string) => void;
     isConnected: boolean;
 }
+    const apiUrl = import.meta.env.DEV
+        ? "http://localhost:2000"  // Local backend for development
+        : import.meta.env.VITE_RENDER_URL_;  // Render backend for production
 
 // Create socket context
 const SocketContext = createContext<IsocketContext|null>(null);
@@ -77,7 +80,7 @@ export const SocketProvider: React.FC<Types> = ({ children }) => {
     }, [userId, username]);
 
     useEffect(() => {
-        const socketIo = io('http://localhost:5001');
+        const socketIo = io(`${apiUrl}`);
         
         socketIo.on('connect', () => {
             console.log('Connected to socket server');
