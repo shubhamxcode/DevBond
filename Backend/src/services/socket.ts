@@ -1,6 +1,6 @@
 import { Server } from "socket.io";
 import Redis from 'ioredis';
-
+import { saveMessage } from "../controller/user.controller";
 interface PrivateMessageData {
     senderId: string;
     senderName: string;
@@ -102,6 +102,7 @@ class SocketService {
                     socket.emit("error", { message: "User not authenticated" });
                     return;
                 }
+                await saveMessage({senderId,recipientId,message})
                 
                 console.log(`Private message from ${senderName} to ${recipientId}: ${message}`);
                 

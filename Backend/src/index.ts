@@ -13,7 +13,7 @@ const httpServer = http.createServer(app);
 
 connectDB()
   .then(() => {
-    const PORT = process.env.PORT || 4000;
+  const PORT = process.env.PORT || 4001;
     
     // Attach Socket.IO to the existing HTTP server
     const socket = new SocketService();

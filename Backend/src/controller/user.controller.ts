@@ -7,6 +7,7 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 import { FollowRequest } from "../models/userfollowrequest.ts";
 // import { Follower } from "../models/Follower.ts";
 import { Document } from "mongoose";
+import { Message } from "../models/message";
 
 interface IUserDocument extends Document {
   username: string;
@@ -451,6 +452,50 @@ const getConnections = asyncHandler(async (req, res) => {
     console.error("Error fetching connections:", error);
     throw new ApiError(500, "Failed to retrieve connections");
   }
+});
+
+// Save message (called from socket)
+export const saveMessage = async ({ senderId, recipientId, message }: any) => {
+  const msg = await Message.create({ senderId, recipientId, message });
+  return msg;
+};
+
+// Get messages (paginated)
+export const getMessages = asyncHandler(async (req, res) => {
+  if (!req.user) {
+    throw new ApiError(401, "Authentication required");
+  }
+  const  userId = req.user._id; // Authenticated user
+  const { otherUserId, skip = 0, limit = 20 } = req.query;
+
+  if (!otherUserId) throw new ApiError(400, "otherUserId required");
+
+  // Find messages between the two users and populate sender information
+  const messages = await Message.find({
+    $or: [
+      { senderId: userId, recipientId: otherUserId },
+      { senderId: otherUserId, recipientId: userId },
+    ],
+  })
+    .populate("senderId", "username") // Populate sender username
+    .skip(Number(skip))
+    .limit(Number(limit))
+    .sort({ createdAt: 1 }); // Sort by creation time ascending
+
+  // Transform messages to include senderName
+  const transformedMessages = messages.map(msg => {
+    const sender = msg.senderId as any; // Type assertion for populated field
+    return {
+      _id: msg._id,
+      senderId: sender._id || sender,
+      recipientId: msg.recipientId,
+      message: msg.message,
+      timestamp: msg.createdAt,
+      senderName: sender.username || 'Unknown'
+    };
+  });
+
+  res.json(new ApiResponse(transformedMessages, "Messages fetched"));
 });
 
 export {

@@ -11,7 +11,8 @@ import {
   sendFollowRequest,
   getFollowStatus,
   getPendingFollowRequests,
-  getConnections
+  getConnections,
+  getMessages
 } from '../controller/user.controller'
 import verifyJwt from "../middleware/authenticationToken";
 
@@ -29,5 +30,6 @@ routes.route("/followreq/accept").post(verifyJwt, followRequestAccept);
 routes.route("/follow-status/:userId").get(verifyJwt, getFollowStatus);
 routes.route("/followreq/pending").get(verifyJwt, getPendingFollowRequests);
 routes.route("/connections").get(verifyJwt, getConnections);
+routes.route("/messages").get(verifyJwt,getMessages)
 // routes.route("/notifications").get(getNotifications)
 export default routes;

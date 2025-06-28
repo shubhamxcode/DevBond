@@ -29,4 +29,15 @@ export const clearState = (key: string): void => {
   } catch (error) {
     console.error('Could not clear state from localStorage:', error);
   }
+};
+
+import axios from "axios";
+
+export const fetchMessages = async (otherUserId: string, skip = 0, limit = 20) => {
+  const token = localStorage.getItem("token"); // Or from Redux
+  const res = await axios.get(`/api/users/messages`, {
+    params: { otherUserId, skip, limit },
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.data.data; // Assuming ApiResponse wraps in .data
 }; 

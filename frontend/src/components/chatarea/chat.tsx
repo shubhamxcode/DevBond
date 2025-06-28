@@ -3,6 +3,7 @@ import {io,Socket} from 'socket.io-client'
 import { useState } from "react";
 import { useSelector } from 'react-redux';
 import { RootState } from '../../Redux/store';
+import axios from "axios";
 
 // Context Type
 interface Types {
@@ -22,7 +23,7 @@ interface IsocketContext{
     isConnected: boolean;
 }
     const apiUrl = import.meta.env.DEV
-        ? "http://localhost:2000"  // Local backend for development
+        ? "http://localhost:4001"  // Local backend for development
         : import.meta.env.VITE_RENDER_URL_;  // Render backend for production
 
 // Create socket context
@@ -37,11 +38,14 @@ export const useSocket=()=>{
 export const SocketProvider: React.FC<Types> = ({ children }) => {
     const [socket, setSocket] = useState<Socket>();
     const [messages, setMessages] = useState<PrivateMessage[]>([]);
+    const [skip, setSkip] = useState(0);
+    const limit = 20;
     const [isConnected, setIsConnected] = useState(false);
 
     // Get current user info from Redux
     const userId = useSelector((state: RootState) => state.userProfile.userId);
     const username = useSelector((state: RootState) => state.userProfile.username);
+    console.log(`is userid there:`,userId,username)
 
     const joinUser = useCallback((userId: string, username: string) => {
         if (socket) {
@@ -78,6 +82,15 @@ export const SocketProvider: React.FC<Types> = ({ children }) => {
             ]);
         }
     }, [userId, username]);
+    const loadMore = async () => {
+        if (userId) {
+            const olderMessages = await fetchMessages(userId, skip, limit);
+            setMessages((prev) => [...olderMessages, ...prev]);
+            setSkip(skip + limit);
+        }
+
+    };
+    console.log(`loadmore data:`,loadMore)
 
     useEffect(() => {
         const socketIo = io(`${apiUrl}`);
@@ -127,3 +140,12 @@ const Chat: React.FC = () => {
 };
 
 export default Chat;
+
+const fetchMessages = async (userId: string, skip: number, limit: number) => {
+    const token = localStorage.getItem("token"); // Or from Redux
+    const res = await axios.get(`/api/users/messages`, {
+        params: { userId, skip, limit },
+        headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data.data; // Assuming ApiResponse wraps in .data
+};
