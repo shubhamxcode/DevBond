@@ -115,6 +115,29 @@ class SocketService {
                 }));
             });
 
+            // Handle typing status
+            socket.on("typing-status", ({ recipientId, isTyping }: { recipientId: string, isTyping: boolean }) => {
+                const senderId = socket.data.userId;
+                
+                if (!senderId) {
+                    socket.emit("error", { message: "User not authenticated" });
+                    return;
+                }
+                
+                console.log(`Typing status from ${senderId} to ${recipientId}: ${isTyping}`);
+                
+                // Get recipient's socket ID
+                const recipientSocketId = this.userSocketMap.get(recipientId);
+                
+                if (recipientSocketId) {
+                    // Send typing status to recipient
+                    this._io.to(recipientSocketId).emit("typing-status", {
+                        userId: senderId,
+                        isTyping
+                    });
+                }
+            });
+
             // Handle disconnect
             socket.on("disconnect", () => {
                 console.log(`Socket ${socket.id} disconnected`);
