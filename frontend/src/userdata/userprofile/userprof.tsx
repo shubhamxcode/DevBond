@@ -99,7 +99,7 @@ function UserProf() {
           console.log("Using access token:", accessToken);
           
           const response = await axios.get(
-            `/api/users/users-by-field?selectedField=${selectedField}`,
+            `${apiUrl}/api/users/users-by-field?selectedField=${selectedField}`,
             {
               headers: { Authorization: `Bearer ${accessToken}` },
             }
