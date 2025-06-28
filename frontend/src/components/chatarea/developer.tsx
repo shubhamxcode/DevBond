@@ -10,13 +10,6 @@ const apiUrl = import.meta.env.DEV
   ? "http://localhost:4001"  // Local backend for development
   : import.meta.env.VITE_RENDER_URL_;  // Render backend for production
 
-// Import PrivateMessage type from chat file
-interface PrivateMessage {
-  senderId: string;
-  senderName: string;
-  message: string;
-  timestamp: Date;
-}
 
 // Add interface for database message structure
 interface DbMessage {
@@ -27,9 +20,6 @@ interface DbMessage {
   timestamp: Date;
   senderName?: string;
 }
-
-// Union type for all messages
-type Message = DbMessage | PrivateMessage;
 
 function Developer() {
   const { sendPrivateMessage, messages: socketMessages, joinUser, isConnected } = useSocket();
