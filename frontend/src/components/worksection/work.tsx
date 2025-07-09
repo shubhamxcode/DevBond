@@ -1,5 +1,6 @@
+import { AnimatePresence, motion } from "framer-motion";
+import Timeline from '../ui/timeline';
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 
 interface Card {
   id: number;
@@ -12,35 +13,54 @@ const cards: Card[] = [
   {
     id: 1,
     image: (
-      <div className="w-full h-auto">
-        {/* <Sinupimg /> */}
+      <div className="w-full h-auto flex items-center justify-center">
+        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+          1
+        </div>
       </div>
     ),
-    step: "Step 1: Signup",
+    step: "Create Account",
     description:
-      "Create Accounts using GitHub and LeetCode to Earn Points and Enhance Website Development Skills",
+      "Sign up to DevBond and create your developer profile. Connect your GitHub and showcase your coding journey.",
   },
   {
     id: 2,
     image: (
-      <div className="w-full h-auto">
-        {/* <LoginBackground /> */}
+      <div className="w-full h-auto flex items-center justify-center">
+        <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-teal-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+          2
+        </div>
       </div>
     ),
-    step: "Step 2: Login with GitHub/LeetCode",
+    step: "Connect & Authenticate",
     description:
-      "Create Accounts on GitHub and LeetCode to Earn Points and Enhance Website Development Skills",
+      "Link your GitHub and LeetCode accounts to earn points, track your progress, and validate your skills automatically.",
   },
   {
     id: 3,
     image: (
-      <div className="min-w-full m-auto mt-[-40px]">
-        {/* <FieldBackground /> */}
+      <div className="w-full h-auto flex items-center justify-center">
+        <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+          3
+        </div>
       </div>
     ),
-    step: "Step 3: Select Your Field",
+    step: "Choose Your Field",
     description:
-      "Create Accounts on GitHub and LeetCode to Earn Points and Enhance your profile and unlock developer sticker",
+      "Select your development specialization - frontend, backend, full-stack, mobile, or DevOps to connect with like-minded developers.",
+  },
+  {
+    id: 4,
+    image: (
+      <div className="w-full h-auto flex items-center justify-center">
+        <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
+          4
+        </div>
+      </div>
+    ),
+    step: "Start Collaborating",
+    description:
+      "Find developers in your field, join projects, share knowledge, and grow together in the DevBond community.",
   },
 ];
 
@@ -49,68 +69,70 @@ function Work() {
   const selectcard = cards.find((card) => selectedId === card.id);
 
   return (
-    <section className="bg-gradient-to-b from-black via-gray-900 to-black">
-      <div className="container mx-auto px-4 py-16 md:py-24">
-        <h1 className="text-center text-3xl sm:text-4xl md:text-5xl font-bold mb-6 md:mb-10 text-transparent bg-clip-text bg-gradient-to-r from-gray-300 to-gray-500">
-          HOW IT WORKS?
-        </h1>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
-          {cards.map((card) => (
-            <motion.div
-              key={card.id}
-              layoutId={String(card.id)}
-              className="cursor-pointer"
-              onClick={() => setSelectedId(selectedId === card.id ? null : card.id)}
-            >
-              <motion.div
-                className="min-h-[300px] sm:h-80 lg:h-96 flex flex-col items-center justify-center p-4 sm:p-6 rounded-lg md:rounded-xl bg-gradient-to-br from-gray-800 to-gray-700 border border-gray-600 shadow-lg hover:shadow-gray-500/50 transition-all duration-300 hover:scale-[1.02]"
-                whileHover={{ y: -5 }}
-              >
-                <div className="text-3xl sm:text-4xl text-gray-300 mb-2 sm:mb-4 w-full">
-                  {card.image}
-                </div>
-                <h2 className="text-lg sm:text-xl md:text-xl font-semibold text-gray-300 mb-1 sm:mb-2 text-center">
-                  {card.step}
-                </h2>
-                <p className="text-xs sm:text-sm md:text-sm text-gray-400 text-center px-2">
-                  {card.description}
-                </p>
-              </motion.div>
-            </motion.div>
-          ))}
+    <section className="bg-black min-h-screen relative overflow-hidden">
+      {/* Subtle background pattern */}
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-900/20 via-black to-gray-900/20"></div>
+      
+      <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
+        {/* Header */}
+        <div className="text-center mb-16">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-500">
+            HOW IT WORKS
+          </h1>
+          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-6"></div>
+          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            Join DevBond in four simple steps and start building connections with developers worldwide
+          </p>
         </div>
 
+        {/* Timeline Component */}
+        <div className="mt-8">
+          <Timeline data={cards.map(card => ({
+            id: card.id,
+            title: card.step,
+            description: card.description,
+            icon: card.image
+          }))} />
+        </div>
+
+        {/* Modal */}
         <AnimatePresence>
           {selectcard && (
             <motion.div
               key={selectcard.id}
-              layoutId={String(selectcard.id)}
-              className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-95 z-50"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.8 }}
+              className="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-50 p-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
+              onClick={() => setSelectedId(null)}
             >
               <motion.div
-                className="bg-gradient-to-br from-gray-800 to-gray-700 p-4 sm:p-6 md:p-8 rounded-lg md:rounded-xl shadow-2xl border border-gray-600 w-full max-w-xs sm:max-w-sm md:max-w-md mx-2 sm:mx-4"
-                initial={{ y: -50, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -50, opacity: 0 }}
+                className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-md border border-gray-700/50 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl"
+                initial={{ scale: 0.8, y: -50 }}
+                animate={{ scale: 1, y: 0 }}
+                exit={{ scale: 0.8, y: -50 }}
+                transition={{ duration: 0.3, type: "spring", stiffness: 300 }}
+                onClick={(e) => e.stopPropagation()}
               >
                 <div className="text-center">
-                  <h2 className="text-lg sm:text-xl md:text-xl font-semibold text-gray-300 mb-2 sm:mb-4">
+                  <div className="mb-6">
+                    {selectcard.image}
+                  </div>
+                  <h2 className="text-2xl font-bold text-white mb-4">
                     {selectcard.step}
                   </h2>
-                  <p className="text-xs sm:text-sm md:text-sm text-gray-400 mb-4 sm:mb-6">
+                  <p className="text-gray-300 mb-8 leading-relaxed">
                     {selectcard.description}
                   </p>
-                  <button
-                    className="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-4 py-2 sm:px-6 sm:py-2 text-sm sm:text-base rounded-md md:rounded-lg hover:from-gray-600 hover:to-gray-700 transition-all"
-                    onClick={() => setSelectedId(null)}
-                  >
-                    Close
-                  </button>
+                  <div className="flex gap-4 justify-center">
+                    <button
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg shadow-blue-500/25 font-medium"
+                      onClick={() => setSelectedId(null)}
+                    >
+                      Got it!
+                    </button>
+                  </div>
                 </div>
               </motion.div>
             </motion.div>

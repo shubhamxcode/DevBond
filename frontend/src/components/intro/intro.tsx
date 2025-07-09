@@ -1,68 +1,63 @@
-import Introvideo from '../videos/Devbond intro.mp4';
-import { useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Globe } from '../magicui/globe';
+import { BackgroundBeamsWithCollision } from '../ui/background-beams-with-collision';
+import { Particles } from '../magicui/particles';
+
 function IntroSection() {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  const handleLoadedMetadata = () => {
-    if (videoRef.current) {
-      videoRef.current.currentTime = 4;
-    }
-  };
-
   return (
-    <section className="min-h-screen flex items-center bg-gradient-to-b from-gray-950 via-gray-900 to-gray-950">
-      <div className="container mx-auto px-4 py-16 md:py-24">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-12">
-          {/* Content Section */}
-          <div className="flex-1 max-w-2xl">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-extrabold mb-6">
-              <span className="bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-transparent bg-clip-text">
-                BOND
-              </span>
-              <span className="text-white"> Connect and Grow</span>
-            </h1>
-
-            <p className="text-gray-300 text-lg md:text-xl leading-relaxed mb-8">
-              At <span className="text-blue-400 font-semibold">BOND</span>, developers unite to 
-              collaborate, solve challenges, and enhance their skills. Earn points by tackling 
-              questions, boost your profile, and connect with peers in your field. With our 
-              helpful chatbot by your side, you're never alone on your journey to success.
-            </p>
-
-            <div className="flex gap-4">
-              <Link to="/signup" className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 
-                               hover:from-blue-700 hover:to-purple-700 text-white font-semibold 
-                               rounded-lg transform transition-all duration-300 hover:scale-105 
-                               focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 
-                               focus:ring-offset-gray-900">
-                Get Started
-              </Link>
-              <button className="px-8 py-4 border-2 border-gray-700 text-gray-300 
-                               hover:border-gray-500 hover:text-white font-semibold rounded-lg 
-                               transform transition-all duration-300 hover:scale-105">
-                Learn More
-              </button>
+    <section className="min-h-screen flex items-center bg-black/80 relative overflow-hidden">
+      {/* Beams background with particles */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <BackgroundBeamsWithCollision className="h-full w-full absolute inset-0 bg-black/60">
+          <Particles quantity={160} className="absolute inset-0 w-full h-full" color="#a5b4fc" />
+        </BackgroundBeamsWithCollision>
+      </div>
+      {/* Main Content: Centered heading */}
+      <div className="relative z-10 w-full flex flex-col items-center justify-center min-h-screen px-4">
+        {/* Platform Name */}
+        <div className="mb-8 text-center">
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-black text-transparent bg-gradient-to-b from-white via-gray-300 to-gray-600 bg-clip-text drop-shadow-2xl tracking-tight">
+            DevBond
+          </h1>
+          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-4 rounded-full"></div>
+        </div>
+        {/* Tagline */}
+        <p className="text-xl md:text-2xl lg:text-3xl font-light text-gray-300 text-center mb-12 max-w-4xl leading-relaxed">
+          Where developers in similar fields <span className="text-blue-400 font-semibold">connect</span>, 
+          <span className="text-purple-400 font-semibold"> collaborate</span>, and 
+          <span className="text-green-400 font-semibold"> grow</span> together
+        </p>
+        {/* Globe Component */}
+        <div className="flex items-center justify-center w-full mb-12">
+          <Globe />
+        </div>
+        {/* Feature highlights */}
+        <div className="flex flex-wrap justify-center gap-8 mt-16 max-w-4xl">
+          <div className="text-center group">
+            <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-blue-500/30 transition-colors">
+              <svg className="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
             </div>
+            <h3 className="text-white font-semibold">Connect</h3>
+            <p className="text-gray-400 text-sm">Find developers in your field</p>
           </div>
-
-          {/* Video Section */}
-          <div className="flex-1 w-full max-w-2xl">
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl 
-                          border border-gray-800/50 backdrop-blur-sm">
-              <video
-                ref={videoRef}
-                src={Introvideo}
-                autoPlay
-                muted
-                loop
-                className="w-full h-full object-cover"
-                onLoadedMetadata={handleLoadedMetadata}
-              >
-                Your browser does not support the video tag.
-              </video>
-              <div className="absolute inset-0 bg-gradient-to-t from-gray-900/20 to-transparent"></div>
+          <div className="text-center group">
+            <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-purple-500/30 transition-colors">
+              <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+              </svg>
             </div>
+            <h3 className="text-white font-semibold">Collaborate</h3>
+            <p className="text-gray-400 text-sm">Work on projects together</p>
+          </div>
+          <div className="text-center group">
+            <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-3 group-hover:bg-green-500/30 transition-colors">
+              <svg className="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <h3 className="text-white font-semibold">Grow</h3>
+            <p className="text-gray-400 text-sm">Level up your skills</p>
           </div>
         </div>
       </div>

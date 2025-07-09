@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "@react-three/drei": "^9.56.15",
+    "@react-three/fiber": "^8.13.7",
+    "rive-react": "^4.21.4",
+    "three": "^0.178.0"
+  }
+}

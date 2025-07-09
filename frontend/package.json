@@ -10,20 +10,30 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-three/drei": "^9.56.15",
+    "@react-three/fiber": "^8.13.7",
     "@reduxjs/toolkit": "^2.5.1",
+    "@rive-app/react-canvas": "^4.21.4",
     "axios": "^1.7.9",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "cobe": "^0.6.4",
     "cors": "^2.8.5",
     "firebase": "^11.1.0",
     "gsap": "^3.12.7",
     "lucide-react": "^0.483.0",
-    "motion": "^11.15.0",
+    "motion": "^12.23.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-icons": "^5.4.0",
     "react-redux": "^9.2.0",
     "react-router-dom": "^6.28.2",
     "redux-persist": "^6.0.0",
-    "socket.io-client": "^4.8.1"
+    "rive-react": "^4.21.4",
+    "socket.io-client": "^4.8.1",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7",
+    "three": "^0.152.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
