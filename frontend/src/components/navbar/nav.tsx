@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import { RiRocketLine } from "react-icons/ri";
-import { FaUserCircle, FaHome, FaStar, FaBriefcase, FaEnvelope, FaQuestionCircle } from "react-icons/fa";
+import { FaUserCircle, FaHome, FaStar, FaBriefcase, FaEnvelope, FaQuestionCircle, FaFileAlt } from "react-icons/fa";
 import { BsGridFill } from "react-icons/bs";
 import { MdOutlinePersonAdd } from "react-icons/md";
 import { useSelector } from "react-redux";
@@ -90,6 +90,7 @@ const Nav: FC = () => {
     { path: "/profile", label: "Profile", icon: <FaUserCircle />, color: "text-orange-400", tooltip: "Profile" },
     { path: "/field", label: "Fields", icon: <BsGridFill />, color: "text-cyan-400", tooltip: "Fields" },
     { path: "/follow-requests", label: "Follow Requests", icon: <MdOutlinePersonAdd />, color: "text-indigo-400", tooltip: "Follow Requests" },
+    { path: "/Resumeparsing", label: "Resume Parser", icon: <FaFileAlt />, color: "text-emerald-400", tooltip: "Resume Parser" },
   ] : [];
 
   return (

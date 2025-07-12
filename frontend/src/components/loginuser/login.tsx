@@ -30,7 +30,7 @@ const LoginPage = () => {
         dispatch(setUserId(userId));
         dispatch(setusername(user.username));
         dispatch(setaccessToken(response.data.data.accessToken));
-        navigate('/field');
+        navigate('/Resumeparsing');
       }
     } catch (err: any) {
       console.error(err);

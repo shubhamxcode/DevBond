@@ -7,6 +7,7 @@ import Sinup from './components/loginuser/sinup'
 import Login from "./components/loginuser/login";
 import Userprof from "./userdata/userprofile/userprof";
 import Connection from "./connections/connection";
+import ResumeParserUI from "./components/resumeparsing/resumeparsing";
 import Developer from "./components/chatarea/developer";
 import FollowRequestsPage from "./components/FollowRequests/FollowRequestsPage";
 function App() {
@@ -21,6 +22,7 @@ function App() {
         <Route path="/connection" element={<Connection/>}/>
         <Route path="/developer/:recipientId" element={<Developer/>}/>
         <Route path="/follow-requests" element={<FollowRequestsPage/>}/>
+        <Route path="/Resumeparsing" element={<ResumeParserUI/>}/>
       </Route>
     </Routes>
   );

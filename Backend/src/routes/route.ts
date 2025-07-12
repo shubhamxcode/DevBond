@@ -14,6 +14,8 @@ import {
   getConnections,
   getMessages
 } from '../controller/user.controller'
+import { parseResume, saveResumeData } from '../controller/resume.controller';
+import { upload } from '../middleware/multer.middleware';
 import verifyJwt from "../middleware/authenticationToken";
 
 const routes = Router();
@@ -30,6 +32,8 @@ routes.route("/followreq/accept").post(verifyJwt, followRequestAccept);
 routes.route("/follow-status/:userId").get(verifyJwt, getFollowStatus);
 routes.route("/followreq/pending").get(verifyJwt, getPendingFollowRequests);
 routes.route("/connections").get(verifyJwt, getConnections);
-routes.route("/messages").get(verifyJwt,getMessages)
+routes.route("/messages").get(verifyJwt,getMessages);
+routes.route("/parse-resume").post(verifyJwt, upload.single('resume'), parseResume);
+routes.route("/save-resume").post(verifyJwt, saveResumeData);
 // routes.route("/notifications").get(getNotifications)
 export default routes;
