@@ -15,7 +15,50 @@ const apiUrl = import.meta.env.DEV
 const Field = () => {
   const [error, setError] = useState("");
   const userId = useSelector((state: RootState) => state.userProfile.userId);
+  const techField = useSelector((state: RootState) => state.userProfile.Techfield);
+  console.log(`there is a techfield yehhh:`,techField);
+  
   const dispatch = useDispatch();
+
+  // Helper to get description for each field
+  const getFieldDescription = (field: string) => {
+    switch (field.toLowerCase()) {
+      case "frontend":
+        return "Build beautiful, interactive UIs";
+      case "backend":
+        return "Power APIs and logic behind the scenes";
+      case "fullstack":
+        return "Master both client and server";
+      default:
+        return `Explore the world of ${field}`;
+    }
+  };
+
+  // Helper to get gradient for each field
+  const getFieldGradient = (field: string) => {
+    switch (field.toLowerCase()) {
+      case "frontend":
+        return "from-pink-500 via-red-500 to-yellow-500";
+      case "backend":
+        return "from-purple-500 via-blue-500 to-indigo-500";
+      case "fullstack":
+        return "from-green-400 via-blue-500 to-purple-600";
+      default:
+        return "from-gray-400 via-gray-500 to-gray-600";
+    }
+  };
+
+  // Normalize techField to an array
+  const techFieldsArray = techField
+    ? Array.isArray(techField)
+      ? techField
+      : [techField]
+    : [];
+
+  // Helper to display only the first two words of a field
+  const getFirstTwoWords = (field: string) => {
+    return field.split(' ').slice(0, 2).join(' ');
+  };
 
   const handleFieldClick = async (selectedField: string) => {
     if (!userId) {
@@ -35,21 +78,6 @@ const Field = () => {
       setError("Error saving field selection");
     }
   };
-
-  const fieldOptions = [
-    {
-      label: "Frontend",
-      gradient: "from-pink-500 via-red-500 to-yellow-500",
-    },
-    {
-      label: "Backend",
-      gradient: "from-purple-500 via-blue-500 to-indigo-500",
-    },
-    {
-      label: "Fullstack",
-      gradient: "from-green-400 via-blue-500 to-purple-600",
-    },
-  ];
 
   return (
     <section className="min-h-screen flex items-center bg-black/80 relative overflow-hidden">
@@ -76,9 +104,9 @@ const Field = () => {
         </motion.h1>
 
         <div className="flex flex-wrap justify-center gap-10">
-          {fieldOptions.map((field, idx) => (
+          {techFieldsArray.map((field, idx) => (
             <motion.div
-              key={field.label}
+              key={field}
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -89,21 +117,16 @@ const Field = () => {
             >
               <Link
                 to="/profile"
-                onClick={() => handleFieldClick(field.label)}
-                className={`group block w-60 md:w-72 px-6 py-10 text-center rounded-2xl border border-white/20 bg-white/5 backdrop-blur-md transition-all hover:scale-105 hover:border-white/60 shadow-xl hover:shadow-${field.label.toLowerCase()}/30`}
+                onClick={() => handleFieldClick(field)}
+                className={`group block w-60 md:w-72 px-6 py-10 text-center rounded-2xl border border-white/20 bg-white/5 backdrop-blur-md transition-all hover:scale-105 hover:border-white/60 shadow-xl hover:shadow-${field.toLowerCase()}/30`}
               >
                 <div
-                  className={`bg-gradient-to-br ${field.gradient} text-transparent bg-clip-text text-4xl font-extrabold mb-4 transition-all group-hover:scale-110`}
+                  className={`bg-gradient-to-br ${getFieldGradient(field)} text-transparent bg-clip-text text-4xl font-extrabold mb-4 transition-all group-hover:scale-110`}
                 >
-                  {field.label}
+                  {getFirstTwoWords(field)}
                 </div>
                 <p className="text-sm text-gray-400 font-light">
-                  {field.label === "Frontend" &&
-                    "Build beautiful, interactive UIs"}
-                  {field.label === "Backend" &&
-                    "Power APIs and logic behind the scenes"}
-                  {field.label === "Fullstack" &&
-                    "Master both client and server"}
+                  {getFieldDescription(field)}
                 </p>
               </Link>
             </motion.div>

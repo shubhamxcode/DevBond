@@ -49,7 +49,11 @@ const parseResume = asyncHandler(async (req: MulterRequest, res: Response) => {
       fileName: req.file.originalname,
       extractedInfo: {
         // AI-enhanced parsing results
-        personalInfo: aiParsedData?.personalInfo || {},
+        personalInfo: {
+          ...(aiParsedData?.personalInfo || {}),
+          techField: aiParsedData?.techField || '',
+          techSubField: aiParsedData?.techSubField || ''
+        },
         summary: aiParsedData?.summary || '',
         skills: {
           technical: aiParsedData?.skills?.technical || [],
@@ -108,33 +112,20 @@ const saveResumeData = asyncHandler(async (req: Request, res: Response) => {
       throw new ApiError(401, "User not authenticated");
     }
 
-    // Check if user already has a resume with the same filename or content
-    const existingResume = await Resume.findOne({
-      userId: user._id,
-      $or: [
-        { fileName: parsedData.fileName },
-        { fullText: parsedData.fullText } // Check for same content
-      ]
-    });
-
-    if (existingResume) {
-      throw new ApiError(409, "A resume with this filename or content already exists for this user");
-    }
-
-    // Create new resume document with logged-in user's username
-    const resume = new Resume({
-      userId: user._id,
-      username: user.username, // Use the logged-in user's username
-      fileName: parsedData.fileName,
-      fileSize: parsedData.fileSize,
-      pageCount: parsedData.pageCount,
-      fullText: parsedData.fullText,
-      extractedInfo: parsedData.extractedInfo,
-      metadata: parsedData.metadata
-    })
-
-    // Save to database
-    const savedResume = await resume.save();
+    // Upsert (update or insert) resume document
+    const filter = { userId: user._id, fileName: parsedData.fileName };
+    const update = {
+      $set: {
+        username: user.username,
+        fileSize: parsedData.fileSize,
+        pageCount: parsedData.pageCount,
+        fullText: parsedData.fullText,
+        extractedInfo: parsedData.extractedInfo,
+        metadata: parsedData.metadata
+      }
+    };
+    const options = { upsert: true, new: true, setDefaultsOnInsert: true };
+    const savedResume = await Resume.findOneAndUpdate(filter, update, options);
 
     return res.status(201).json(
       new ApiResponse(savedResume, "Resume data saved successfully")

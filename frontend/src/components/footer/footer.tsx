@@ -1,8 +1,7 @@
 function Footer() {
   return (
-    <footer className="bg-gradient-to-b from-black via-gray-900 to-black  text-white py-12 px-8 mt-12 border-t border-gray-700">
+    <footer className="bg-black rounded-3xl text-white py-12 px-8 mt-12 border-b border-gray-100">
       <div className="flex flex-wrap justify-between gap-12">
-        {/* Column 1: About Us */}
         <div className="flex-1 min-w-[200px] mb-8">
           <h2 className="text-xl mb-4 text-blue-400">About Us</h2>
           <p className="text-sm leading-relaxed text-gray-400">
@@ -10,8 +9,6 @@ function Footer() {
             enhance their skills. Join us and explore a world of opportunities!
           </p>
         </div>
-
-        {/* Column 2: Quick Links */}
         <div className="flex-1 min-w-[200px] mb-8">
           <h2 className="text-xl mb-4 text-blue-400">Quick Links</h2>
           <ul className="text-sm text-gray-400">
@@ -21,8 +18,6 @@ function Footer() {
             <li className="mb-2 hover:text-blue-400 transition-colors cursor-pointer">Contact</li>
           </ul>
         </div>
-
-        {/* Column 3: Resources */}
         <div className="flex-1 min-w-[200px] mb-8">
           <h2 className="text-xl mb-4 text-blue-400">Resources</h2>
           <ul className="text-sm text-gray-400">
@@ -32,8 +27,6 @@ function Footer() {
             <li className="mb-2 hover:text-blue-400 transition-colors cursor-pointer">API</li>
           </ul>
         </div>
-
-        {/* Column 4: Contact Us */}
         <div className="flex-1 min-w-[200px] mb-8">
           <h2 className="text-xl mb-4 text-blue-400">Contact Us</h2>
           <p className="text-sm leading-relaxed text-gray-400">
@@ -45,8 +38,6 @@ function Footer() {
           </p>
         </div>
       </div>
-
-      {/* Social Media */}
       <div className="mt-8">
         <h3 className="text-lg text-blue-400 mb-4">Follow Us</h3>
         <div className="flex justify-center gap-4">
@@ -62,8 +53,6 @@ function Footer() {
           </div>
         </div>
       </div>
-
-      {/* Footer Bottom */}
       <div className="border-t border-gray-700 mt-8 pt-4 text-sm text-gray-500">
         <p>© {new Date().getFullYear()} Cool Footer. All rights reserved.</p>
       </div>

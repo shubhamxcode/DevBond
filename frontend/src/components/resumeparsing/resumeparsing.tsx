@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, FileText, Loader2, Edit3, CheckCircle, AlertCircle, User, Briefcase, GraduationCap, Award, Code } from 'lucide-react';
+import { Upload, FileText, Loader2, Edit3, CheckCircle, AlertCircle, User, Briefcase, GraduationCap, Award, Code, Sparkles, Zap, Target, Globe } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../Redux/store';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Particles } from '../magicui/particles';
+import { Techdata } from '../Slices/userslice';
 
 interface PersonalInfo {
   name?: string;
@@ -54,6 +57,8 @@ interface ExtractedInfo {
   education: Education[];
   certifications: Certification[];
   projects: Project[];
+  techField?: string; // Add techField to the interface
+  techSubField?: string; // Add techSubField to the interface
 }
 
 interface Metadata {
@@ -83,6 +88,7 @@ const ResumeParserUI: React.FC = () => {
   const apiUrl = import.meta.env.DEV ? "http://localhost:4001" : import.meta.env.VITE_RENDER_URL_;
   const accessToken = useSelector((state: RootState) => state.userProfile.accessToken);
   const navigate = useNavigate();
+  const dispatch=useDispatch()
 
   // Check authentication on component mount
   useEffect(() => {
@@ -132,7 +138,7 @@ const ResumeParserUI: React.FC = () => {
       // Simulate progress
       progressInterval = setInterval(() => {
         setProgress(prev => {
-          if (prev >= 90) {
+          if (prev >=90) {
             if (progressInterval) {
               clearInterval(progressInterval);
             }
@@ -149,7 +155,11 @@ const ResumeParserUI: React.FC = () => {
           'Authorization': `Bearer ${accessToken}`,
         },
         withCredentials: true,
-      });
+      },
+      
+    );
+    console.log(`response of file data:`,response);
+    
 
       clearInterval(progressInterval);
       setProgress(100);
@@ -212,10 +222,13 @@ const ResumeParserUI: React.FC = () => {
 
       // Show success message
       alert('Resume data saved successfully!');
-      console.log(`resumesavedata response received:`,response);
-      
-      
-      
+      console.log(`resumesavedata response received:`,response.data.data);
+      // Save techSubField to Redux for filtering cards by subfield
+      dispatch(Techdata(response.data.data.extractedInfo.personalInfo.techSubField))
+      // Navigate to field page after 2 seconds
+      setTimeout(() => {
+        navigate('/field');
+      }, 2000);
       // Reset state after successful save
       resetState();
 
@@ -233,335 +246,562 @@ const ResumeParserUI: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black p-6">
-      <div className="max-w-2xl mx-auto">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">Resume Parser</h1>
-          <p className="text-gray-300">Upload your resume and let AI extract key information</p>
-        </div>
+    <section className="min-h-screen flex items-center bg-black/80 relative overflow-hidden">
+      {/* Animated Background */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <Particles quantity={500} className="absolute inset-0 w-full h-full" color="#a5b4fc" />
+      </div>
 
-        <div className="bg-gray-800 rounded-2xl shadow-xl p-8 border border-gray-700">
-          {!file && !parsing && !parsedData && (
-            <div className="text-center">
-              <div className="border-2 border-dashed border-gray-600 rounded-xl p-12 hover:border-blue-400 hover:bg-gray-700 transition-all">
-                <Upload className="mx-auto h-16 w-16 text-gray-400 mb-4" />
-                <h3 className="text-xl font-semibold text-gray-200 mb-2">Upload your resume</h3>
-                <p className="text-gray-400 mb-4">Drag and drop your PDF here, or click to browse</p>
-                <input
-                  type="file"
-                  accept=".pdf"
-                  onChange={handleFileChange}
-                  className="hidden"
-                  id="upload"
-                />
-                <label htmlFor="upload" className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors cursor-pointer">
-                  <Upload className="h-5 w-5 mr-2" />
-                  Choose PDF File
-                </label>
+      {/* Main Content */}
+      <div className="relative z-10 w-full flex flex-col items-center justify-center min-h-screen px-4 py-8">
+        <motion.div
+          className="w-full max-w-4xl mx-auto"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
+        >
+          {/* Header */}
+          <motion.div 
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            <div className="flex items-center justify-center mb-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
+                <Target className="h-8 w-8 text-white" />
               </div>
-              
-              <div className="mt-6 pt-6 border-t border-gray-700">
-                <Link to="/field" className="text-gray-400 mb-4">Don't have a resume?</Link> <br />
-                <Link to='/field' className="inline-flex items-center px-6 py-3 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition-colors">
-                  <Edit3 className="h-5 w-5 mr-2" />
-                  Fill information manually
-                </Link>
-              </div>
+              <h1 className="text-5xl md:text-6xl font-black text-transparent bg-gradient-to-b from-white via-gray-300 to-gray-600 bg-clip-text drop-shadow-2xl">
+                Resume Parser
+              </h1>
             </div>
-          )}
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+              Upload your resume and let our AI extract key information to showcase your skills and experience
+            </p>
+            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-6 rounded-full"></div>
+          </motion.div>
 
-          {error && (
-            <div className="text-center">
-              <div className="bg-red-900 border border-red-700 rounded-xl p-6 mb-6">
-                <AlertCircle className="mx-auto h-12 w-12 text-red-400 mb-3" />
-                <h3 className="text-lg font-semibold text-red-200">Error</h3>
-                <p className="text-red-300">{error}</p>
-              </div>
-              <button
-                onClick={resetState}
-                className="w-full bg-gray-700 text-gray-200 py-3 px-6 rounded-xl hover:bg-gray-600 transition-colors"
-              >
-                Try Again
-              </button>
-            </div>
-          )}
-
-          {file && !parsing && !error && (
-            <div className="text-center">
-              <div className="bg-green-900 border border-green-700 rounded-xl p-6 mb-6">
-                <FileText className="mx-auto h-12 w-12 text-green-400 mb-3" />
-                <h3 className="text-lg font-semibold text-green-200">{file.name}</h3>
-                <p className="text-green-300">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
-              </div>
-              <div className="space-y-3">
-                <button
-                  onClick={handleParseResume}
-                  className="w-full bg-blue-600 text-white py-4 px-6 rounded-xl font-semibold hover:bg-blue-700 transition-colors"
+          {/* Main Container */}
+          <motion.div 
+            className="rounded-2xl border border-gray-700/50 bg-black/50 backdrop-blur-xl p-8 shadow-2xl"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <AnimatePresence mode="wait">
+              {!file && !parsing && !parsedData && (
+                <motion.div
+                  key="upload"
+                  className="text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
                 >
-                  Parse Resume
-                </button>
-                <button
-                  onClick={() => setFile(null)}
-                  className="w-full bg-gray-700 text-gray-200 py-3 px-6 rounded-xl hover:bg-gray-600 transition-colors"
+                  <div className="border-2 border-dashed border-gray-600/50 rounded-2xl p-16 hover:border-blue-400/60 hover:bg-gray-900/30 transition-all duration-300 group">
+                    <motion.div
+                      className="mb-6"
+                      whileHover={{ scale: 1.05 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <div className="w-20 h-20 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:from-blue-500/30 group-hover:to-purple-600/30 transition-all duration-300">
+                        <Upload className="h-10 w-10 text-blue-400 group-hover:text-blue-300 transition-colors" />
+                      </div>
+                    </motion.div>
+                    <h3 className="text-2xl font-bold text-white mb-3">Upload your resume</h3>
+                    <p className="text-gray-400 mb-8 text-lg">Drag and drop your PDF here, or click to browse</p>
+                    <input
+                      type="file"
+                      accept=".pdf"
+                      onChange={handleFileChange}
+                      className="hidden"
+                      id="upload"
+                    />
+                    <motion.label 
+                      htmlFor="upload" 
+                      className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 cursor-pointer"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Upload className="h-5 w-5 mr-2" />
+                      Choose PDF File
+                    </motion.label>
+                  </div>
+                  
+                  <motion.div 
+                    className="mt-8 pt-8 border-t border-gray-700/50"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                  >
+                    <p className="text-gray-400 mb-4 text-lg">Don't have a resume?</p>
+                    <Link to='/field'>
+                      <motion.button 
+                        className="inline-flex items-center px-6 py-3 bg-gray-800/50 text-gray-200 rounded-xl hover:bg-gray-700/50 transition-all duration-300 border border-gray-600/50"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Edit3 className="h-5 w-5 mr-2" />
+                        Fill information manually
+                      </motion.button>
+                    </Link>
+                  </motion.div>
+                </motion.div>
+              )}
+
+              {error && (
+                <motion.div
+                  key="error"
+                  className="text-center"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
                 >
-                  Choose Different File
-                </button>
-              </div>
-            </div>
-          )}
-
-          {parsing && (
-            <div className="space-y-6">
-              <div className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-900 rounded-full mb-4">
-                  <Loader2 className="h-8 w-8 text-blue-400 animate-spin" />
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-2">Parsing Your Resume</h3>
-                <p className="text-gray-300">AI is analyzing your document...</p>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm text-gray-300">
-                  <span>Parsing Progress</span>
-                  <span>{progress}%</span>
-                </div>
-                <div className="w-full bg-gray-700 rounded-full h-4">
-                  <div 
-                    className="bg-blue-500 h-4 rounded-full transition-all duration-500" 
-                    style={{ width: `${progress}%` }} 
-                  />
-                </div>
-              </div>
-
-              <div className="flex justify-center space-x-2">
-                <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"></div>
-                <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
-                <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
-              </div>
-            </div>
-          )}
-
-          {parsedData && parsedData.extractedInfo && (
-            <div className="text-center">
-              <div className="bg-green-900 border border-green-700 rounded-xl p-6 mb-6">
-                <CheckCircle className="mx-auto h-12 w-12 text-green-400 mb-3" />
-                <h3 className="text-lg font-semibold text-green-200">Resume Parsed Successfully!</h3>
-                <p className="text-green-300">
-                  Pages: {parsedData.pageCount} | Size: {(parsedData.fileSize / 1024 / 1024).toFixed(2)} MB
-                  {parsedData.metadata.hasAIParsing && (
-                    <span className="block text-sm text-green-400 mt-1">
-                      ✨ AI-Enhanced Parsing Applied
-                    </span>
-                  )}
-                </p>
-              </div>
-              
-              {/* Personal Information */}
-              {parsedData.extractedInfo.personalInfo.name && (
-                <div className="bg-gray-700 rounded-xl p-6 mb-4 text-left">
-                  <div className="flex items-center mb-3">
-                    <User className="h-5 w-5 text-blue-400 mr-2" />
-                    <h4 className="text-lg font-semibold text-white">Personal Information</h4>
+                  <div className="bg-red-900/50 border border-red-700/50 rounded-2xl p-8 mb-6 backdrop-blur-sm">
+                    <AlertCircle className="mx-auto h-16 w-16 text-red-400 mb-4" />
+                    <h3 className="text-xl font-semibold text-red-200 mb-2">Error</h3>
+                    <p className="text-red-300">{error}</p>
                   </div>
-                  <div className="text-gray-300 text-sm space-y-1">
-                    {parsedData.extractedInfo.personalInfo.name && (
-                      <p><span className="font-medium">Name:</span> {parsedData.extractedInfo.personalInfo.name}</p>
-                    )}
-                    {parsedData.extractedInfo.personalInfo.email && (
-                      <p><span className="font-medium">Email:</span> {parsedData.extractedInfo.personalInfo.email}</p>
-                    )}
-                    {parsedData.extractedInfo.personalInfo.location && (
-                      <p><span className="font-medium">Location:</span> {parsedData.extractedInfo.personalInfo.location}</p>
-                    )}
-                  </div>
-                </div>
+                  <motion.button
+                    onClick={resetState}
+                    className="w-full bg-gray-800/50 text-gray-200 py-4 px-6 rounded-xl hover:bg-gray-700/50 transition-all duration-300 border border-gray-600/50"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    Try Again
+                  </motion.button>
+                </motion.div>
               )}
 
-              {/* Summary */}
-              {parsedData.extractedInfo.summary && (
-                <div className="bg-gray-700 rounded-xl p-6 mb-4 text-left">
-                  <h4 className="text-lg font-semibold text-white mb-3">Professional Summary</h4>
-                  <p className="text-gray-300 text-sm">{parsedData.extractedInfo.summary}</p>
-                </div>
+              {file && !parsing && !error && (
+                <motion.div
+                  key="file-selected"
+                  className="text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="bg-green-900/50 border border-green-700/50 rounded-2xl p-8 mb-8 backdrop-blur-sm">
+                    <FileText className="mx-auto h-16 w-16 text-green-400 mb-4" />
+                    <h3 className="text-xl font-semibold text-green-200 mb-2">{file.name}</h3>
+                    <p className="text-green-300">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                  </div>
+                  <div className="space-y-4">
+                    <motion.button
+                      onClick={handleParseResume}
+                      className="w-full bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white py-4 px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <Zap className="h-5 w-5 mr-2 inline" />
+                      Parse Resume
+                    </motion.button>
+                    <motion.button
+                      onClick={() => setFile(null)}
+                      className="w-full bg-gray-800/50 text-gray-200 py-3 px-6 rounded-xl hover:bg-gray-700/50 transition-all duration-300 border border-gray-600/50"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      Choose Different File
+                    </motion.button>
+                  </div>
+                </motion.div>
               )}
 
-              {/* Skills */}
-              {((parsedData.extractedInfo.skills?.technical?.length > 0) || 
-                (parsedData.extractedInfo.skills?.soft?.length > 0) || 
-                (parsedData.extractedInfo.skills?.languages?.length > 0)) && (
-                <div className="bg-gray-700 rounded-xl p-6 mb-4 text-left">
-                  <div className="flex items-center mb-3">
-                    <Code className="h-5 w-5 text-green-400 mr-2" />
-                    <h4 className="text-lg font-semibold text-white">Skills</h4>
+              {parsing && (
+                <motion.div
+                  key="parsing"
+                  className="space-y-8"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="text-center">
+                    <motion.div 
+                      className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-full mb-6"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+                    >
+                      <Loader2 className="h-10 w-10 text-blue-400" />
+                    </motion.div>
+                    <h3 className="text-3xl font-bold text-white mb-3">Parsing Your Resume</h3>
+                    <p className="text-gray-300 text-lg">AI is analyzing your document...</p>
                   </div>
-                  <div className="text-gray-300 text-sm space-y-3">
-                    {parsedData.extractedInfo.skills?.technical && Array.isArray(parsedData.extractedInfo.skills.technical) && parsedData.extractedInfo.skills.technical.length > 0 && (
-                      <div>
-                        <p className="font-medium text-blue-300">Technical Skills:</p>
-                        <div className="flex flex-wrap gap-2 mt-1">
-                          {parsedData.extractedInfo.skills.technical.map((skill, index) => (
-                            <span key={index} className="bg-blue-900 text-blue-200 px-2 py-1 rounded text-xs">
-                              {skill}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    {parsedData.extractedInfo.skills?.soft && Array.isArray(parsedData.extractedInfo.skills.soft) && parsedData.extractedInfo.skills.soft.length > 0 && (
-                      <div>
-                        <p className="font-medium text-green-300">Soft Skills:</p>
-                        <div className="flex flex-wrap gap-2 mt-1">
-                          {parsedData.extractedInfo.skills.soft.map((skill, index) => (
-                            <span key={index} className="bg-green-900 text-green-200 px-2 py-1 rounded text-xs">
-                              {skill}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                    {parsedData.extractedInfo.skills?.languages && Array.isArray(parsedData.extractedInfo.skills.languages) && parsedData.extractedInfo.skills.languages.length > 0 && (
-                      <div>
-                        <p className="font-medium text-purple-300">Languages:</p>
-                        <div className="flex flex-wrap gap-2 mt-1">
-                          {parsedData.extractedInfo.skills.languages.map((skill, index) => (
-                            <span key={index} className="bg-purple-900 text-purple-200 px-2 py-1 rounded text-xs">
-                              {skill}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    )}
+
+                  <div className="space-y-4">
+                    <div className="flex justify-between text-sm text-gray-300">
+                      <span>Parsing Progress</span>
+                      <span className="font-semibold">{progress}%</span>
+                    </div>
+                    <div className="w-full bg-gray-800/50 rounded-full h-3 overflow-hidden">
+                      <motion.div 
+                        className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full"
+                        initial={{ width: 0 }}
+                        animate={{ width: `${progress}%` }}
+                        transition={{ duration: 0.5 }}
+                      />
+                    </div>
                   </div>
-                </div>
+
+                  <div className="flex justify-center space-x-2">
+                    <motion.div 
+                      className="w-3 h-3 bg-blue-500 rounded-full"
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ duration: 1, repeat: Infinity, delay: 0 }}
+                    />
+                    <motion.div 
+                      className="w-3 h-3 bg-purple-500 rounded-full"
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
+                    />
+                    <motion.div 
+                      className="w-3 h-3 bg-pink-500 rounded-full"
+                      animate={{ scale: [1, 1.2, 1] }}
+                      transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
+                    />
+                  </div>
+                </motion.div>
               )}
 
-              {/* Experience */}
-              {parsedData.extractedInfo.experience?.length > 0 && (
-                <div className="bg-gray-700 rounded-xl p-6 mb-4 text-left">
-                  <div className="flex items-center mb-3">
-                    <Briefcase className="h-5 w-5 text-yellow-400 mr-2" />
-                    <h4 className="text-lg font-semibold text-white">Experience</h4>
+              {parsedData && parsedData.extractedInfo && (
+                <motion.div
+                  key="parsed-data"
+                  className="space-y-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <div className="bg-green-900/50 border border-green-700/50 rounded-2xl p-8 text-center backdrop-blur-sm">
+                    <CheckCircle className="mx-auto h-16 w-16 text-green-400 mb-4" />
+                    <h3 className="text-2xl font-semibold text-green-200 mb-2">Resume Parsed Successfully!</h3>
+                    <p className="text-green-300 text-lg">
+                      Pages: {parsedData.pageCount} | Size: {(parsedData.fileSize / 1024 / 1024).toFixed(2)} MB
+                    </p>
+                    {parsedData.metadata.hasAIParsing && (
+                      <div className="flex items-center justify-center mt-3">
+                        <Sparkles className="h-5 w-5 text-green-400 mr-2" />
+                        <span className="text-sm text-green-400 font-medium">AI-Enhanced Parsing Applied</span>
+                      </div>
+                    )}
                   </div>
-                  <div className="text-gray-300 text-sm space-y-4">
-                    {parsedData.extractedInfo.experience?.map((exp, index) => (
-                      <div key={index} className="border-l-2 border-yellow-500 pl-4">
-                        <p className="font-medium text-white">{exp.title}</p>
-                        <p className="text-yellow-300">{exp.company}</p>
-                        <p className="text-gray-400 text-xs">{exp.duration}</p>
-                        <p className="mt-2">{exp.description}</p>
-                        {exp.achievements?.length > 0 && (
-                          <ul className="mt-2 space-y-1">
-                            {exp.achievements?.map((achievement, idx) => (
-                              <li key={idx} className="text-xs text-gray-400">• {achievement}</li>
-                            ))}
-                          </ul>
+                  
+                  {/* Personal Information */}
+                  {parsedData.extractedInfo.personalInfo.name && (
+                    <motion.div 
+                      className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.1 }}
+                    >
+                      <div className="flex items-center mb-4">
+                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-full flex items-center justify-center mr-3">
+                          <User className="h-5 w-5 text-blue-400" />
+                        </div>
+                        <h4 className="text-xl font-semibold text-white">Personal Information</h4>
+                      </div>
+                      <div className="text-gray-300 space-y-2">
+                        {parsedData.extractedInfo.personalInfo.name && (
+                          <p><span className="font-medium text-blue-300">Name:</span> {parsedData.extractedInfo.personalInfo.name}</p>
+                        )}
+                        {parsedData.extractedInfo.personalInfo.email && (
+                          <p><span className="font-medium text-blue-300">Email:</span> {parsedData.extractedInfo.personalInfo.email}</p>
+                        )}
+                        {parsedData.extractedInfo.personalInfo.location && (
+                          <p><span className="font-medium text-blue-300">Location:</span> {parsedData.extractedInfo.personalInfo.location}</p>
                         )}
                       </div>
-                    ))}
-                  </div>
-                </div>
-              )}
+                    </motion.div>
+                  )}
 
-              {/* Education */}
-              {parsedData.extractedInfo.education?.length > 0 && (
-                <div className="bg-gray-700 rounded-xl p-6 mb-4 text-left">
-                  <div className="flex items-center mb-3">
-                    <GraduationCap className="h-5 w-5 text-indigo-400 mr-2" />
-                    <h4 className="text-lg font-semibold text-white">Education</h4>
-                  </div>
-                  <div className="text-gray-300 text-sm space-y-3">
-                    {parsedData.extractedInfo.education?.map((edu, index) => (
-                      <div key={index} className="border-l-2 border-indigo-500 pl-4">
-                        <p className="font-medium text-white">{edu.degree}</p>
-                        <p className="text-indigo-300">{edu.institution}</p>
-                        <p className="text-gray-400 text-xs">{edu.year}</p>
-                        {edu.gpa && <p className="text-gray-400 text-xs">GPA: {edu.gpa}</p>}
+                  {/* Summary */}
+                  {parsedData.extractedInfo.summary && (
+                    <motion.div 
+                      className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.2 }}
+                    >
+                      <h4 className="text-xl font-semibold text-white mb-3">Professional Summary</h4>
+                      <p className="text-gray-300 leading-relaxed">{parsedData.extractedInfo.summary}</p>
+                    </motion.div>
+                  )}
+
+                  {/* Skills */}
+                  {((parsedData.extractedInfo.skills?.technical?.length > 0) || 
+                    (parsedData.extractedInfo.skills?.soft?.length > 0) || 
+                    (parsedData.extractedInfo.skills?.languages?.length > 0)) && (
+                    <motion.div 
+                      className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.3 }}
+                    >
+                      <div className="flex items-center mb-4">
+                        <div className="w-10 h-10 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-full flex items-center justify-center mr-3">
+                          <Code className="h-5 w-5 text-green-400" />
+                        </div>
+                        <h4 className="text-xl font-semibold text-white">Skills</h4>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Certifications */}
-              {parsedData.extractedInfo.certifications?.length > 0 && (
-                <div className="bg-gray-700 rounded-xl p-6 mb-4 text-left">
-                  <div className="flex items-center mb-3">
-                    <Award className="h-5 w-5 text-orange-400 mr-2" />
-                    <h4 className="text-lg font-semibold text-white">Certifications</h4>
-                  </div>
-                  <div className="text-gray-300 text-sm space-y-2">
-                    {parsedData.extractedInfo.certifications?.map((cert, index) => (
-                      <div key={index} className="border-l-2 border-orange-500 pl-4">
-                        <p className="font-medium text-white">{cert.name}</p>
-                        <p className="text-orange-300">{cert.issuer}</p>
-                        <p className="text-gray-400 text-xs">{cert.year}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Projects */}
-              {parsedData.extractedInfo.projects?.length > 0 && (
-                <div className="bg-gray-700 rounded-xl p-6 mb-4 text-left">
-                  <div className="flex items-center mb-3">
-                    <Code className="h-5 w-5 text-pink-400 mr-2" />
-                    <h4 className="text-lg font-semibold text-white">Projects</h4>
-                  </div>
-                  <div className="text-gray-300 text-sm space-y-4">
-                    {parsedData.extractedInfo.projects?.map((project, index) => (
-                      <div key={index} className="border-l-2 border-pink-500 pl-4">
-                        <p className="font-medium text-white">{project.name}</p>
-                        <p className="mt-1">{project.description}</p>
-                        {project.technologies && Array.isArray(project.technologies) && project.technologies.length > 0 && (
-                          <div className="flex flex-wrap gap-2 mt-2">
-                            {project.technologies.map((tech, idx) => (
-                              <span key={idx} className="bg-pink-900 text-pink-200 px-2 py-1 rounded text-xs">
-                                {tech}
-                              </span>
-                            ))}
+                      <div className="space-y-4">
+                        {parsedData.extractedInfo.skills?.technical && Array.isArray(parsedData.extractedInfo.skills.technical) && parsedData.extractedInfo.skills.technical.length > 0 && (
+                          <div>
+                            <p className="font-medium text-blue-300 mb-2">Technical Skills:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {parsedData.extractedInfo.skills.technical.map((skill, index) => (
+                                <motion.span 
+                                  key={index} 
+                                  className="bg-blue-900/50 text-blue-200 px-3 py-1 rounded-full text-sm border border-blue-700/50"
+                                  initial={{ opacity: 0, scale: 0.8 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  transition={{ delay: 0.4 + index * 0.05 }}
+                                >
+                                  {skill}
+                                </motion.span>
+                              ))}
+                            </div>
                           </div>
                         )}
-                        {(project.url || project.link) && (
-                          <a href={project.url || project.link} target="_blank" rel="noopener noreferrer" 
-                             className="text-pink-400 text-xs hover:underline mt-2 inline-block">
-                            View Project →
-                          </a>
+                        {parsedData.extractedInfo.skills?.soft && Array.isArray(parsedData.extractedInfo.skills.soft) && parsedData.extractedInfo.skills.soft.length > 0 && (
+                          <div>
+                            <p className="font-medium text-green-300 mb-2">Soft Skills:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {parsedData.extractedInfo.skills.soft.map((skill, index) => (
+                                <motion.span 
+                                  key={index} 
+                                  className="bg-green-900/50 text-green-200 px-3 py-1 rounded-full text-sm border border-green-700/50"
+                                  initial={{ opacity: 0, scale: 0.8 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  transition={{ delay: 0.5 + index * 0.05 }}
+                                >
+                                  {skill}
+                                </motion.span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                        {parsedData.extractedInfo.skills?.languages && Array.isArray(parsedData.extractedInfo.skills.languages) && parsedData.extractedInfo.skills.languages.length > 0 && (
+                          <div>
+                            <p className="font-medium text-purple-300 mb-2">Languages:</p>
+                            <div className="flex flex-wrap gap-2">
+                              {parsedData.extractedInfo.skills.languages.map((skill, index) => (
+                                <motion.span 
+                                  key={index} 
+                                  className="bg-purple-900/50 text-purple-200 px-3 py-1 rounded-full text-sm border border-purple-700/50"
+                                  initial={{ opacity: 0, scale: 0.8 }}
+                                  animate={{ opacity: 1, scale: 1 }}
+                                  transition={{ delay: 0.6 + index * 0.05 }}
+                                >
+                                  {skill}
+                                </motion.span>
+                              ))}
+                            </div>
+                          </div>
                         )}
                       </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="space-y-3">
-                <button
-                  onClick={handleSaveData}
-                  disabled={saving}
-                  className="w-full bg-green-600 text-white py-4 px-6 rounded-xl font-semibold hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                >
-                  {saving ? (
-                    <>
-                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                      Saving...
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle className="h-5 w-5 mr-2" />
-                      Save Data
-                    </>
+                    </motion.div>
                   )}
-                </button>
-                
-                <Link to="/field" className="block w-full bg-gray-700 text-gray-200 py-3 px-6 rounded-xl hover:bg-gray-600 transition-colors text-center">
-                  Continue to Profile
-                </Link>
-              </div>
-            </div>
-          )}
-        </div>
+
+                  {/* Experience */}
+                  {parsedData.extractedInfo.experience?.length > 0 && (
+                    <motion.div 
+                      className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.4 }}
+                    >
+                      <div className="flex items-center mb-4">
+                        <div className="w-10 h-10 bg-gradient-to-br from-yellow-500/20 to-yellow-600/20 rounded-full flex items-center justify-center mr-3">
+                          <Briefcase className="h-5 w-5 text-yellow-400" />
+                        </div>
+                        <h4 className="text-xl font-semibold text-white">Experience</h4>
+                      </div>
+                      <div className="space-y-6">
+                        {parsedData.extractedInfo.experience?.map((exp, index) => (
+                          <motion.div 
+                            key={index} 
+                            className="border-l-2 border-yellow-500 pl-6"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.5 + index * 0.1 }}
+                          >
+                            <p className="font-semibold text-white text-lg">{exp.title}</p>
+                            <p className="text-yellow-300 font-medium">{exp.company}</p>
+                            <p className="text-gray-400 text-sm mb-2">{exp.duration}</p>
+                            <p className="text-gray-300 leading-relaxed mb-3">{exp.description}</p>
+                            {exp.achievements?.length > 0 && (
+                              <ul className="space-y-1">
+                                {exp.achievements?.map((achievement, idx) => (
+                                  <li key={idx} className="text-sm text-gray-400 flex items-start">
+                                    <span className="text-yellow-400 mr-2 mt-1">•</span>
+                                    {achievement}
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* Education */}
+                  {parsedData.extractedInfo.education?.length > 0 && (
+                    <motion.div 
+                      className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.5 }}
+                    >
+                      <div className="flex items-center mb-4">
+                        <div className="w-10 h-10 bg-gradient-to-br from-indigo-500/20 to-indigo-600/20 rounded-full flex items-center justify-center mr-3">
+                          <GraduationCap className="h-5 w-5 text-indigo-400" />
+                        </div>
+                        <h4 className="text-xl font-semibold text-white">Education</h4>
+                      </div>
+                      <div className="space-y-4">
+                        {parsedData.extractedInfo.education?.map((edu, index) => (
+                          <motion.div 
+                            key={index} 
+                            className="border-l-2 border-indigo-500 pl-6"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.6 + index * 0.1 }}
+                          >
+                            <p className="font-semibold text-white text-lg">{edu.degree}</p>
+                            <p className="text-indigo-300 font-medium">{edu.institution}</p>
+                            <p className="text-gray-400 text-sm">{edu.year}</p>
+                            {edu.gpa && <p className="text-gray-400 text-sm">GPA: {edu.gpa}</p>}
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* Certifications */}
+                  {parsedData.extractedInfo.certifications?.length > 0 && (
+                    <motion.div 
+                      className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.6 }}
+                    >
+                      <div className="flex items-center mb-4">
+                        <div className="w-10 h-10 bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-full flex items-center justify-center mr-3">
+                          <Award className="h-5 w-5 text-orange-400" />
+                        </div>
+                        <h4 className="text-xl font-semibold text-white">Certifications</h4>
+                      </div>
+                      <div className="space-y-3">
+                        {parsedData.extractedInfo.certifications?.map((cert, index) => (
+                          <motion.div 
+                            key={index} 
+                            className="border-l-2 border-orange-500 pl-6"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.7 + index * 0.1 }}
+                          >
+                            <p className="font-semibold text-white">{cert.name}</p>
+                            <p className="text-orange-300">{cert.issuer}</p>
+                            <p className="text-gray-400 text-sm">{cert.year}</p>
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+
+                  {/* Projects */}
+                  {parsedData.extractedInfo.projects?.length > 0 && (
+                    <motion.div 
+                      className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.7 }}
+                    >
+                      <div className="flex items-center mb-4">
+                        <div className="w-10 h-10 bg-gradient-to-br from-pink-500/20 to-pink-600/20 rounded-full flex items-center justify-center mr-3">
+                          <Code className="h-5 w-5 text-pink-400" />
+                        </div>
+                        <h4 className="text-xl font-semibold text-white">Projects</h4>
+                      </div>
+                      <div className="space-y-6">
+                        {parsedData.extractedInfo.projects?.map((project, index) => (
+                          <motion.div 
+                            key={index} 
+                            className="border-l-2 border-pink-500 pl-6"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.8 + index * 0.1 }}
+                          >
+                            <p className="font-semibold text-white text-lg mb-2">{project.name}</p>
+                            <p className="text-gray-300 leading-relaxed mb-3">{project.description}</p>
+                            {project.technologies && Array.isArray(project.technologies) && project.technologies.length > 0 && (
+                              <div className="flex flex-wrap gap-2 mb-3">
+                                {project.technologies.map((tech, idx) => (
+                                  <span key={idx} className="bg-pink-900/50 text-pink-200 px-2 py-1 rounded-full text-xs border border-pink-700/50">
+                                    {tech}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                            {(project.url || project.link) && (
+                              <a 
+                                href={project.url || project.link} 
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="text-pink-400 text-sm hover:underline inline-flex items-center"
+                              >
+                                View Project →
+                              </a>
+                            )}
+                          </motion.div>
+                        ))}
+                      </div>
+                    </motion.div>
+                  )}
+
+                  <div className="space-y-4 pt-6">
+                    <motion.button
+                      onClick={handleSaveData}
+                      disabled={saving}
+                      className="w-full bg-gradient-to-r from-green-500 via-green-600 to-green-700 text-white py-4 px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                      whileHover={{ scale: saving ? 1 : 1.02 }}
+                      whileTap={{ scale: saving ? 1 : 0.98 }}
+                    >
+                      {saving ? (
+                        <>
+                          <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle className="h-5 w-5 mr-2" />
+                          Save Data
+                        </>
+                      )}
+                    </motion.button>
+                    
+                    <Link to="/field">
+                      <motion.button 
+                        className="w-full bg-gray-800/50 text-gray-200 py-3 px-6 rounded-xl hover:bg-gray-700/50 transition-all duration-300 border border-gray-600/50 flex items-center justify-center"
+                        whileHover={{ scale: 1.02 }}
+                        whileTap={{ scale: 0.98 }}
+                      >
+                        <Globe className="h-5 w-5 mr-2" />
+                        Continue to Profile
+                      </motion.button>
+                    </Link>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </motion.div>
+        </motion.div>
       </div>
-    </div>
+    </section>
   );
 };
 

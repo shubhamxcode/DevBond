@@ -8,6 +8,7 @@ interface UserState {
   selectedField: string;
   accessToken: string | null;
   followedUsers: FollowedUser[]; // Update this line
+  Techfield:string[]|null
 }
 
 const initialState: UserState = {
@@ -15,7 +16,8 @@ const initialState: UserState = {
   username: null,
   selectedField: '',
   accessToken: null,
-  followedUsers: [], // Initialize as an empty array
+  followedUsers: [],
+  Techfield:[] // Initialize as an empty array
 };
 
 const userSlice = createSlice({
@@ -63,12 +65,16 @@ const userSlice = createSlice({
       state.followedUsers = [];
       // Clear persisted state in localStorage
       clearState('userState');
+    },
+    Techdata: (state, action) => {
+      state.Techfield = action.payload;
     }
   },
 });
 
 export const { 
   setUserId, 
+  Techdata,
   setselectedfield, 
   setusername, 
   setaccessToken, 
