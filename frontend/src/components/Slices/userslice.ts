@@ -8,7 +8,8 @@ interface UserState {
   selectedField: string;
   accessToken: string | null;
   followedUsers: FollowedUser[]; // Update this line
-  Techfield:string[]|null
+  Techfield:string[]|null;
+  resumeInfo?: any; // Add resumeInfo to store parsed resume data
 }
 
 const initialState: UserState = {
@@ -17,7 +18,8 @@ const initialState: UserState = {
   selectedField: '',
   accessToken: null,
   followedUsers: [],
-  Techfield:[] // Initialize as an empty array
+  Techfield:[], // Initialize as an empty array
+  resumeInfo: null // Initialize resumeInfo
 };
 
 const userSlice = createSlice({
@@ -68,6 +70,12 @@ const userSlice = createSlice({
     },
     Techdata: (state, action) => {
       state.Techfield = action.payload;
+    },
+    setResumeInfo: (state, action) => {
+      state.resumeInfo = action.payload;
+    },
+    clearResumeInfo: (state) => {
+      state.resumeInfo = null;
     }
   },
 });
@@ -81,7 +89,9 @@ export const {
   followUser, 
   unfollowUser,
   setConnections,
-  logoutUser 
+  logoutUser,
+  setResumeInfo,
+  clearResumeInfo
 } = userSlice.actions;
 
 export default userSlice.reducer;

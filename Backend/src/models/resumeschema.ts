@@ -7,6 +7,8 @@ export interface IResume extends Document {
   fileSize: number;
   pageCount: number;
   fullText: string;
+  bio: string;
+  projectLinks: string[];
   extractedInfo: {
     personalInfo: {
       name?: string;
@@ -85,6 +87,14 @@ const resumeSchema = new Schema<IResume>({
   },
   fullText: {
     type: String,
+    required: true
+  },
+  bio: {
+    type: String,
+    required: true
+  },
+  projectLinks: {
+    type: [String],
     required: true
   },
   extractedInfo: {

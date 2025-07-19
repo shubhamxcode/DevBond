@@ -1,4 +1,4 @@
-import {useSelector,useDispatch} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -40,10 +40,13 @@ function UserProf() {
   const followedUsers = useSelector(
     (state: RootState) => state.userProfile.followedUsers
   );
+  const resumeBio = useSelector((state: RootState) => state.userProfile.resumeInfo?.bio);
+  console.log(`shera:`, resumeBio);
+
 
   const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
 
-  const apiUrl=import.meta.env.DEV ? "http://localhost:4001":import.meta.env.VITE_RENDER_URL_ 
+  const apiUrl = import.meta.env.DEV ? "http://localhost:4001" : import.meta.env.VITE_RENDER_URL_
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -55,7 +58,7 @@ function UserProf() {
       username,
       selectedField
     });
-    
+
     // If not authenticated, redirect to login
     if (!accessToken) {
       console.warn("No access token found - redirecting to login");
@@ -72,7 +75,7 @@ function UserProf() {
           const response = await axios.get(`${apiUrl}/api/users/connections`, {
             headers: { Authorization: `Bearer ${accessToken}` }
           });
-          
+
           if (response.data && response.data.data) {
             // Set all connections from backend
             const connectionsData = response.data.data.map((connection: Connection) => ({
@@ -98,35 +101,35 @@ function UserProf() {
         try {
           console.log("Fetching developers with field:", selectedField);
           console.log("Using access token:", accessToken);
-          
+
           const response = await axios.get(
             `${apiUrl}/api/users/users-by-field?selectedField=${selectedField}`,
             {
               headers: { Authorization: `Bearer ${accessToken}` },
             }
           );
-          
+
           console.log("Raw API response:", response);
-          
+
           // Handle the API response properly
           // Our improved backend returns data in { data: [...], message: "..." } format
           if (response.data && response.data.data) {
             // If the response follows the ApiResponse format
             setFieldData(response.data.data);
-            
+
             // Note: We don't dispatch followUser here since these are just suggestions, not actual connections
             // The followUser action should only be dispatched when someone actually accepts a follow request
           } else if (Array.isArray(response.data)) {
             // For backward compatibility, if the response is directly an array
             setFieldData(response.data);
-            
+
             // Note: We don't dispatch followUser here since these are just suggestions, not actual connections
           } else {
             console.error("Unexpected API response format:", response.data);
             setFieldData([]);
             setError("Invalid data format received from server");
           }
-          
+
         } catch (error) {
           console.error("Error fetching field data:", error);
           setError("Failed to fetch developer suggestions.");
@@ -142,7 +145,7 @@ function UserProf() {
     try {
       // Clear the user data from Redux store
       dispatch(logoutUser());
-      
+
       // Also try to logout from the backend
       await axios.post('/api/users/logout', {}, {
         headers: { Authorization: `Bearer ${accessToken}` }
@@ -150,10 +153,10 @@ function UserProf() {
         // Even if backend logout fails, we still want to logout locally
         console.warn("Backend logout failed:", error);
       });
-      
+
       setShowSignOutConfirm(false);
       setIsOpen(false);
-      
+
       // Navigate to login page
       navigate('/login');
     } catch (error) {
@@ -181,20 +184,20 @@ function UserProf() {
 
   return (
     <section className="min-h-screen bg-black/80 relative overflow-hidden">
-      
+
       {/* Background Effects */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         {/* Remove BackgroundBeamsWithCollision, keep only Particles */}
-        <Particles 
-          quantity={1000} 
-          className="absolute inset-0 w-full h-full" 
-          color="#a5b4fc" 
+        <Particles
+          quantity={1000}
+          className="absolute inset-0 w-full h-full"
+          color="#a5b4fc"
         />
       </div>
-      
+
       {/* Main Content */}
       <div className="relative z-10 w-full min-h-screen flex flex-col">
-        
+
         {/* Profile Dropdown - Fixed Position */}
         <div className="relative z-20">
           <button
@@ -331,7 +334,7 @@ function UserProf() {
           {/* Header Section - Fixed positioning */}
           <div className="text-center py-20 px-4">
             <div className="relative">
-              <h1 className="text-transparent text-7xl md:text-7xl  bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-5xl md:text-6xl font-bold mb-4">
+              <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-5xl md:text-6xl font-bold mb-4">
                 Developer Suggestions
               </h1>
               <h2 className="text-white text-3xl md:text-4xl font-light mb-2">
@@ -361,10 +364,10 @@ function UserProf() {
                     >
                       {/* Main card */}
                       <div className="relative bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-xl rounded-2xl p-6 border border-gray-700/50 hover:border-gray-600/50 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-indigo-500/20">
-                        
+
                         {/* Top decoration */}
                         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-t-2xl"></div>
-                        
+
                         {/* Profile section */}
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center space-x-3">
@@ -379,27 +382,36 @@ function UserProf() {
                                 {user.username}
                               </h3>
                               <p className="text-gray-400 text-sm">Developer</p>
+                              <p className="text-gray-400 text-xs mt-2 italic border-l-4 border-blue-500 pl-3 bg-gray-900/40 rounded-md">
+                                {resumeBio ? resumeBio : "No bio available."}
+                              </p>
                             </div>
                           </div>
                         </div>
-                        
+
                         {/* Field badge */}
-                        <div className="mb-4">
-                          <div className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium text-white bg-gradient-to-r ${getFieldColor(user.selectedField)} shadow-lg`}>
-                            <div className="w-2 h-2 bg-white rounded-full mr-2"></div>
-                            {user.selectedField}
+                        <div className="flex justify-between">
+                          <div className="mb-4">
+                            <div className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium text-white bg-gradient-to-r ${getFieldColor(user.selectedField)} shadow-lg`}>
+                              <div className="w-2 h-2 bg-white rounded-full mr-2"></div>
+                              {user.selectedField}
+                            </div>
+                          </div>
+
+                          <div className="">
+                            <Link to="/userinfo" className=" underline text-blue-700">Userinfo</Link>
                           </div>
                         </div>
-                        
+
                         {/* Action button */}
                         <div className="mt-6">
-                          <FollowButton 
-                            UserIdtoFollow={user._id!} 
+                          <FollowButton
+                            UserIdtoFollow={user._id!}
                             username={user.username}
                             selectedField={user.selectedField}
                           />
                         </div>
-                        
+
                         {/* Hover effect overlay */}
                         <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                       </div>
@@ -425,7 +437,7 @@ function UserProf() {
           </div>
         </div>
       </div>
-      
+
       {/* Custom styles for animations */}
       <style>{`
         @keyframes slideUp {

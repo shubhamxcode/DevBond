@@ -100,18 +100,21 @@ const parseResume = asyncHandler(async (req: MulterRequest, res: Response) => {
 
 const saveResumeData = asyncHandler(async (req: Request, res: Response) => {
   try {
-    const { parsedData } = req.body;
-    
+    const { parsedData, bio, projectLinks } = req.body;
     if (!parsedData) {
       throw new ApiError(400, "No parsed data provided");
     }
-
+    if (!bio || typeof bio !== 'string' || !bio.trim()) {
+      throw new ApiError(400, "Bio is required");
+    }
+    if (!Array.isArray(projectLinks) || projectLinks.length !== (parsedData.extractedInfo.projects?.length || 0) || projectLinks.some(link => !link || !link.trim())) {
+      throw new ApiError(400, "Project links are required for all projects");
+    }
     // Get user from authenticated request
     const user = req.user;
     if (!user) {
       throw new ApiError(401, "User not authenticated");
     }
-
     // Upsert (update or insert) resume document
     const filter = { userId: user._id, fileName: parsedData.fileName };
     const update = {
@@ -121,21 +124,20 @@ const saveResumeData = asyncHandler(async (req: Request, res: Response) => {
         pageCount: parsedData.pageCount,
         fullText: parsedData.fullText,
         extractedInfo: parsedData.extractedInfo,
-        metadata: parsedData.metadata
+        metadata: parsedData.metadata,
+        bio,
+        projectLinks
       }
     };
     const options = { upsert: true, new: true, setDefaultsOnInsert: true };
     const savedResume = await Resume.findOneAndUpdate(filter, update, options);
-
     return res.status(201).json(
       new ApiResponse(savedResume, "Resume data saved successfully")
     );
-
   } catch (error) {
     if (error instanceof ApiError) {
       throw error;
     }
-    
     console.error('Save resume error:', error);
     throw new ApiError(500, "Failed to save resume data");
   }

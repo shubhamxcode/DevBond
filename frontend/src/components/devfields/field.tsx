@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
@@ -14,71 +13,45 @@ const apiUrl = import.meta.env.DEV
 
 const Field = () => {
   const [error, setError] = useState("");
+  const [selectedField, setSelectedField] = useState("");
+  const [customField, setCustomField] = useState("");
+  const [isUpdating, setIsUpdating] = useState(false);
   const userId = useSelector((state: RootState) => state.userProfile.userId);
-  const techField = useSelector((state: RootState) => state.userProfile.Techfield);
-  console.log(`there is a techfield yehhh:`,techField);
-  
   const dispatch = useDispatch();
+  const fieldOptions = [
+    'Frontend', 'Backend', 'Full Stack', 'Mobile', 'DevOps', 'Data Science', 'AI/ML', 'UI/UX', 'Cloud', 'Security', 'Other'
+  ];
 
-  // Helper to get description for each field
-  const getFieldDescription = (field: string) => {
-    switch (field.toLowerCase()) {
-      case "frontend":
-        return "Build beautiful, interactive UIs";
-      case "backend":
-        return "Power APIs and logic behind the scenes";
-      case "fullstack":
-        return "Master both client and server";
-      default:
-        return `Explore the world of ${field}`;
-    }
-  };
-
-  // Helper to get gradient for each field
-  const getFieldGradient = (field: string) => {
-    switch (field.toLowerCase()) {
-      case "frontend":
-        return "from-pink-500 via-red-500 to-yellow-500";
-      case "backend":
-        return "from-purple-500 via-blue-500 to-indigo-500";
-      case "fullstack":
-        return "from-green-400 via-blue-500 to-purple-600";
-      default:
-        return "from-gray-400 via-gray-500 to-gray-600";
-    }
-  };
-
-  // Normalize techField to an array
-  const techFieldsArray = techField
-    ? Array.isArray(techField)
-      ? techField
-      : [techField]
-    : [];
-
-  // Helper to display only the first two words of a field
-  const getFirstTwoWords = (field: string) => {
-    return field.split(' ').slice(0, 2).join(' ');
-  };
-
-  const handleFieldClick = async (selectedField: string) => {
+  const handleFieldSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     if (!userId) {
       setError("User ID is missing. Please log in again.");
       return;
     }
-
+    let fieldToSet = selectedField === 'Other' ? customField : selectedField;
+    if (!fieldToSet) {
+      setError("Please select or enter a field.");
+      return;
+    }
+    setIsUpdating(true);
     try {
       const response = await axios.post(`${apiUrl}/api/users/update-field`, {
         userId,
-        selectedField,
+        selectedField: fieldToSet,
       });
-      console.log("Field update response:", response.data);
-      dispatch(setselectedfield(selectedField));
+      dispatch(setselectedfield(fieldToSet));
+      setError("");
+      console.log(response);
+      
+      window.location.href = "/profile";
     } catch (err) {
-      console.error("Field selection error:", err);
       setError("Error saving field selection");
+    } finally {
+      setIsUpdating(false);
     }
   };
-
+  
+  
   return (
     <section className="min-h-screen flex items-center bg-black/80 relative overflow-hidden">
       {/* Background */}
@@ -103,35 +76,38 @@ const Field = () => {
           Choose Your Tech Arena 🧠
         </motion.h1>
 
-        <div className="flex flex-wrap justify-center gap-10">
-          {techFieldsArray.map((field, idx) => (
-            <motion.div
-              key={field}
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: 0.6,
-                delay: 0.2 + idx * 0.15,
-                ease: "easeOut",
-              }}
-            >
-              <Link
-                to="/profile"
-                onClick={() => handleFieldClick(field)}
-                className={`group block w-60 md:w-72 px-6 py-10 text-center rounded-2xl border border-white/20 bg-white/5 backdrop-blur-md transition-all hover:scale-105 hover:border-white/60 shadow-xl hover:shadow-${field.toLowerCase()}/30`}
-              >
-                <div
-                  className={`bg-gradient-to-br ${getFieldGradient(field)} text-transparent bg-clip-text text-4xl font-extrabold mb-4 transition-all group-hover:scale-110`}
-                >
-                  {getFirstTwoWords(field)}
-                </div>
-                <p className="text-sm text-gray-400 font-light">
-                  {getFieldDescription(field)}
-                </p>
-              </Link>
-            </motion.div>
-          ))}
-        </div>
+        {/* New Field Selection UI */}
+        <form onSubmit={handleFieldSubmit} className="bg-white/5 backdrop-blur-md rounded-2xl p-8 w-full max-w-md border border-white/20 shadow-xl flex flex-col gap-4 items-center">
+          <label className="text-white text-lg font-medium mb-2">Select your field:</label>
+          <select
+            className="w-full p-2 rounded bg-gray-800 text-white border border-gray-700 mb-2"
+            value={selectedField}
+            onChange={e => setSelectedField(e.target.value)}
+            required
+          >
+            <option value="">-- Choose --</option>
+            {fieldOptions.map(opt => (
+              <option key={opt} value={opt}>{opt}</option>
+            ))}
+          </select>
+          {selectedField === 'Other' && (
+            <input
+              className="w-full p-2 rounded bg-gray-800 text-white border border-gray-700 mb-2"
+              type="text"
+              placeholder="Enter your field"
+              value={customField}
+              onChange={e => setCustomField(e.target.value)}
+              required
+            />
+          )}
+          <button
+            type="submit"
+            className="px-6 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors w-full"
+            disabled={isUpdating || (!selectedField || (selectedField === 'Other' && !customField))}
+          >
+            {isUpdating ? 'Saving...' : 'Save Field'}
+          </button>
+        </form>
 
         {error && (
           <motion.p

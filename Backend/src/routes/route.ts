@@ -12,7 +12,8 @@ import {
   getFollowStatus,
   getPendingFollowRequests,
   getConnections,
-  getMessages
+  getMessages,
+  getUserProfile
 } from '../controller/user.controller'
 import { parseResume, saveResumeData } from '../controller/resume.controller';
 import { upload } from '../middleware/multer.middleware';
@@ -33,6 +34,7 @@ routes.route("/follow-status/:userId").get(verifyJwt, getFollowStatus);
 routes.route("/followreq/pending").get(verifyJwt, getPendingFollowRequests);
 routes.route("/connections").get(verifyJwt, getConnections);
 routes.route("/messages").get(verifyJwt,getMessages);
+routes.route("/profile").get(verifyJwt, getUserProfile);
 routes.route("/parse-resume").post(verifyJwt, upload.single('resume'), parseResume);
 routes.route("/save-resume").post(verifyJwt, saveResumeData);
 // routes.route("/notifications").get(getNotifications)

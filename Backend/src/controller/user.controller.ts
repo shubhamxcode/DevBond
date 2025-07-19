@@ -8,6 +8,7 @@ import { FollowRequest } from "../models/userfollowrequest.ts";
 // import { Follower } from "../models/Follower.ts";
 import { Document } from "mongoose";
 import { Message } from "../models/message";
+import Resume from "../models/resumeschema.ts";
 
 interface IUserDocument extends Document {
   username: string;
@@ -454,6 +455,49 @@ const getConnections = asyncHandler(async (req, res) => {
   }
 });
 
+const getUserProfile = asyncHandler(async (req, res) => {
+  if (!req.user) throw new ApiError(401, "Authentication required");
+  const userId = req.user._id;
+
+  // Fetch user basic info
+  const user = await User.findById(userId).select("-password -refreshToken");
+  if (!user) throw new ApiError(404, "User not found");
+
+  // Fetch latest resume
+  const resume = await Resume.findOne({ userId }).sort({ updatedAt: -1 });
+
+  // Fetch connections (accepted follow requests)
+  const acceptedConnections = await FollowRequest.find({
+    $or: [
+      { from: userId, status: "accepted" },
+      { to: userId, status: "accepted" }
+    ]
+  })
+    .populate("from", "username email selectedField")
+    .populate("to", "username email selectedField")
+    .sort({ updatedAt: -1 });
+
+  const connections = acceptedConnections.map((connection) => {
+    const isFromCurrentUser = String(connection.from._id) === String(userId);
+    const otherUser = isFromCurrentUser ? connection.to : connection.from;
+    const otherUserData = otherUser as any;
+    return {
+      userId: otherUserData._id,
+      username: otherUserData.username,
+      email: otherUserData.email,
+      selectedField: otherUserData.selectedField
+    };
+  });
+
+  return res.status(200).json(
+    new ApiResponse({
+      user,
+      resume,
+      connections
+    }, "User profile fetched successfully")
+  );
+});
+
 // Save message (called from socket)
 export const saveMessage = async ({ senderId, recipientId, message }: any) => {
   const msg = await Message.create({ senderId, recipientId, message });
@@ -511,4 +555,5 @@ export {
   getFollowStatus,
   getPendingFollowRequests,
   getConnections,
+  getUserProfile,
 }; 

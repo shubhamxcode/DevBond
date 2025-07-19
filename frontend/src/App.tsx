@@ -10,7 +10,19 @@ import Connection from "./connections/connection";
 import ResumeParserUI from "./components/resumeparsing/resumeparsing";
 import Developer from "./components/chatarea/developer";
 import FollowRequestsPage from "./components/FollowRequests/FollowRequestsPage";
+import UserResumeInfo from "./userdata/userprofile/userresumeinfo";
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { hydrateUserProfile } from './Redux/store';
+import type { AppDispatch } from './Redux/store';
 function App() {
+  const dispatch: AppDispatch = useDispatch();
+  const accessToken = useSelector((state: any) => state.userProfile.accessToken);
+  useEffect(() => {
+    if (accessToken) {
+      dispatch(hydrateUserProfile());
+    }
+  }, [accessToken, dispatch]);
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
@@ -23,6 +35,8 @@ function App() {
         <Route path="/developer/:recipientId" element={<Developer/>}/>
         <Route path="/follow-requests" element={<FollowRequestsPage/>}/>
         <Route path="/Resumeparsing" element={<ResumeParserUI/>}/>
+        <Route path="/userinfo" element={<UserResumeInfo/>}/>
+
       </Route>
     </Routes>
   );

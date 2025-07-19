@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../Redux/store';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Particles } from '../magicui/particles';
-import { Techdata } from '../Slices/userslice';
+import { Techdata, setResumeInfo } from '../Slices/userslice';
 
 interface PersonalInfo {
   name?: string;
@@ -85,10 +85,24 @@ const ResumeParserUI: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
 
+  // Add state for bio and project links
+  const [bio, setBio] = useState('');
+  const [projectLinks, setProjectLinks] = useState<string[]>([]);
+  const [bioError, setBioError] = useState('');
+  const [projectLinksError, setProjectLinksError] = useState<string[]>([]);
+
   const apiUrl = import.meta.env.DEV ? "http://localhost:4001" : import.meta.env.VITE_RENDER_URL_;
   const accessToken = useSelector((state: RootState) => state.userProfile.accessToken);
   const navigate = useNavigate();
   const dispatch=useDispatch()
+
+  // Update projectLinks state when parsedData changes
+  useEffect(() => {
+    if (parsedData && parsedData.extractedInfo.projects) {
+      setProjectLinks(parsedData.extractedInfo.projects.map(p => p.link || ''));
+      setProjectLinksError(parsedData.extractedInfo.projects.map(() => ''));
+    }
+  }, [parsedData]);
 
   // Check authentication on component mount
   useEffect(() => {
@@ -206,13 +220,31 @@ const ResumeParserUI: React.FC = () => {
       setError('Please login to save resume data');
       return;
     }
-
+    let valid = true;
+    if (!bio.trim()) {
+      setBioError('Bio is required');
+      valid = false;
+    } else {
+      setBioError('');
+    }
+    const newProjectLinksError = projectLinks.map((link) => {
+      if (!link.trim()) {
+        valid = false;
+        return 'Project link is required';
+      }
+      // Optionally, validate URL format here
+      return '';
+    });
+    setProjectLinksError(newProjectLinksError);
+    if (!valid) return;
     setSaving(true);
     setError(null);
 
     try {
       const response = await axios.post(`${apiUrl}/api/users/save-resume`, {
-        parsedData: parsedData
+        parsedData: parsedData,
+        bio,
+        projectLinks
       }, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -225,6 +257,8 @@ const ResumeParserUI: React.FC = () => {
       console.log(`resumesavedata response received:`,response.data.data);
       // Save techSubField to Redux for filtering cards by subfield
       dispatch(Techdata(response.data.data.extractedInfo.personalInfo.techSubField))
+      // Update resumeInfo in Redux
+      dispatch(setResumeInfo(response.data.data));
       // Navigate to field page after 2 seconds
       setTimeout(() => {
         navigate('/field');
@@ -465,6 +499,8 @@ const ResumeParserUI: React.FC = () => {
                   </div>
                 </motion.div>
               )}
+
+              
 
               {parsedData && parsedData.extractedInfo && (
                 <motion.div
@@ -763,10 +799,48 @@ const ResumeParserUI: React.FC = () => {
                     </motion.div>
                   )}
 
+                  {/* Move manual fields here, after all parsed sections and before Save button */}
+                  <div className="space-y-4 pt-6">
+                    <div>
+                      <label className="block text-white font-semibold mb-2">Bio <span className="text-red-400">*</span></label>
+                      <textarea
+                        className="w-full p-2 rounded bg-gray-900 text-white border border-gray-700"
+                        value={bio}
+                        onChange={e => setBio(e.target.value)}
+                        rows={3}
+                        required
+                      />
+                      {bioError && <p className="text-red-400 text-sm mt-1">{bioError}</p>}
+                    </div>
+                    {parsedData.extractedInfo.projects?.length > 0 && (
+                      <div>
+                        <label className="block text-white font-semibold mb-2">Project Links <span className="text-red-400">*</span></label>
+                        {parsedData.extractedInfo.projects.map((project, idx) => (
+                          <div key={idx} className="mb-2">
+                            <span className="text-gray-300">{project.name}:</span>
+                            <input
+                              type="url"
+                              className="w-full p-2 rounded bg-gray-900 text-white border border-gray-700 mt-1"
+                              value={projectLinks[idx] || ''}
+                              onChange={e => {
+                                const newLinks = [...projectLinks];
+                                newLinks[idx] = e.target.value;
+                                setProjectLinks(newLinks);
+                              }}
+                              required
+                              placeholder="https://project-link.com"
+                            />
+                            {projectLinksError[idx] && <p className="text-red-400 text-sm mt-1">{projectLinksError[idx]}</p>}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  {/* Save and Continue buttons remain after manual fields */}
                   <div className="space-y-4 pt-6">
                     <motion.button
                       onClick={handleSaveData}
-                      disabled={saving}
+                      disabled={saving || !bio.trim() || (parsedData && parsedData.extractedInfo.projects && projectLinks.some(link => !link.trim()))}
                       className="w-full bg-gradient-to-r from-green-500 via-green-600 to-green-700 text-white py-4 px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                       whileHover={{ scale: saving ? 1 : 1.02 }}
                       whileTap={{ scale: saving ? 1 : 0.98 }}
