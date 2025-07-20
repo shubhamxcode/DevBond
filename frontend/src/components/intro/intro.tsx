@@ -1,34 +1,36 @@
-
+import { Globe } from '../magicui/globe';
 import { BackgroundBeamsWithCollision } from '../ui/background-beams-with-collision';
 import { Particles } from '../magicui/particles';
 
 function IntroSection() {
   return (
-    <section className="min-h-screen flex items-center bg-black/80 relative overflow-hidden px-2 sm:px-4 md:px-8 lg:px-16 xl:px-32">
+    <section className="min-h-screen flex items-center bg-black/80 relative overflow-hidden w-full max-w-full px-2 sm:px-4 md:px-8">
       {/* Beams background with particles */}
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <BackgroundBeamsWithCollision className="h-full w-full absolute inset-0 bg-black/60">
+      <div className="absolute inset-0 z-0 pointer-events-none w-full max-w-full">
+        <BackgroundBeamsWithCollision className="h-full w-full absolute inset-0 bg-black/60" >
           <Particles quantity={160} className="absolute inset-0 w-full h-full" color="#a5b4fc" />
         </BackgroundBeamsWithCollision>
       </div>
       {/* Main Content: Centered heading */}
-      <div className="relative z-10 w-full flex flex-col items-center justify-center min-h-screen px-2 sm:px-4">
+      <div className="relative z-10 w-full flex flex-col items-center justify-center min-h-screen px-2 sm:px-4 max-w-full">
         {/* Platform Name */}
         <div className="mb-8 text-center w-full">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-transparent bg-gradient-to-b from-white via-gray-300 to-gray-600 bg-clip-text drop-shadow-2xl tracking-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-transparent bg-gradient-to-b from-white via-gray-300 to-gray-600 bg-clip-text drop-shadow-2xl tracking-tight">
             DevBond
           </h1>
           <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-4 rounded-full"></div>
         </div>
         {/* Tagline */}
-        <pre className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl font-light text-gray-300 text-center mb-8 sm:mb-12 max-w-4xl leading-relaxed">
+        <p className="text-base sm:text-xl md:text-2xl lg:text-3xl font-light text-gray-300 text-center mb-8 sm:mb-12 max-w-4xl leading-relaxed">
           Where developers in similar fields <span className="text-blue-400 font-semibold">connect</span>, 
           <span className="text-purple-400 font-semibold"> collaborate</span>, and 
           <span className="text-green-400 font-semibold"> grow</span> together
-        </pre>
+        </p>
         {/* Globe Component */}
         <div className="flex items-center justify-center w-full mb-8 sm:mb-12">
-          
+          <div className="w-full max-w-xs sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl">
+            <Globe />
+          </div>
         </div>
         {/* Feature highlights */}
         <div className="flex flex-wrap justify-center gap-8 mt-16 max-w-4xl">
