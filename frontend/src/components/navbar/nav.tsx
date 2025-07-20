@@ -1,10 +1,10 @@
 import { FC, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
-import { RiRocketLine } from "react-icons/ri";
-import { FaHome, FaStar, FaBriefcase, FaEnvelope, FaQuestionCircle } from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { FiMenu, FiX } from "react-icons/fi";
+import { FaPeoplePulling } from "react-icons/fa6";
 
 // Compact Dock for smaller screens
 const Dock: FC<{ children: React.ReactNode; compact?: boolean }> = ({ children, compact = false }) => {
@@ -81,10 +81,6 @@ const Nav: FC = () => {
 
   const navItems = [
     { path: "/", label: "Home", icon: <FaHome />, color: "text-blue-400", tooltip: "Home" },
-    { path: "/feature", label: "Features", icon: <FaStar />, color: "text-purple-400", tooltip: "Features" },
-    { path: "/work", label: "Work", icon: <FaBriefcase />, color: "text-green-400", tooltip: "Work" },
-    { path: "/contact", label: "Contact", icon: <FaEnvelope />, color: "text-pink-400", tooltip: "Contact" },
-    { path: "/help", label: "Help", icon: <FaQuestionCircle />, color: "text-yellow-400", tooltip: "Help" },
   ];
 
   return (
@@ -101,11 +97,11 @@ const Nav: FC = () => {
                 <div className="relative group">
                   <div className="absolute -inset-0.5 sm:-inset-1 lg:-inset-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full blur opacity-40 group-hover:opacity-75 transition duration-300" />
                   <div className="relative p-0.5 sm:p-1 lg:p-2">
-                    <RiRocketLine className="h-4 w-4 sm:h-5 sm:w-5 lg:h-8 lg:w-8 text-blue-500" />
+                    <FaPeoplePulling className="h-4 w-4 sm:h-5 sm:w-5 lg:h-8 lg:w-8 text-blue-500" />
                   </div>
                 </div>
                 <span className="text-sm sm:text-base lg:text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-400">
-                  BOND
+                  DevBond
                 </span>
               </motion.div>
             </Link>
@@ -137,9 +133,8 @@ const Nav: FC = () => {
                   </DockIcon>
                 ))}
               </Dock>
-              
               {/* Auth Section - More compact */}
-              <div className="pl-3 border-l border-gray-800">
+              <div className="pl-3 border-l border-gray-800 flex gap-2">
                 {username ? (
                   <Link to="/profile">
                     <motion.div
@@ -158,16 +153,26 @@ const Nav: FC = () => {
                     </motion.div>
                   </Link>
                 ) : (
-                  <Link to="/login">
-                    <motion.button
-                      className="px-4 py-1.5 text-xs font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 
-                               rounded-full hover:from-blue-500 hover:to-purple-500 transition-all duration-200"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                    >
-                      Sign In
-                    </motion.button>
-                  </Link>
+                  <>
+                    <Link to="/login">
+                      <motion.button
+                        className="px-4 py-1.5 text-xs font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-full hover:from-blue-500 hover:to-purple-500 transition-all duration-200"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        Sign In
+                      </motion.button>
+                    </Link>
+                    <Link to="/signup">
+                      <motion.button
+                        className="px-4 py-1.5 text-xs font-medium text-white bg-gradient-to-r from-green-500 to-blue-500 rounded-full hover:from-green-400 hover:to-blue-400 transition-all duration-200"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        Sign Up
+                      </motion.button>
+                    </Link>
+                  </>
                 )}
               </div>
             </div>
@@ -175,7 +180,7 @@ const Nav: FC = () => {
             {/* Tablet Navigation - Ultra compact dock */}
             <div className="hidden lg:flex xl:hidden items-center gap-2">
               <Dock compact={true}>
-                {navItems.slice(0, 4).map((item) => (
+                {navItems.map((item) => (
                   <DockIcon
                     key={item.path}
                     className={`${location.pathname === item.path ? "ring-1 ring-blue-400/80 bg-blue-400/20" : ""} ${item.color}`}
@@ -186,7 +191,6 @@ const Nav: FC = () => {
                   </DockIcon>
                 ))}
               </Dock>
-              
               {username ? (
                 <Link to="/profile">
                   <div className="h-7 w-7 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center">
@@ -196,11 +200,18 @@ const Nav: FC = () => {
                   </div>
                 </Link>
               ) : (
-                <Link to="/login">
-                  <button className="px-3 py-1 text-xs font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-full">
-                    Sign In
-                  </button>
-                </Link>
+                <>
+                  <Link to="/login">
+                    <button className="px-3 py-1 text-xs font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 rounded-full">
+                      Sign In
+                    </button>
+                  </Link>
+                  <Link to="/signup">
+                    <button className="px-3 py-1 text-xs font-medium text-white bg-gradient-to-r from-green-500 to-blue-500 rounded-full">
+                      Sign Up
+                    </button>
+                  </Link>
+                </>
               )}
             </div>
           </nav>
@@ -241,13 +252,22 @@ const Nav: FC = () => {
                   {username}
                 </Link>
               ) : (
-                <Link
-                  to="/login"
-                  className="text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2 rounded-full"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  Sign In
-                </Link>
+                <div className="flex gap-2">
+                  <Link
+                    to="/login"
+                    className="text-base font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 px-4 py-2 rounded-full"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/signup"
+                    className="text-base font-semibold text-white bg-gradient-to-r from-green-500 to-blue-500 px-4 py-2 rounded-full"
+                    onClick={() => setMobileOpen(false)}
+                  >
+                    Sign Up
+                  </Link>
+                </div>
               )}
             </div>
           </motion.div>

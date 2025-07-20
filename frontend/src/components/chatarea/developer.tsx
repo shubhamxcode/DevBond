@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../Redux/store";
 import { useParams } from "react-router-dom";
 import axios from "axios";
+import EmojiPicker from 'emoji-picker-react';
 
 // API URL configuration
 const apiUrl = import.meta.env.DEV
@@ -34,6 +35,7 @@ function Developer() {
   const nameInputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const messageInputRef = useRef<HTMLInputElement>(null);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
   // Check if the other user is typing
   const isOtherUserTyping = recipientId ? typingUsers.get(recipientId) : false;
@@ -189,6 +191,26 @@ function Developer() {
         sendTypingStatus(recipientId, false);
       }
     }, 2000);
+  };
+
+  // Handle emoji click
+  const handleEmojiClick = (emojiData: any) => {
+    const emoji = emojiData.emoji;
+    // Insert emoji at cursor position
+    if (messageInputRef.current) {
+      const input = messageInputRef.current;
+      const start = input.selectionStart || 0;
+      const end = input.selectionEnd || 0;
+      const newValue = message.slice(0, start) + emoji + message.slice(end);
+      setMessage(newValue);
+      setTimeout(() => {
+        input.focus();
+        input.setSelectionRange(start + emoji.length, start + emoji.length);
+      }, 0);
+    } else {
+      setMessage(message + emoji);
+    }
+    setShowEmojiPicker(false);
   };
 
   // Join user when component mounts
@@ -396,6 +418,27 @@ function Developer() {
       {/* Input Area */}
       <footer className="relative bg-gray-900/80 backdrop-blur-xl border-t border-gray-700 p-6 z-10">
         <div className="flex space-x-4 items-end">
+          {/* Emoji Button */}
+          <div className="relative">
+            <button
+              type="button"
+              className="p-2 rounded-full hover:bg-gray-800 transition-colors text-2xl"
+              onClick={() => setShowEmojiPicker((v) => !v)}
+              tabIndex={0}
+              aria-label="Add emoji"
+            >
+              😊
+            </button>
+            {showEmojiPicker && (
+              <div className="absolute bottom-12 left-0 z-50">
+                <EmojiPicker
+                  onEmojiClick={handleEmojiClick}
+                  width={320}
+                  height={400}
+                />
+              </div>
+            )}
+          </div>
           <div className="flex-1 relative">
             <input
               ref={messageInputRef}
