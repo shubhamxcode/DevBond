@@ -97,7 +97,7 @@ function Features() {
           title: card.step,
           description: card.description,
           icon: card.image
-        }))} />
+        }))} disableAnimation={undefined} />
 
         <AnimatePresence>
         </AnimatePresence>

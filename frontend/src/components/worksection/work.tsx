@@ -90,7 +90,7 @@ function Work() {
             title: card.step,
             description: card.description,
             icon: card.image
-          }))} />
+          }))} disableAnimation={undefined} />
         </div>
         {/* Modal */}
         <AnimatePresence>
