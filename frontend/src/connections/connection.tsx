@@ -127,15 +127,6 @@ function Connection() {
                         Chat with {data.username}
                       </div>
                     </Link>
-                    
-                    <button className="w-full bg-gray-700/50 hover:bg-gray-600/50 text-gray-300 hover:text-white py-2 px-4 rounded-xl font-medium transition-all duration-200 border border-gray-600/50 hover:border-gray-500/50">
-                      <div className="flex items-center justify-center gap-2">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                        View Profile
-                      </div>
-                    </button>
                   </div>
                   
                   {/* Hover effect overlay */}

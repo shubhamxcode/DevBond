@@ -72,21 +72,19 @@ function Work() {
     <section className="bg-black min-h-screen relative overflow-hidden">
       {/* Subtle background pattern */}
       <div className="absolute inset-0 bg-gradient-to-br from-gray-900/20 via-black to-gray-900/20"></div>
-      
-      <div className="container mx-auto px-4 py-16 md:py-24 relative z-10">
+      <div className="container mx-auto px-2 sm:px-4 py-8 md:py-16 lg:py-24 relative z-10">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-500">
+        <div className="text-center mb-8 md:mb-16">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black mb-4 text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-300 to-gray-500">
             HOW IT WORKS
           </h1>
           <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-6"></div>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+          <p className="text-gray-400 text-base sm:text-lg max-w-2xl mx-auto">
             Join DevBond in four simple steps and start building connections with developers worldwide
           </p>
         </div>
-
         {/* Timeline Component */}
-        <div className="mt-8">
+        <div className="mt-4 md:mt-8">
           <Timeline data={cards.map(card => ({
             id: card.id,
             title: card.step,
@@ -94,13 +92,12 @@ function Work() {
             icon: card.image
           }))} />
         </div>
-
         {/* Modal */}
         <AnimatePresence>
           {selectcard && (
             <motion.div
               key={selectcard.id}
-              className="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-50 p-4"
+              className="fixed inset-0 flex items-center justify-center bg-black/80 backdrop-blur-sm z-50 p-2 sm:p-4"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -108,7 +105,7 @@ function Work() {
               onClick={() => setSelectedId(null)}
             >
               <motion.div
-                className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-md border border-gray-700/50 rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl"
+                className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-md border border-gray-700/50 rounded-2xl p-4 sm:p-8 max-w-md w-full mx-2 sm:mx-4 shadow-2xl"
                 initial={{ scale: 0.8, y: -50 }}
                 animate={{ scale: 1, y: 0 }}
                 exit={{ scale: 0.8, y: -50 }}
@@ -119,15 +116,15 @@ function Work() {
                   <div className="mb-6">
                     {selectcard.image}
                   </div>
-                  <h2 className="text-2xl font-bold text-white mb-4">
+                  <h2 className="text-xl sm:text-2xl font-bold text-white mb-4">
                     {selectcard.step}
                   </h2>
-                  <p className="text-gray-300 mb-8 leading-relaxed">
+                  <p className="text-gray-300 mb-6 sm:mb-8 leading-relaxed">
                     {selectcard.description}
                   </p>
                   <div className="flex gap-4 justify-center">
                     <button
-                      className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-8 py-3 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg shadow-blue-500/25 font-medium"
+                      className="bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all shadow-lg shadow-blue-500/25 font-medium"
                       onClick={() => setSelectedId(null)}
                     >
                       Got it!

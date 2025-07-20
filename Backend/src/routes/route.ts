@@ -15,7 +15,7 @@ import {
   getMessages,
   getUserProfile
 } from '../controller/user.controller'
-import { parseResume, saveResumeData } from '../controller/resume.controller';
+import { parseResume, saveResumeData, checkUserSetup, getResumeByUserId } from '../controller/resume.controller';
 import { upload } from '../middleware/multer.middleware';
 import verifyJwt from "../middleware/authenticationToken";
 
@@ -37,5 +37,7 @@ routes.route("/messages").get(verifyJwt,getMessages);
 routes.route("/profile").get(verifyJwt, getUserProfile);
 routes.route("/parse-resume").post(verifyJwt, upload.single('resume'), parseResume);
 routes.route("/save-resume").post(verifyJwt, saveResumeData);
+routes.route("/check-setup").get(verifyJwt, checkUserSetup);
+routes.route("/resume/:userId").get(verifyJwt, getResumeByUserId);
 // routes.route("/notifications").get(getNotifications)
 export default routes;

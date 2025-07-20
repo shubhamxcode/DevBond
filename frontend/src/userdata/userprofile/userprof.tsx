@@ -3,7 +3,7 @@ import { RootState } from "../../Redux/store";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-import { IoIosNotifications } from "react-icons/io";
+import { FaUserEdit } from "react-icons/fa";
 import FollowButton from "../../components/Follow/follow";
 import { logoutUser, setConnections } from "../../components/Slices/userslice";
 import { Particles } from "../../components/magicui/particles";
@@ -27,6 +27,7 @@ function UserProf() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [userBios, setUserBios] = useState<{ [userId: string]: string }>({});
 
   const selectedField = useSelector(
     (state: RootState) => state.userProfile.selectedField
@@ -65,6 +66,39 @@ function UserProf() {
       navigate('/login');
     }
   }, [accessToken, username, selectedField, navigate]);
+
+  // Check if user has completed setup
+  useEffect(() => {
+    const checkUserSetup = async () => {
+      if (!accessToken) return;
+
+      try {
+        const response = await axios.get(`${apiUrl}/api/users/check-setup`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+          withCredentials: true,
+        });
+
+        const { hasResume, hasSelectedField, isSetupComplete } = response.data.data;
+
+        if (!isSetupComplete) {
+          // User hasn't completed setup, redirect to appropriate page
+          if (!hasResume) {
+            navigate('/Resumeparsing');
+          } else if (!hasSelectedField) {
+            navigate('/field');
+          }
+        }
+        // If setup is complete, stay on profile page
+      } catch (error) {
+        console.error('Error checking user setup:', error);
+        // Continue with profile if check fails
+      }
+    };
+
+    checkUserSetup();
+  }, [accessToken, navigate, apiUrl]);
 
   // Fetch user's actual connections/followers
   useEffect(() => {
@@ -139,6 +173,32 @@ function UserProf() {
     fetchFieldData();
   }, [selectedField, accessToken, dispatch]);
 
+  // Fetch bios for each user in fieldData
+  useEffect(() => {
+    const fetchBios = async () => {
+      if (!accessToken) return;
+      const apiUrl = import.meta.env.DEV ? "http://localhost:4001" : import.meta.env.VITE_RENDER_URL_;
+      const bios: { [userId: string]: string } = {};
+      await Promise.all(
+        fieldData.map(async (user) => {
+          try {
+            const response = await axios.get(`${apiUrl}/api/users/resume/${user._id}`, {
+              headers: { Authorization: `Bearer ${accessToken}` },
+              withCredentials: true,
+            });
+            bios[user._id!] = response.data.data?.bio || "No bio available.";
+          } catch {
+            bios[user._id!] = "No bio available.";
+          }
+        })
+      );
+      setUserBios(bios);
+    };
+    if (fieldData.length > 0) {
+      fetchBios();
+    }
+  }, [fieldData, accessToken]);
+
   const handleSignOut = () => setShowSignOutConfirm(true);
 
   const confirmSignOut = async () => {
@@ -167,19 +227,20 @@ function UserProf() {
   // Helper function to get field color
   const getFieldColor = (field: string) => {
     const colors = {
-      'Frontend': 'from-blue-500 to-cyan-500',
-      'Backend': 'from-green-500 to-emerald-500',
-      'Full Stack': 'from-purple-500 to-pink-500',
-      'Mobile': 'from-orange-500 to-red-500',
-      'DevOps': 'from-indigo-500 to-blue-500',
-      'Data Science': 'from-teal-500 to-green-500',
-      'AI/ML': 'from-violet-500 to-purple-500',
-      'UI/UX': 'from-pink-500 to-rose-500',
-      'Cloud': 'from-sky-500 to-blue-500',
-      'Security': 'from-red-500 to-orange-500',
+      'frontend': 'from-blue-500 to-cyan-500',
+      'backend': 'from-green-500 to-emerald-500',
+      'full stack': 'from-purple-500 to-pink-500',
+      'mobile': 'from-orange-500 to-red-500',
+      'devops': 'from-indigo-500 to-blue-500',
+      'data science': 'from-teal-500 to-green-500',
+      'ai/ml': 'from-violet-500 to-purple-500',
+      'ui/ux': 'from-pink-500 to-rose-500',
+      'cloud': 'from-sky-500 to-blue-500',
+      'security': 'from-red-500 to-orange-500',
+      'blockchain': 'from-yellow-500 to-yellow-700',
       'default': 'from-gray-500 to-gray-600'
     };
-    return colors[field as keyof typeof colors] || colors.default;
+    return colors[field.toLowerCase() as keyof typeof colors] || colors.default;
   };
 
   return (
@@ -264,16 +325,19 @@ function UserProf() {
                   </div>
                 )}
                 <div className="flex justify-between items-center mb-2">
-                  <p className="text-gray-300 text-sm font-medium">Field</p>
-                  <span className="bg-purple-600/30 text-purple-400 text-xs font-medium px-2 py-1 rounded-full">
-                    {selectedField || "Not set"}
-                  </span>
+                  <Link to="/field-edit" className="text-gray-300 text-sm font-medium">Field</Link>
+                  <div className="flex items-center gap-2">
+                    <span className="bg-purple-600/30 text-purple-400 text-xs font-medium px-2 py-1 rounded-full">
+                      {selectedField || "Not set"}
+                    </span>
+                    
+                  </div>
                 </div>
 
                 <div className="flex justify-between">
-                  <p className="text-white">Notification</p>
-                  <span className="text-red-500 text-2xl">
-                    <IoIosNotifications />
+                  <Link to="/resume-edit" className="text-white ">Edit Your information</Link>
+                  <span className="text-blue-500 text-2xl">
+                  <FaUserEdit />
                   </span>
                 </div>
               </div>
@@ -334,9 +398,12 @@ function UserProf() {
           {/* Header Section - Fixed positioning */}
           <div className="text-center py-20 px-4">
             <div className="relative">
-              <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-5xl md:text-6xl font-bold mb-4">
-                Developer Suggestions
-              </h1>
+              <div className="flex items-center justify-center gap-4 mb-4">
+                <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 text-5xl md:text-6xl font-bold">
+                  Developer Suggestions
+                </h1>
+                
+              </div>
               <h2 className="text-white text-3xl md:text-4xl font-light mb-2">
                 For You
               </h2>
@@ -383,7 +450,7 @@ function UserProf() {
                               </h3>
                               <p className="text-gray-400 text-sm">Developer</p>
                               <p className="text-gray-400 text-xs mt-2 italic border-l-4 border-blue-500 pl-3 bg-gray-900/40 rounded-md">
-                                {resumeBio ? resumeBio : "No bio available."}
+                                {userBios[user._id!] ? userBios[user._id!] : "No bio available."}
                               </p>
                             </div>
                           </div>
@@ -394,12 +461,12 @@ function UserProf() {
                           <div className="mb-4">
                             <div className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium text-white bg-gradient-to-r ${getFieldColor(user.selectedField)} shadow-lg`}>
                               <div className="w-2 h-2 bg-white rounded-full mr-2"></div>
-                              {user.selectedField}
+                              {user.selectedField.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ')}
                             </div>
                           </div>
 
                           <div className="">
-                            <Link to="/userinfo" className=" underline text-blue-700">Userinfo</Link>
+                            <Link to={`/userinfo/${user._id}`} className=" underline text-blue-700">Userinfo</Link>
                           </div>
                         </div>
 

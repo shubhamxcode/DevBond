@@ -11,6 +11,9 @@ import ResumeParserUI from "./components/resumeparsing/resumeparsing";
 import Developer from "./components/chatarea/developer";
 import FollowRequestsPage from "./components/FollowRequests/FollowRequestsPage";
 import UserResumeInfo from "./userdata/userprofile/userresumeinfo";
+import SetupCheck from "./components/SetupCheck";
+import ResumeEdit from "./components/resumeEdit/ResumeEdit";
+import FieldEdit from "./components/fieldEdit/FieldEdit";
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { hydrateUserProfile } from './Redux/store';
@@ -35,8 +38,10 @@ function App() {
         <Route path="/developer/:recipientId" element={<Developer/>}/>
         <Route path="/follow-requests" element={<FollowRequestsPage/>}/>
         <Route path="/Resumeparsing" element={<ResumeParserUI/>}/>
-        <Route path="/userinfo" element={<UserResumeInfo/>}/>
-
+        <Route path="/userinfo/:userId" element={<UserResumeInfo/>}/>
+        <Route path="/setup-check" element={<SetupCheck/>}/>
+        <Route path="/resume-edit" element={<ResumeEdit/>}/>
+        <Route path="/field-edit" element={<FieldEdit/>}/>
       </Route>
     </Routes>
   );

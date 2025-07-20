@@ -2,10 +2,9 @@ import { FC, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import { RiRocketLine } from "react-icons/ri";
-import { FaUserCircle, FaHome, FaStar, FaBriefcase, FaEnvelope, FaQuestionCircle, FaFileAlt } from "react-icons/fa";
-import { BsGridFill } from "react-icons/bs";
-import { MdOutlinePersonAdd } from "react-icons/md";
+import { FaHome, FaStar, FaBriefcase, FaEnvelope, FaQuestionCircle } from "react-icons/fa";
 import { useSelector } from "react-redux";
+import { FiMenu, FiX } from "react-icons/fi";
 
 // Enhanced Dock Component with ultra-fast zoom on hover
 const Dock: FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -73,8 +72,9 @@ const DockIcon: FC<{
 
 const Nav: FC = () => {
   const username = useSelector((state: any) => state.userProfile.username);
-  const accessToken = useSelector((state: any) => state.userProfile.accessToken);
+  // const accessToken = useSelector((state: any) => state.userProfile.accessToken);
   const location = useLocation();
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   // Navigation items with dock integration
   const navItems = [
@@ -86,12 +86,7 @@ const Nav: FC = () => {
   ];
 
   // User-specific navigation items
-  const userNavItems = accessToken ? [
-    { path: "/profile", label: "Profile", icon: <FaUserCircle />, color: "text-orange-400", tooltip: "Profile" },
-    { path: "/field", label: "Fields", icon: <BsGridFill />, color: "text-cyan-400", tooltip: "Fields" },
-    { path: "/follow-requests", label: "Follow Requests", icon: <MdOutlinePersonAdd />, color: "text-indigo-400", tooltip: "Follow Requests" },
-    { path: "/Resumeparsing", label: "Resume Parser", icon: <FaFileAlt />, color: "text-emerald-400", tooltip: "Resume Parser" },
-  ] : [];
+  
 
   return (
     <header className="fixed w-full top-0 z-50 transition-all duration-300">
@@ -116,8 +111,17 @@ const Nav: FC = () => {
               </motion.div>
             </Link>
 
+            {/* Hamburger for mobile and tablet (up to md) */}
+            <button
+              className="lg:hidden p-2 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-400"
+              onClick={() => setMobileOpen((v) => !v)}
+              aria-label="Open menu"
+            >
+              {mobileOpen ? <FiX className="w-7 h-7 text-white" /> : <FiMenu className="w-7 h-7 text-white" />}
+            </button>
+
             {/* Desktop Navigation - Row Layout */}
-            <div className="flex items-center gap-8">
+            <div className="hidden lg:flex items-center gap-8">
               {/* Main Navigation Dock */}
               <Dock>
                 {navItems.map((item) => (
@@ -133,27 +137,8 @@ const Nav: FC = () => {
                   </DockIcon>
                 ))}
               </Dock>
-
-              {/* User Navigation Dock (if logged in) */}
-              {accessToken && userNavItems.length > 0 && (
-                <Dock>
-                  {userNavItems.map((item) => (
-                    <DockIcon
-                      key={item.path}
-                      className={`${location.pathname === item.path ? "ring-2 ring-blue-400/80 bg-blue-400/20" : ""}`}
-                      tooltip={item.tooltip}
-                      to={item.path}
-                    >
-                      <div className={`${item.color} text-lg`}>
-                        {item.icon}
-                      </div>
-                    </DockIcon>
-                  ))}
-                </Dock>
-              )}
-
               {/* Auth Section */}
-              <div className="pl-6 border-l border-gray-800">
+              <div className="pl-6 border-l border-gray-800 ml-2">
                 {username ? (
                   <Link to="/profile">
                     <motion.div
@@ -205,6 +190,52 @@ const Nav: FC = () => {
           </nav>
         </div>
       </div>
+      {/* Mobile Menu Drawer */}
+      <AnimatePresence>
+        {mobileOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-40 bg-black/80 backdrop-blur-sm flex flex-col md:hidden"
+            onClick={() => setMobileOpen(false)}
+          >
+            <div className="flex flex-col items-center justify-center flex-1 gap-8" onClick={e => e.stopPropagation()}>
+              {navItems.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className={`flex items-center gap-3 text-lg font-semibold ${location.pathname === item.path ? "text-blue-400" : "text-white"}`}
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <span className="text-2xl">{item.icon}</span>
+                  {item.label}
+                </Link>
+              ))}
+              <div className="w-full border-t border-gray-700 my-4"></div>
+              {username ? (
+                <Link
+                  to="/profile"
+                  className="flex items-center gap-3 text-lg font-semibold text-white bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-2 rounded-full"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  <span className="bg-white/20 rounded-full px-3 py-1 text-white font-bold">{username[0].toUpperCase()}</span>
+                  {username}
+                </Link>
+              ) : (
+                <Link
+                  to="/login"
+                  className="flex items-center gap-3 text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-purple-600 px-6 py-2 rounded-full"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  Sign In
+                </Link>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };

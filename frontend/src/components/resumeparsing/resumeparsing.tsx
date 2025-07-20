@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, FileText, Loader2, Edit3, CheckCircle, AlertCircle, User, Briefcase, GraduationCap, Award, Code, Sparkles, Zap, Target, Globe } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Upload, FileText, Loader2, CheckCircle, AlertCircle, User, Briefcase, GraduationCap, Award, Code, Sparkles, Zap, Target } from 'lucide-react';
+import {  useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../Redux/store';
@@ -110,6 +110,38 @@ const ResumeParserUI: React.FC = () => {
       navigate('/login');
     }
   }, [accessToken, navigate]);
+
+  // Check if user has already completed setup
+  useEffect(() => {
+    const checkUserSetup = async () => {
+      if (!accessToken) return;
+
+      try {
+        const response = await axios.get(`${apiUrl}/api/users/check-setup`, {
+          headers: {
+            'Authorization': `Bearer ${accessToken}`,
+          },
+          withCredentials: true,
+        });
+
+        const { hasResume, hasSelectedField, isSetupComplete } = response.data.data;
+
+        if (isSetupComplete) {
+          // User has both resume and field selected, redirect to profile
+          navigate('/profile');
+        } else if (hasResume && !hasSelectedField) {
+          // User has resume but no field selected, redirect to field selection
+          navigate('/field');
+        }
+        // If user has no resume, stay on this page
+      } catch (error) {
+        console.error('Error checking user setup:', error);
+        // Continue with resume parsing if check fails
+      }
+    };
+
+    checkUserSetup();
+  }, [accessToken, navigate, apiUrl]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
@@ -280,41 +312,39 @@ const ResumeParserUI: React.FC = () => {
   };
 
   return (
-    <section className="min-h-screen flex items-center bg-black/80 relative overflow-hidden">
+    <section className="min-h-screen flex items-center bg-black/80 relative overflow-hidden px-2 sm:px-4 md:px-8 lg:px-16 xl:px-32">
       {/* Animated Background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <Particles quantity={500} className="absolute inset-0 w-full h-full" color="#a5b4fc" />
       </div>
-
       {/* Main Content */}
-      <div className="relative z-10 w-full flex flex-col items-center justify-center min-h-screen px-4 py-8">
+      <div className="relative z-10 w-full flex flex-col items-center justify-center min-h-screen px-2 sm:px-4 py-4 sm:py-8">
         <motion.div
-          className="w-full max-w-4xl mx-auto"
+          className="w-full max-w-2xl sm:max-w-3xl md:max-w-4xl mx-auto"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
         >
           {/* Header */}
           <motion.div 
-            className="text-center mb-12"
+            className="text-center mb-8 sm:mb-12"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
             <div className="flex items-center justify-center mb-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mr-4 shadow-lg">
-                <Target className="h-8 w-8 text-white" />
+              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mr-2 sm:mr-4 shadow-lg">
+                <Target className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
               </div>
-              <h1 className="text-5xl md:text-6xl font-black text-transparent bg-gradient-to-b from-white via-gray-300 to-gray-600 bg-clip-text drop-shadow-2xl">
+              <h1 className="text-2xl sm:text-5xl md:text-6xl font-black text-transparent bg-gradient-to-b from-white via-gray-300 to-gray-600 bg-clip-text drop-shadow-2xl">
                 Resume Parser
               </h1>
             </div>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
               Upload your resume and let our AI extract key information to showcase your skills and experience
             </p>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-6 rounded-full"></div>
+            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-4 sm:mt-6 rounded-full"></div>
           </motion.div>
-
           {/* Main Container */}
           <motion.div 
             className="rounded-2xl border border-gray-700/50 bg-black/50 backdrop-blur-xl p-8 shadow-2xl"
@@ -362,24 +392,6 @@ const ResumeParserUI: React.FC = () => {
                     </motion.label>
                   </div>
                   
-                  <motion.div 
-                    className="mt-8 pt-8 border-t border-gray-700/50"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.5 }}
-                  >
-                    <p className="text-gray-400 mb-4 text-lg">Don't have a resume?</p>
-                    <Link to='/field'>
-                      <motion.button 
-                        className="inline-flex items-center px-6 py-3 bg-gray-800/50 text-gray-200 rounded-xl hover:bg-gray-700/50 transition-all duration-300 border border-gray-600/50"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <Edit3 className="h-5 w-5 mr-2" />
-                        Fill information manually
-                      </motion.button>
-                    </Link>
-                  </motion.div>
                 </motion.div>
               )}
 
@@ -857,17 +869,6 @@ const ResumeParserUI: React.FC = () => {
                         </>
                       )}
                     </motion.button>
-                    
-                    <Link to="/field">
-                      <motion.button 
-                        className="w-full bg-gray-800/50 text-gray-200 py-3 px-6 rounded-xl hover:bg-gray-700/50 transition-all duration-300 border border-gray-600/50 flex items-center justify-center"
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                      >
-                        <Globe className="h-5 w-5 mr-2" />
-                        Continue to Profile
-                      </motion.button>
-                    </Link>
                   </div>
                 </motion.div>
               )}

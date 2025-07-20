@@ -1,11 +1,47 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../Redux/store';
-import { User, Mail, MapPin, Calendar, Award, Briefcase, GraduationCap, Code, Globe, Star, FileText, Users, Languages } from 'lucide-react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { User, Mail, MapPin, Calendar, Award, Briefcase, GraduationCap, Code, Globe, Star, FileText, Users, Languages, Linkedin, Twitter } from 'lucide-react';
 
 const UserResumeInfo = () => {
-  const resumeInfo = useSelector((state: RootState) => state.userProfile.resumeInfo);
+  const { userId } = useParams();
+  const accessToken = useSelector((state: RootState) => state.userProfile.accessToken);
+  const [resumeInfo, setResumeInfo] = useState<any>(null);
   const [activeSection, setActiveSection] = useState('personal');
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchOtherUserResume = async () => {
+      if (userId && accessToken) {
+        setLoading(true);
+        try {
+          const apiUrl = import.meta.env.DEV ? "http://localhost:4001" : import.meta.env.VITE_RENDER_URL_;
+          const response = await axios.get(`${apiUrl}/api/users/resume/${userId}`, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+            withCredentials: true,
+          });
+          setResumeInfo(response.data.data);
+        } catch (error) {
+          setResumeInfo(null);
+        }
+        setLoading(false);
+      }
+    };
+    fetchOtherUserResume();
+  }, [userId, accessToken]);
+
+  if (loading) {
+    return (
+      <div className="min-h-96 bg-gradient-to-br from-gray-900 via-gray-800 to-black rounded-3xl p-8 text-center border border-gray-700/30 backdrop-blur-sm">
+        <div className="animate-pulse">
+          <FileText className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+          <p className="text-gray-400 text-lg">Loading resume information...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!resumeInfo) {
     return (
@@ -112,6 +148,18 @@ const UserResumeInfo = () => {
     </div>
   );
 
+  // Helper functions for normalizing links
+  const normalizeGithub = (val: string) => {
+    if (!val) return '';
+    if (val.startsWith('http')) return val;
+    return `https://github.com/${val.replace(/^github[./]*/i, '')}`;
+  };
+  const normalizeLinkedin = (val: string) => {
+    if (!val) return '';
+    if (val.startsWith('http')) return val;
+    return `https://linkedin.com/in/${val.replace(/^linkedin[./]*/i, '')}`;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900 p-4">
       <div className="max-w-6xl mx-auto">
@@ -181,6 +229,49 @@ const UserResumeInfo = () => {
                       <div>
                         <p className="text-sm text-gray-400">Location</p>
                         <p className="text-white font-medium">{extractedInfo.personalInfo.location}</p>
+                      </div>
+                    </div>
+                  )}
+                  {extractedInfo.personalInfo.github && (
+                    <div className="flex items-center gap-3 p-4 bg-gray-700/30 rounded-xl border border-gray-600/20">
+                      <Globe className="w-5 h-5 text-gray-300" />
+                      <div>
+                        <p className="text-sm text-gray-400">GitHub</p>
+                        <a
+                          href={normalizeGithub(extractedInfo.personalInfo.github)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-400 hover:underline flex items-center gap-1"
+                        >
+                          <span>{extractedInfo.personalInfo.github.replace(/^github[./]*/i, '')}</span>
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                  {extractedInfo.personalInfo.linkedin && (
+                    <div className="flex items-center gap-3 p-4 bg-gray-700/30 rounded-xl border border-gray-600/20">
+                      <Linkedin className="w-5 h-5 text-blue-500" />
+                      <div>
+                        <p className="text-sm text-gray-400">LinkedIn</p>
+                        <a
+                          href={normalizeLinkedin(extractedInfo.personalInfo.linkedin)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-400 hover:underline flex items-center gap-1"
+                        >
+                          <span>{extractedInfo.personalInfo.linkedin.replace(/^linkedin[./]*/i, '')}</span>
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                  {extractedInfo.personalInfo.twitter && (
+                    <div className="flex items-center gap-3 p-4 bg-gray-700/30 rounded-xl border border-gray-600/20">
+                      <Twitter className="w-5 h-5 text-sky-400" />
+                      <div>
+                        <p className="text-sm text-gray-400">Twitter</p>
+                        <a href={extractedInfo.personalInfo.twitter} target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:underline flex items-center gap-1">
+                          <span>{extractedInfo.personalInfo.twitter}</span>
+                        </a>
                       </div>
                     </div>
                   )}

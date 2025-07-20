@@ -31,12 +31,25 @@ const generateTokens = async (user: IUserDocument) => {
   return { accessToken, refreshToken };
 };
 
+const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+
 const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password } = req.body;
 
   // Validate required fields
   if ([username, email, password].some((field) => !field?.trim())) {
     throw new ApiError(400, "All fields are required");
+  }
+
+  // Professional email validation
+  if (!emailRegex.test(email)) {
+    throw new ApiError(400, "Please enter a valid professional email address.");
+  }
+
+  // Strong password validation
+  if (!passwordRegex.test(password)) {
+    throw new ApiError(400, "Password must be at least 8 characters, include uppercase, lowercase, a number, and a special character.");
   }
 
   // Check if user already exists

@@ -9,6 +9,15 @@ const RegisterUser = () => {
   const navigate = useNavigate();
   const [data, setData] = useState({ username: "", email: "", password: "" });
   const [message, setMessage] = useState("");
+  // Add state for email and password errors
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [usernameError, setUsernameError] = useState("");
+
+  // Regex patterns
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]).{8,}$/;
+  const usernameRegex = /^[A-Z][a-zA-Z0-9_]*$/;
 
   const apiUrl = import.meta.env.DEV
     ? "http://localhost:4001"
@@ -35,6 +44,17 @@ const RegisterUser = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setData((prev) => ({ ...prev, [name]: value }));
+    if (name === "username") {
+      setUsernameError(usernameRegex.test(value) ? "" : "Username must start with an uppercase letter and contain only letters, numbers, or underscores.");
+    }
+    if (name === "email") {
+      setEmailError(emailRegex.test(value) ? "" : "Email must be a valid professional address (e.g., you@example.com)");
+    }
+    if (name === "password") {
+      setPasswordError(passwordRegex.test(value)
+        ? ""
+        : "Password must be at least 8 characters, include uppercase, lowercase, a number, and a special character.");
+    }
   };
 
   return (
@@ -96,6 +116,7 @@ const RegisterUser = () => {
                 placeholder="Enter your username"
                 required
               />
+              {usernameError && <p className="text-xs text-red-400 mt-1">{usernameError}</p>}
             </motion.div>
 
             {/* Email */}
@@ -117,6 +138,8 @@ const RegisterUser = () => {
                 placeholder="you@example.com"
                 required
               />
+              <p className="text-xs text-gray-400 mt-1">Email must be a valid professional address (e.g., you@example.com)</p>
+              {emailError && <p className="text-xs text-red-400 mt-1">{emailError}</p>}
             </motion.div>
 
             {/* Password */}
@@ -138,6 +161,7 @@ const RegisterUser = () => {
                 placeholder="••••••••"
                 required
               />
+              {passwordError && <p className="text-xs text-red-400 mt-1">{passwordError}</p>}
             </motion.div>
 
             {/* Submit */}

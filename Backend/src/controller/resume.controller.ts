@@ -143,4 +143,57 @@ const saveResumeData = asyncHandler(async (req: Request, res: Response) => {
   }
 });
 
-export { parseResume, saveResumeData };
+const checkUserSetup = asyncHandler(async (req: Request, res: Response) => {
+  try {
+    // Get user from authenticated request
+    const user = req.user;
+    if (!user) {
+      throw new ApiError(401, "User not authenticated");
+    }
+
+    // Check if user has uploaded a resume
+    const resume = await Resume.findOne({ userId: user._id });
+    const hasResume = !!resume;
+
+    // Check if user has selected a field
+    const hasSelectedField = !!user.selectedField;
+
+    return res.status(200).json(
+      new ApiResponse({
+        hasResume,
+        hasSelectedField,
+        isSetupComplete: hasResume && hasSelectedField
+      }, "User setup status retrieved successfully")
+    );
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    console.error('Check user setup error:', error);
+    throw new ApiError(500, "Failed to check user setup status");
+  }
+});
+
+// Get resume by userId (for another user)
+const getResumeByUserId = asyncHandler(async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    if (!userId) {
+      throw new ApiError(400, "User ID is required");
+    }
+    // Find the latest resume for the given userId
+    const resume = await Resume.findOne({ userId }).sort({ updatedAt: -1 });
+    if (!resume) {
+      throw new ApiError(404, "Resume not found for this user");
+    }
+    return res.status(200).json(new ApiResponse(resume, "Resume fetched successfully"));
+  } catch (error) {
+    if (error instanceof ApiError) {
+      throw error;
+    }
+    console.error('Get resume by userId error:', error);
+    throw new ApiError(500, "Failed to fetch resume by userId");
+  }
+});
+
+export { parseResume, saveResumeData, checkUserSetup, getResumeByUserId };
