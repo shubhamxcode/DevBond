@@ -36,6 +36,7 @@ export const GLOBE_CONFIG: COBEOptions = {
 
 export function Globe({
   config = GLOBE_CONFIG,
+  className = ""
 }: {
   className?: string;
   config?: COBEOptions;
@@ -98,10 +99,10 @@ export function Globe({
   }, [rs, config]);
 
   return (
-    <div className="relative aspect-square w-full max-w-[520px] max-h-[520px] flex items-center justify-center bg-transparent">
+    <div className={`relative w-full aspect-square max-w-[260px] sm:max-w-[340px] md:max-w-[420px] lg:max-w-[520px] xl:max-w-[600px] flex items-center justify-center bg-transparent mx-auto ${className}`}>
       <canvas
         className={cn(
-          "size-full opacity-0 transition-opacity duration-500 [contain:layout_paint_size]",
+          "w-full h-full opacity-0 transition-opacity duration-500 [contain:layout_paint_size]",
         )}
         ref={canvasRef}
         onPointerDown={(e) => {
