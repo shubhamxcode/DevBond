@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Upload, FileText, Loader2, CheckCircle, AlertCircle, User, Briefcase, GraduationCap, Award, Code, Sparkles, Zap, Target } from 'lucide-react';
+import { Upload, FileText, Loader2, CheckCircle, AlertCircle, User, Briefcase, GraduationCap, Award, Code, Sparkles, Zap, Target, Linkedin, Github, Globe, Twitter } from 'lucide-react';
 import {  useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +12,10 @@ interface PersonalInfo {
   name?: string;
   email?: string;
   location?: string;
+  linkedin?: string;
+  github?: string;
+  portfolio?: string;
+  twitter?: string;
 }
 
 interface Skills {
@@ -77,6 +81,18 @@ interface ParsedResumeData {
   metadata: Metadata;
 }
 
+const normalizeLinkedin = (url: string) => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  return `https://linkedin.com/in/${url.replace(/^linkedin[./]*/i, '')}`;
+};
+
+const normalizeGithub = (url: string) => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://')) return url;
+  return `https://github.com/${url.replace(/^github[./]*/i, '')}`;
+};
+
 const ResumeParserUI: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [parsing, setParsing] = useState(false);
@@ -84,6 +100,7 @@ const ResumeParserUI: React.FC = () => {
   const [parsedData, setParsedData] = useState<ParsedResumeData | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   // Add state for bio and project links
   const [bio, setBio] = useState('');
@@ -284,17 +301,17 @@ const ResumeParserUI: React.FC = () => {
         withCredentials: true,
       });
 
-      // Show success message
-      alert('Resume data saved successfully!');
-      console.log(`resumesavedata response received:`,response.data.data);
+      // Show success message (UI, not alert)
+      setSuccessMessage('🎉 Resume data saved successfully! You can edit your resume on your profile.');
       // Save techSubField to Redux for filtering cards by subfield
       dispatch(Techdata(response.data.data.extractedInfo.personalInfo.techSubField))
       // Update resumeInfo in Redux
       dispatch(setResumeInfo(response.data.data));
-      // Navigate to field page after 2 seconds
+      // Navigate to field page after 4 seconds
       setTimeout(() => {
+        setSuccessMessage(null);
         navigate('/field');
-      }, 2000);
+      }, 4000);
       // Reset state after successful save
       resetState();
 
@@ -353,6 +370,22 @@ const ResumeParserUI: React.FC = () => {
             transition={{ delay: 0.3 }}
           >
             <AnimatePresence mode="wait">
+              {successMessage && (
+                <motion.div
+                  key="success"
+                  className="text-center"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="bg-green-900/50 border border-green-700/50 rounded-2xl p-8 mb-6 backdrop-blur-sm">
+                    <CheckCircle className="mx-auto h-16 w-16 text-green-400 mb-4" />
+                    <h3 className="text-xl font-semibold text-green-200 mb-2">Success</h3>
+                    <p className="text-green-300">{successMessage}</p>
+                  </div>
+                </motion.div>
+              )}
               {!file && !parsing && !parsedData && (
                 <motion.div
                   key="upload"
@@ -810,6 +843,82 @@ const ResumeParserUI: React.FC = () => {
                       </div>
                     </motion.div>
                   )}
+
+                  {/* Social Media Links */}
+                  <motion.div
+                    className="mb-8"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.7 }}
+                  >
+                    <h3 className="text-xl font-semibold text-white mb-4">Social Links</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {parsedData.extractedInfo.personalInfo.linkedin && (
+                        <div className="flex items-center gap-3 p-4 bg-gray-700/30 rounded-xl border border-gray-600/20">
+                          <Linkedin className="w-5 h-5 text-blue-500" />
+                          <div>
+                            <p className="text-sm text-gray-400">LinkedIn</p>
+                            <a
+                              href={normalizeLinkedin(parsedData.extractedInfo.personalInfo.linkedin)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-400 hover:underline flex items-center gap-1"
+                            >
+                              <span>{parsedData.extractedInfo.personalInfo.linkedin.replace(/^linkedin[./]*/i, '')}</span>
+                            </a>
+                          </div>
+                        </div>
+                      )}
+                      {parsedData.extractedInfo.personalInfo.github && (
+                        <div className="flex items-center gap-3 p-4 bg-gray-700/30 rounded-xl border border-gray-600/20">
+                          <Github className="w-5 h-5 text-gray-200" />
+                          <div>
+                            <p className="text-sm text-gray-400">GitHub</p>
+                            <a
+                              href={normalizeGithub(parsedData.extractedInfo.personalInfo.github)}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-400 hover:underline flex items-center gap-1"
+                            >
+                              <span>{parsedData.extractedInfo.personalInfo.github.replace(/^github[./]*/i, '')}</span>
+                            </a>
+                          </div>
+                        </div>
+                      )}
+                      {parsedData.extractedInfo.personalInfo.portfolio && (
+                        <div className="flex items-center gap-3 p-4 bg-gray-700/30 rounded-xl border border-gray-600/20">
+                          <Globe className="w-5 h-5 text-green-400" />
+                          <div>
+                            <p className="text-sm text-gray-400">Portfolio</p>
+                            <a
+                              href={parsedData.extractedInfo.personalInfo.portfolio}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-400 hover:underline flex items-center gap-1"
+                            >
+                              <span>{parsedData.extractedInfo.personalInfo.portfolio}</span>
+                            </a>
+                          </div>
+                        </div>
+                      )}
+                      {parsedData.extractedInfo.personalInfo.twitter && (
+                        <div className="flex items-center gap-3 p-4 bg-gray-700/30 rounded-xl border border-gray-600/20">
+                          <Twitter className="w-5 h-5 text-sky-400" />
+                          <div>
+                            <p className="text-sm text-gray-400">Twitter</p>
+                            <a
+                              href={parsedData.extractedInfo.personalInfo.twitter}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-400 hover:underline flex items-center gap-1"
+                            >
+                              <span>{parsedData.extractedInfo.personalInfo.twitter.replace(/^twitter[./]*/i, '')}</span>
+                            </a>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </motion.div>
 
                   {/* Move manual fields here, after all parsed sections and before Save button */}
                   <div className="space-y-4 pt-6">

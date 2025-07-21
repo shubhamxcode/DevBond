@@ -18,8 +18,10 @@ export interface IResume extends Document {
       linkedin?: string;
       github?: string;
       portfolio?: string;
-      techField:String
-      techSubField:String
+      twitter?: string;
+      techField: String;
+      techSubField: String;
+      socialLinks?: Array<{ name: string; url: string }>;
     };
     summary: string;
     skills: {
@@ -106,8 +108,15 @@ const resumeSchema = new Schema<IResume>({
       linkedin: String,
       github: String,
       portfolio: String,
-      techField:String,
-      techSubField:String,
+      twitter: String,
+      techField: String,
+      techSubField: String,
+      socialLinks: [
+        {
+          name: String,
+          url: String
+        }
+      ]
     },
     summary: {
       type: String,
