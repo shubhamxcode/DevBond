@@ -18,7 +18,7 @@ const FollowButton: React.FC<FollowButtonProps> = ({ UserIdtoFollow, username, s
   const [status, setStatus] = useState<FollowStatus>('not_following');
   const [error, setError] = useState('');
 
-  const apiUrl=import.meta.env.DEV ? "http://localhost:5173" : import.meta.env.VITE_RENDER_URL_
+  const apiUrl=import.meta.env.DEV ? "http://localhost:4001" : import.meta.env.VITE_RENDER_URL_
 
   // Check the current follow status when component mounts
   useEffect(() => {

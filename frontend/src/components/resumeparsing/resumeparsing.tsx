@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Upload, FileText, Loader2, CheckCircle, AlertCircle, User, Briefcase, GraduationCap, Award, Code, Sparkles, Zap, Target, Linkedin, Github, Globe, Twitter } from 'lucide-react';
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../Redux/store';
@@ -329,42 +329,47 @@ const ResumeParserUI: React.FC = () => {
   };
 
   return (
-    <section className="min-h-screen flex items-center bg-black/80 relative overflow-hidden px-2 sm:px-4 md:px-8 lg:px-16 xl:px-32">
+    <section className="min-h-screen flex items-center bg-black/80 relative overflow-hidden">
       {/* Animated Background */}
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <Particles quantity={500} className="absolute inset-0 w-full h-full" color="#a5b4fc" />
+        <Particles 
+          quantity={window.innerWidth < 768 ? 200 : 500} 
+          className="absolute inset-0 w-full h-full" 
+          color="#a5b4fc" 
+        />
       </div>
+      
       {/* Main Content */}
-      <div className="relative z-10 w-full flex flex-col items-center justify-center min-h-screen px-2 sm:px-4 py-4 sm:py-8">
+      <div className="relative z-10 w-full flex flex-col items-center justify-center min-h-screen px-3 sm:px-6 md:px-8 lg:px-12 xl:px-16 2xl:px-24 py-4 sm:py-6 md:py-8">
         <motion.div
-          className="w-full max-w-2xl sm:max-w-3xl md:max-w-4xl mx-auto"
+          className="w-full max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-4xl xl:max-w-5xl 2xl:max-w-6xl mx-auto"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: 'easeOut' }}
         >
           {/* Header */}
           <motion.div 
-            className="text-center mb-8 sm:mb-12"
+            className="text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12"
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <div className="flex items-center justify-center mb-4">
-              <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mr-2 sm:mr-4 shadow-lg">
-                <Target className="h-6 w-6 sm:h-8 sm:w-8 text-white" />
+            <div className="flex flex-col sm:flex-row items-center justify-center mb-4 sm:mb-6">
+              <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl sm:rounded-2xl flex items-center justify-center mb-3 sm:mb-0 sm:mr-3 md:mr-4 shadow-lg">
+                <Target className="h-5 w-5 sm:h-6 sm:w-6 md:h-7 md:w-7 lg:h-8 lg:w-8 text-white" />
               </div>
-              <h1 className="text-2xl sm:text-5xl md:text-6xl font-black text-transparent bg-gradient-to-b from-white via-gray-300 to-gray-600 bg-clip-text drop-shadow-2xl">
+              <h1 className="text-xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-black text-transparent bg-gradient-to-b from-white via-gray-300 to-gray-600 bg-clip-text drop-shadow-2xl text-center sm:text-left">
                 Resume Parser
               </h1>
             </div>
-            <p className="text-base sm:text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">
+            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 max-w-xs sm:max-w-md md:max-w-lg lg:max-w-2xl mx-auto leading-relaxed px-2 sm:px-0">
               Upload your resume and let our AI extract key information to showcase your skills and experience
             </p>
-            <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-4 sm:mt-6 rounded-full"></div>
+            <div className="w-16 sm:w-20 md:w-24 h-0.5 sm:h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mt-3 sm:mt-4 md:mt-6 rounded-full"></div>
           </motion.div>
           {/* Main Container */}
           <motion.div 
-            className="rounded-2xl border border-gray-700/50 bg-black/50 backdrop-blur-xl p-8 shadow-2xl"
+            className="rounded-xl sm:rounded-2xl border border-gray-700/50 bg-black/50 backdrop-blur-xl p-4 sm:p-6 md:p-8 lg:p-10 shadow-2xl"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.3 }}
@@ -379,10 +384,10 @@ const ResumeParserUI: React.FC = () => {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <div className="bg-green-900/50 border border-green-700/50 rounded-2xl p-8 mb-6 backdrop-blur-sm">
-                    <CheckCircle className="mx-auto h-16 w-16 text-green-400 mb-4" />
-                    <h3 className="text-xl font-semibold text-green-200 mb-2">Success</h3>
-                    <p className="text-green-300">{successMessage}</p>
+                  <div className="bg-green-900/50 border border-green-700/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 mb-4 sm:mb-6 backdrop-blur-sm">
+                    <CheckCircle className="mx-auto h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 text-green-400 mb-3 sm:mb-4" />
+                    <h3 className="text-lg sm:text-xl font-semibold text-green-200 mb-2">Success</h3>
+                    <p className="text-sm sm:text-base text-green-300">{successMessage}</p>
                   </div>
                 </motion.div>
               )}
@@ -395,18 +400,18 @@ const ResumeParserUI: React.FC = () => {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className="border-2 border-dashed border-gray-600/50 rounded-2xl p-16 hover:border-blue-400/60 hover:bg-gray-900/30 transition-all duration-300 group">
+                  <div className="border-2 border-dashed border-gray-600/50 rounded-xl sm:rounded-2xl p-6 sm:p-8 md:p-12 lg:p-16 hover:border-blue-400/60 hover:bg-gray-900/30 transition-all duration-300 group">
                     <motion.div
-                      className="mb-6"
-                      whileHover={{ scale: 1.05 }}
+                      className="mb-4 sm:mb-6"
+                      whileHover={{ scale: window.innerWidth >= 768 ? 1.05 : 1.02 }}
                       transition={{ duration: 0.2 }}
                     >
-                      <div className="w-20 h-20 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:from-blue-500/30 group-hover:to-purple-600/30 transition-all duration-300">
-                        <Upload className="h-10 w-10 text-blue-400 group-hover:text-blue-300 transition-colors" />
+                      <div className="w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4 group-hover:from-blue-500/30 group-hover:to-purple-600/30 transition-all duration-300">
+                        <Upload className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 text-blue-400 group-hover:text-blue-300 transition-colors" />
                       </div>
                     </motion.div>
-                    <h3 className="text-2xl font-bold text-white mb-3">Upload your resume</h3>
-                    <p className="text-gray-400 mb-8 text-lg">Drag and drop your PDF here, or click to browse</p>
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-2 sm:mb-3">Upload your resume</h3>
+                    <p className="text-gray-400 mb-6 sm:mb-8 text-sm sm:text-base md:text-lg px-2 sm:px-0">Drag and drop your PDF here, or click to browse</p>
                     <input
                       type="file"
                       accept=".pdf"
@@ -416,11 +421,11 @@ const ResumeParserUI: React.FC = () => {
                     />
                     <motion.label 
                       htmlFor="upload" 
-                      className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 cursor-pointer"
-                      whileHover={{ scale: 1.02 }}
+                      className="inline-flex items-center px-4 sm:px-6 md:px-8 py-3 sm:py-4 bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white rounded-lg sm:rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 cursor-pointer text-sm sm:text-base"
+                      whileHover={{ scale: window.innerWidth >= 768 ? 1.02 : 1.01 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <Upload className="h-5 w-5 mr-2" />
+                      <Upload className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                       Choose PDF File
                     </motion.label>
                   </div>
@@ -437,15 +442,15 @@ const ResumeParserUI: React.FC = () => {
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <div className="bg-red-900/50 border border-red-700/50 rounded-2xl p-8 mb-6 backdrop-blur-sm">
-                    <AlertCircle className="mx-auto h-16 w-16 text-red-400 mb-4" />
-                    <h3 className="text-xl font-semibold text-red-200 mb-2">Error</h3>
-                    <p className="text-red-300">{error}</p>
+                  <div className="bg-red-900/50 border border-red-700/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 mb-4 sm:mb-6 backdrop-blur-sm">
+                    <AlertCircle className="mx-auto h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 text-red-400 mb-3 sm:mb-4" />
+                    <h3 className="text-lg sm:text-xl font-semibold text-red-200 mb-2">Error</h3>
+                    <p className="text-sm sm:text-base text-red-300 px-2 sm:px-0">{error}</p>
                   </div>
                   <motion.button
                     onClick={resetState}
-                    className="w-full bg-gray-800/50 text-gray-200 py-4 px-6 rounded-xl hover:bg-gray-700/50 transition-all duration-300 border border-gray-600/50"
-                    whileHover={{ scale: 1.02 }}
+                    className="w-full bg-gray-800/50 text-gray-200 py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl hover:bg-gray-700/50 transition-all duration-300 border border-gray-600/50 text-sm sm:text-base"
+                    whileHover={{ scale: window.innerWidth >= 768 ? 1.02 : 1.01 }}
                     whileTap={{ scale: 0.98 }}
                   >
                     Try Again
@@ -462,25 +467,25 @@ const ResumeParserUI: React.FC = () => {
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className="bg-green-900/50 border border-green-700/50 rounded-2xl p-8 mb-8 backdrop-blur-sm">
-                    <FileText className="mx-auto h-16 w-16 text-green-400 mb-4" />
-                    <h3 className="text-xl font-semibold text-green-200 mb-2">{file.name}</h3>
-                    <p className="text-green-300">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                  <div className="bg-green-900/50 border border-green-700/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 backdrop-blur-sm">
+                    <FileText className="mx-auto h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 text-green-400 mb-3 sm:mb-4" />
+                    <h3 className="text-lg sm:text-xl font-semibold text-green-200 mb-2 break-all">{file.name}</h3>
+                    <p className="text-sm sm:text-base text-green-300">{(file.size / 1024 / 1024).toFixed(2)} MB</p>
                   </div>
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     <motion.button
                       onClick={handleParseResume}
-                      className="w-full bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white py-4 px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300"
-                      whileHover={{ scale: 1.02 }}
+                      className="w-full bg-gradient-to-r from-blue-500 via-purple-600 to-pink-500 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-semibold hover:shadow-lg hover:shadow-blue-500/25 transition-all duration-300 text-sm sm:text-base"
+                      whileHover={{ scale: window.innerWidth >= 768 ? 1.02 : 1.01 }}
                       whileTap={{ scale: 0.98 }}
                     >
-                      <Zap className="h-5 w-5 mr-2 inline" />
+                      <Zap className="h-4 w-4 sm:h-5 sm:w-5 mr-2 inline" />
                       Parse Resume
                     </motion.button>
                     <motion.button
                       onClick={() => setFile(null)}
-                      className="w-full bg-gray-800/50 text-gray-200 py-3 px-6 rounded-xl hover:bg-gray-700/50 transition-all duration-300 border border-gray-600/50"
-                      whileHover={{ scale: 1.02 }}
+                      className="w-full bg-gray-800/50 text-gray-200 py-2.5 sm:py-3 px-4 sm:px-6 rounded-lg sm:rounded-xl hover:bg-gray-700/50 transition-all duration-300 border border-gray-600/50 text-sm sm:text-base"
+                      whileHover={{ scale: window.innerWidth >= 768 ? 1.02 : 1.01 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       Choose Different File
@@ -492,7 +497,7 @@ const ResumeParserUI: React.FC = () => {
               {parsing && (
                 <motion.div
                   key="parsing"
-                  className="space-y-8"
+                  className="space-y-6 sm:space-y-8"
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
@@ -500,24 +505,24 @@ const ResumeParserUI: React.FC = () => {
                 >
                   <div className="text-center">
                     <motion.div 
-                      className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-full mb-6"
+                      className="inline-flex items-center justify-center w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 bg-gradient-to-br from-blue-500/20 to-purple-600/20 rounded-full mb-4 sm:mb-6"
                       animate={{ rotate: 360 }}
                       transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
                     >
-                      <Loader2 className="h-10 w-10 text-blue-400" />
+                      <Loader2 className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 text-blue-400" />
                     </motion.div>
-                    <h3 className="text-3xl font-bold text-white mb-3">Parsing Your Resume</h3>
-                    <p className="text-gray-300 text-lg">AI is analyzing your document...</p>
+                    <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-2 sm:mb-3">Parsing Your Resume</h3>
+                    <p className="text-gray-300 text-sm sm:text-base md:text-lg px-2 sm:px-0">AI is analyzing your document...</p>
                   </div>
 
-                  <div className="space-y-4">
-                    <div className="flex justify-between text-sm text-gray-300">
+                  <div className="space-y-3 sm:space-y-4">
+                    <div className="flex justify-between text-xs sm:text-sm text-gray-300">
                       <span>Parsing Progress</span>
                       <span className="font-semibold">{progress}%</span>
                     </div>
-                    <div className="w-full bg-gray-800/50 rounded-full h-3 overflow-hidden">
+                    <div className="w-full bg-gray-800/50 rounded-full h-2 sm:h-3 overflow-hidden">
                       <motion.div 
-                        className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full"
+                        className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 sm:h-3 rounded-full"
                         initial={{ width: 0 }}
                         animate={{ width: `${progress}%` }}
                         transition={{ duration: 0.5 }}
@@ -525,19 +530,19 @@ const ResumeParserUI: React.FC = () => {
                     </div>
                   </div>
 
-                  <div className="flex justify-center space-x-2">
+                  <div className="flex justify-center space-x-1.5 sm:space-x-2">
                     <motion.div 
-                      className="w-3 h-3 bg-blue-500 rounded-full"
+                      className="w-2 h-2 sm:w-3 sm:h-3 bg-blue-500 rounded-full"
                       animate={{ scale: [1, 1.2, 1] }}
                       transition={{ duration: 1, repeat: Infinity, delay: 0 }}
                     />
                     <motion.div 
-                      className="w-3 h-3 bg-purple-500 rounded-full"
+                      className="w-2 h-2 sm:w-3 sm:h-3 bg-purple-500 rounded-full"
                       animate={{ scale: [1, 1.2, 1] }}
                       transition={{ duration: 1, repeat: Infinity, delay: 0.2 }}
                     />
                     <motion.div 
-                      className="w-3 h-3 bg-pink-500 rounded-full"
+                      className="w-2 h-2 sm:w-3 sm:h-3 bg-pink-500 rounded-full"
                       animate={{ scale: [1, 1.2, 1] }}
                       transition={{ duration: 1, repeat: Infinity, delay: 0.4 }}
                     />
@@ -550,22 +555,22 @@ const ResumeParserUI: React.FC = () => {
               {parsedData && parsedData.extractedInfo && (
                 <motion.div
                   key="parsed-data"
-                  className="space-y-6"
+                  className="space-y-4 sm:space-y-6"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.5 }}
                 >
-                  <div className="bg-green-900/50 border border-green-700/50 rounded-2xl p-8 text-center backdrop-blur-sm">
-                    <CheckCircle className="mx-auto h-16 w-16 text-green-400 mb-4" />
-                    <h3 className="text-2xl font-semibold text-green-200 mb-2">Resume Parsed Successfully!</h3>
-                    <p className="text-green-300 text-lg">
+                  <div className="bg-green-900/50 border border-green-700/50 rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 text-center backdrop-blur-sm">
+                    <CheckCircle className="mx-auto h-12 w-12 sm:h-14 sm:w-14 md:h-16 md:w-16 text-green-400 mb-3 sm:mb-4" />
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-green-200 mb-2">Resume Parsed Successfully!</h3>
+                    <p className="text-sm sm:text-base md:text-lg text-green-300">
                       Pages: {parsedData.pageCount} | Size: {(parsedData.fileSize / 1024 / 1024).toFixed(2)} MB
                     </p>
                     {parsedData.metadata.hasAIParsing && (
-                      <div className="flex items-center justify-center mt-3">
-                        <Sparkles className="h-5 w-5 text-green-400 mr-2" />
-                        <span className="text-sm text-green-400 font-medium">AI-Enhanced Parsing Applied</span>
+                      <div className="flex items-center justify-center mt-2 sm:mt-3">
+                        <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-green-400 mr-2" />
+                        <span className="text-xs sm:text-sm text-green-400 font-medium">AI-Enhanced Parsing Applied</span>
                       </div>
                     )}
                   </div>
@@ -573,26 +578,26 @@ const ResumeParserUI: React.FC = () => {
                   {/* Personal Information */}
                   {parsedData.extractedInfo.personalInfo.name && (
                     <motion.div 
-                      className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm"
+                      className="bg-gray-800/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-gray-700/50 backdrop-blur-sm"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.1 }}
                     >
-                      <div className="flex items-center mb-4">
-                        <div className="w-10 h-10 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-full flex items-center justify-center mr-3">
-                          <User className="h-5 w-5 text-blue-400" />
+                      <div className="flex items-center mb-3 sm:mb-4">
+                        <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-full flex items-center justify-center mr-2 sm:mr-3">
+                          <User className="h-4 w-4 sm:h-5 sm:w-5 text-blue-400" />
                         </div>
-                        <h4 className="text-xl font-semibold text-white">Personal Information</h4>
+                        <h4 className="text-lg sm:text-xl font-semibold text-white">Personal Information</h4>
                       </div>
-                      <div className="text-gray-300 space-y-2">
+                      <div className="text-gray-300 space-y-1.5 sm:space-y-2 text-sm sm:text-base">
                         {parsedData.extractedInfo.personalInfo.name && (
-                          <p><span className="font-medium text-blue-300">Name:</span> {parsedData.extractedInfo.personalInfo.name}</p>
+                          <p className="break-words"><span className="font-medium text-blue-300">Name:</span> {parsedData.extractedInfo.personalInfo.name}</p>
                         )}
                         {parsedData.extractedInfo.personalInfo.email && (
-                          <p><span className="font-medium text-blue-300">Email:</span> {parsedData.extractedInfo.personalInfo.email}</p>
+                          <p className="break-all"><span className="font-medium text-blue-300">Email:</span> {parsedData.extractedInfo.personalInfo.email}</p>
                         )}
                         {parsedData.extractedInfo.personalInfo.location && (
-                          <p><span className="font-medium text-blue-300">Location:</span> {parsedData.extractedInfo.personalInfo.location}</p>
+                          <p className="break-words"><span className="font-medium text-blue-300">Location:</span> {parsedData.extractedInfo.personalInfo.location}</p>
                         )}
                       </div>
                     </motion.div>
@@ -601,13 +606,13 @@ const ResumeParserUI: React.FC = () => {
                   {/* Summary */}
                   {parsedData.extractedInfo.summary && (
                     <motion.div 
-                      className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm"
+                      className="bg-gray-800/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-gray-700/50 backdrop-blur-sm"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.2 }}
                     >
-                      <h4 className="text-xl font-semibold text-white mb-3">Professional Summary</h4>
-                      <p className="text-gray-300 leading-relaxed">{parsedData.extractedInfo.summary}</p>
+                      <h4 className="text-lg sm:text-xl font-semibold text-white mb-2 sm:mb-3">Professional Summary</h4>
+                      <p className="text-gray-300 leading-relaxed text-sm sm:text-base">{parsedData.extractedInfo.summary}</p>
                     </motion.div>
                   )}
 
@@ -616,26 +621,26 @@ const ResumeParserUI: React.FC = () => {
                     (parsedData.extractedInfo.skills?.soft?.length > 0) || 
                     (parsedData.extractedInfo.skills?.languages?.length > 0)) && (
                     <motion.div 
-                      className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm"
+                      className="bg-gray-800/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-gray-700/50 backdrop-blur-sm"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.3 }}
                     >
-                      <div className="flex items-center mb-4">
-                        <div className="w-10 h-10 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-full flex items-center justify-center mr-3">
-                          <Code className="h-5 w-5 text-green-400" />
+                      <div className="flex items-center mb-3 sm:mb-4">
+                        <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-full flex items-center justify-center mr-2 sm:mr-3">
+                          <Code className="h-4 w-4 sm:h-5 sm:w-5 text-green-400" />
                         </div>
-                        <h4 className="text-xl font-semibold text-white">Skills</h4>
+                        <h4 className="text-lg sm:text-xl font-semibold text-white">Skills</h4>
                       </div>
-                      <div className="space-y-4">
+                      <div className="space-y-3 sm:space-y-4">
                         {parsedData.extractedInfo.skills?.technical && Array.isArray(parsedData.extractedInfo.skills.technical) && parsedData.extractedInfo.skills.technical.length > 0 && (
                           <div>
-                            <p className="font-medium text-blue-300 mb-2">Technical Skills:</p>
-                            <div className="flex flex-wrap gap-2">
+                            <p className="font-medium text-blue-300 mb-2 text-sm sm:text-base">Technical Skills:</p>
+                            <div className="flex flex-wrap gap-1.5 sm:gap-2">
                               {parsedData.extractedInfo.skills.technical.map((skill, index) => (
                                 <motion.span 
                                   key={index} 
-                                  className="bg-blue-900/50 text-blue-200 px-3 py-1 rounded-full text-sm border border-blue-700/50"
+                                  className="bg-blue-900/50 text-blue-200 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm border border-blue-700/50"
                                   initial={{ opacity: 0, scale: 0.8 }}
                                   animate={{ opacity: 1, scale: 1 }}
                                   transition={{ delay: 0.4 + index * 0.05 }}
@@ -648,12 +653,12 @@ const ResumeParserUI: React.FC = () => {
                         )}
                         {parsedData.extractedInfo.skills?.soft && Array.isArray(parsedData.extractedInfo.skills.soft) && parsedData.extractedInfo.skills.soft.length > 0 && (
                           <div>
-                            <p className="font-medium text-green-300 mb-2">Soft Skills:</p>
-                            <div className="flex flex-wrap gap-2">
+                            <p className="font-medium text-green-300 mb-2 text-sm sm:text-base">Soft Skills:</p>
+                            <div className="flex flex-wrap gap-1.5 sm:gap-2">
                               {parsedData.extractedInfo.skills.soft.map((skill, index) => (
                                 <motion.span 
                                   key={index} 
-                                  className="bg-green-900/50 text-green-200 px-3 py-1 rounded-full text-sm border border-green-700/50"
+                                  className="bg-green-900/50 text-green-200 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm border border-green-700/50"
                                   initial={{ opacity: 0, scale: 0.8 }}
                                   animate={{ opacity: 1, scale: 1 }}
                                   transition={{ delay: 0.5 + index * 0.05 }}
@@ -666,12 +671,12 @@ const ResumeParserUI: React.FC = () => {
                         )}
                         {parsedData.extractedInfo.skills?.languages && Array.isArray(parsedData.extractedInfo.skills.languages) && parsedData.extractedInfo.skills.languages.length > 0 && (
                           <div>
-                            <p className="font-medium text-purple-300 mb-2">Languages:</p>
-                            <div className="flex flex-wrap gap-2">
+                            <p className="font-medium text-purple-300 mb-2 text-sm sm:text-base">Languages:</p>
+                            <div className="flex flex-wrap gap-1.5 sm:gap-2">
                               {parsedData.extractedInfo.skills.languages.map((skill, index) => (
                                 <motion.span 
                                   key={index} 
-                                  className="bg-purple-900/50 text-purple-200 px-3 py-1 rounded-full text-sm border border-purple-700/50"
+                                  className="bg-purple-900/50 text-purple-200 px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm border border-purple-700/50"
                                   initial={{ opacity: 0, scale: 0.8 }}
                                   animate={{ opacity: 1, scale: 1 }}
                                   transition={{ delay: 0.6 + index * 0.05 }}
@@ -689,36 +694,36 @@ const ResumeParserUI: React.FC = () => {
                   {/* Experience */}
                   {parsedData.extractedInfo.experience?.length > 0 && (
                     <motion.div 
-                      className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm"
+                      className="bg-gray-800/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-gray-700/50 backdrop-blur-sm"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.4 }}
                     >
-                      <div className="flex items-center mb-4">
-                        <div className="w-10 h-10 bg-gradient-to-br from-yellow-500/20 to-yellow-600/20 rounded-full flex items-center justify-center mr-3">
-                          <Briefcase className="h-5 w-5 text-yellow-400" />
+                      <div className="flex items-center mb-3 sm:mb-4">
+                        <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gradient-to-br from-yellow-500/20 to-yellow-600/20 rounded-full flex items-center justify-center mr-2 sm:mr-3">
+                          <Briefcase className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-400" />
                         </div>
-                        <h4 className="text-xl font-semibold text-white">Experience</h4>
+                        <h4 className="text-lg sm:text-xl font-semibold text-white">Experience</h4>
                       </div>
-                      <div className="space-y-6">
+                      <div className="space-y-4 sm:space-y-6">
                         {parsedData.extractedInfo.experience?.map((exp, index) => (
                           <motion.div 
                             key={index} 
-                            className="border-l-2 border-yellow-500 pl-6"
+                            className="border-l-2 border-yellow-500 pl-3 sm:pl-4 md:pl-6"
                             initial={{ opacity: 0, x: -20 }}
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: 0.5 + index * 0.1 }}
                           >
-                            <p className="font-semibold text-white text-lg">{exp.title}</p>
-                            <p className="text-yellow-300 font-medium">{exp.company}</p>
-                            <p className="text-gray-400 text-sm mb-2">{exp.duration}</p>
-                            <p className="text-gray-300 leading-relaxed mb-3">{exp.description}</p>
+                            <p className="font-semibold text-white text-base sm:text-lg break-words">{exp.title}</p>
+                            <p className="text-yellow-300 font-medium text-sm sm:text-base break-words">{exp.company}</p>
+                            <p className="text-gray-400 text-xs sm:text-sm mb-2">{exp.duration}</p>
+                            <p className="text-gray-300 leading-relaxed mb-3 text-sm sm:text-base">{exp.description}</p>
                             {exp.achievements?.length > 0 && (
                               <ul className="space-y-1">
                                 {exp.achievements?.map((achievement, idx) => (
-                                  <li key={idx} className="text-sm text-gray-400 flex items-start">
-                                    <span className="text-yellow-400 mr-2 mt-1">•</span>
-                                    {achievement}
+                                  <li key={idx} className="text-xs sm:text-sm text-gray-400 flex items-start">
+                                    <span className="text-yellow-400 mr-2 mt-1 flex-shrink-0">•</span>
+                                    <span className="break-words">{achievement}</span>
                                   </li>
                                 ))}
                               </ul>
@@ -732,16 +737,16 @@ const ResumeParserUI: React.FC = () => {
                   {/* Education */}
                   {parsedData.extractedInfo.education?.length > 0 && (
                     <motion.div 
-                      className="bg-gray-800/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm"
+                      className="bg-gray-800/50 rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 border border-gray-700/50 backdrop-blur-sm"
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: 0.5 }}
                     >
-                      <div className="flex items-center mb-4">
-                        <div className="w-10 h-10 bg-gradient-to-br from-indigo-500/20 to-indigo-600/20 rounded-full flex items-center justify-center mr-3">
-                          <GraduationCap className="h-5 w-5 text-indigo-400" />
+                      <div className="flex items-center mb-3 sm:mb-4">
+                        <div className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 bg-gradient-to-br from-indigo-500/20 to-indigo-600/20 rounded-full flex items-center justify-center mr-2 sm:mr-3">
+                          <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5 text-indigo-400" />
                         </div>
-                        <h4 className="text-xl font-semibold text-white">Education</h4>
+                        <h4 className="text-lg sm:text-xl font-semibold text-white">Education</h4>
                       </div>
                       <div className="space-y-4">
                         {parsedData.extractedInfo.education?.map((edu, index) => (
@@ -921,27 +926,28 @@ const ResumeParserUI: React.FC = () => {
                   </motion.div>
 
                   {/* Move manual fields here, after all parsed sections and before Save button */}
-                  <div className="space-y-4 pt-6">
+                  <div className="space-y-3 sm:space-y-4 pt-4 sm:pt-6">
                     <div>
-                      <label className="block text-white font-semibold mb-2">Bio <span className="text-red-400">*</span></label>
+                      <label className="block text-white font-semibold mb-2 text-sm sm:text-base">Bio <span className="text-red-400">*</span></label>
                       <textarea
-                        className="w-full p-2 rounded bg-gray-900 text-white border border-gray-700"
+                        className="w-full p-2 sm:p-3 rounded-lg sm:rounded-xl bg-gray-900 text-white border border-gray-700 text-sm sm:text-base resize-none"
                         value={bio}
                         onChange={e => setBio(e.target.value)}
                         rows={3}
                         required
+                        placeholder="Tell us about yourself..."
                       />
-                      {bioError && <p className="text-red-400 text-sm mt-1">{bioError}</p>}
+                      {bioError && <p className="text-red-400 text-xs sm:text-sm mt-1">{bioError}</p>}
                     </div>
                     {parsedData.extractedInfo.projects?.length > 0 && (
                       <div>
-                        <label className="block text-white font-semibold mb-2">Project Links <span className="text-red-400">*</span></label>
+                        <label className="block text-white font-semibold mb-2 text-sm sm:text-base">Project Links <span className="text-red-400">*</span></label>
                         {parsedData.extractedInfo.projects.map((project, idx) => (
-                          <div key={idx} className="mb-2">
-                            <span className="text-gray-300">{project.name}:</span>
+                          <div key={idx} className="mb-2 sm:mb-3">
+                            <span className="text-gray-300 text-sm sm:text-base break-words">{project.name}:</span>
                             <input
                               type="url"
-                              className="w-full p-2 rounded bg-gray-900 text-white border border-gray-700 mt-1"
+                              className="w-full p-2 sm:p-3 rounded-lg sm:rounded-xl bg-gray-900 text-white border border-gray-700 mt-1 text-sm sm:text-base"
                               value={projectLinks[idx] || ''}
                               onChange={e => {
                                 const newLinks = [...projectLinks];
@@ -951,29 +957,29 @@ const ResumeParserUI: React.FC = () => {
                               required
                               placeholder="https://project-link.com"
                             />
-                            {projectLinksError[idx] && <p className="text-red-400 text-sm mt-1">{projectLinksError[idx]}</p>}
+                            {projectLinksError[idx] && <p className="text-red-400 text-xs sm:text-sm mt-1">{projectLinksError[idx]}</p>}
                           </div>
                         ))}
                       </div>
                     )}
                   </div>
                   {/* Save and Continue buttons remain after manual fields */}
-                  <div className="space-y-4 pt-6">
+                  <div className="space-y-3 sm:space-y-4 pt-4 sm:pt-6">
                     <motion.button
                       onClick={handleSaveData}
                       disabled={saving || !bio.trim() || (parsedData && parsedData.extractedInfo.projects && projectLinks.some(link => !link.trim()))}
-                      className="w-full bg-gradient-to-r from-green-500 via-green-600 to-green-700 text-white py-4 px-6 rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
-                      whileHover={{ scale: saving ? 1 : 1.02 }}
+                      className="w-full bg-gradient-to-r from-green-500 via-green-600 to-green-700 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg sm:rounded-xl font-semibold hover:shadow-lg hover:shadow-green-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center text-sm sm:text-base"
+                      whileHover={{ scale: saving ? 1 : (window.innerWidth >= 768 ? 1.02 : 1.01) }}
                       whileTap={{ scale: saving ? 1 : 0.98 }}
                     >
                       {saving ? (
                         <>
-                          <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                          <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 mr-2 animate-spin" />
                           Saving...
                         </>
                       ) : (
                         <>
-                          <CheckCircle className="h-5 w-5 mr-2" />
+                          <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 mr-2" />
                           Save Data
                         </>
                       )}
